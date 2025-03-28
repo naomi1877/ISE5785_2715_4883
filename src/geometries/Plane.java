@@ -42,12 +42,7 @@ public class Plane extends Geometry {
         this.normal = normal.normalize();
     }
 
-    /**
-     * Gets the normal vector of the Plane.
-     *
-     * @param unused unused point (not used)
-     * @return the normal vector of the plane
-     */
+@Override
     public Vector getNormal(Point unused) {
         return normal;
     }
