@@ -1,3 +1,4 @@
+
 package primitives;
 
 
@@ -42,7 +43,7 @@ public class Point {
     @Override
     public boolean equals(Object o) {
         if (this == o) return  true;
-       return (o instanceof Point point) && xyz.equals(point.xyz);
+        return (o instanceof Point point) && xyz.equals(point.xyz);
     }
 
     @Override
