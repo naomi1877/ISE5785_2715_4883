@@ -10,7 +10,8 @@ import static primitives.Util.isZero;
 /**
  * Test program for the 1st stage
  *
- * @author Dan Zilberstein
+ * @author Naomie Gronstein 342582715 naomi0556751877@gmail.com
+ *       & Efrat Brinkman 215704883 efratbrinkman@gmail.com
  */
 public final class Main {
     /**
