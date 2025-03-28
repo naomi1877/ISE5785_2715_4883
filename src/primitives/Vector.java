@@ -1,3 +1,5 @@
+
+
 package primitives;
 
 public class Vector extends Point {
@@ -61,3 +63,5 @@ public class Vector extends Point {
     }
 
 }
+
+

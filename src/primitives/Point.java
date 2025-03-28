@@ -1,4 +1,3 @@
-
 package primitives;
 
 import java.util.Objects;
@@ -52,3 +51,4 @@ public class Point {
         return xyz.toString();
     }
 }
+
