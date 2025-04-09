@@ -19,8 +19,7 @@ public class Plane extends Geometry {
     protected final Vector normal;
 
     /**
-     * Constructor to initialize a Plane object with three points.
-     *
+     * Constructor to initialize a Plane object with three points
      * @param p1 the first point defining the plane
      * @param p2 the second point defining the plane
      * @param p3 the third point defining the plane
@@ -30,13 +29,11 @@ public class Plane extends Geometry {
         p = p1;
         Vector v1 = p2.subtract(p1);
         Vector v2 = p3.subtract(p1);
-
         normal = v1.crossProduct(v2).normalize();
     }
 
     /**
      * Constructor to initialize a Plane object with a point and a normal vector.
-     *
      * @param p the point on the plane
      * @param normal the normal vector of the plane
      */

@@ -15,7 +15,6 @@ public class Point {
 
     /**
      * Constructs a point from the given x, y, and z coordinates.
-     *
      * @param x The x-coordinate of the point.
      * @param y The y-coordinate of the point.
      * @param z The z-coordinate of the point.
@@ -26,7 +25,6 @@ public class Point {
 
     /**
      * Constructs a point from the given {@link Double3} object representing the x, y, and z coordinates.
-     *
      * @param xyz The {@link Double3} object representing the point's coordinates.
      */
     public Point(Double3 xyz) {
@@ -35,7 +33,6 @@ public class Point {
 
     /**
      * Returns a vector representing the difference between this point and another point.
-     *
      * @param other The other point.
      * @return A vector representing the difference between the two points.
      */
@@ -45,7 +42,6 @@ public class Point {
 
     /**
      * Adds a vector to this point and returns the resulting point.
-     *
      * @param vector The vector to add to the point.
      * @return A new point representing the result of the addition.
      */
@@ -55,7 +51,6 @@ public class Point {
 
     /**
      * Returns the squared distance between this point and another point.
-     *
      * @param other The other point.
      * @return The squared distance between the two points.
      */

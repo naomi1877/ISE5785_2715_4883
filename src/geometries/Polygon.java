@@ -2,17 +2,13 @@ package geometries;
 
 import primitives.Point;
 import primitives.Vector;
-
 import java.util.List;
-
 import static primitives.Util.isZero;
 
 /**
  * This class represents a Polygon, a 2D shape in 3D Cartesian coordinates.
  * It extends the Geometry class and is defined by a list of vertices and a plane.
-
  * A polygon can have any number of vertices, but must be convex.
-
  */
 public class Polygon extends Geometry {
     /**
@@ -32,9 +28,7 @@ public class Polygon extends Geometry {
 
     /**
      * Constructor to initialize a Polygon object with a list of vertices.
-     *
      * The list must be ordered by edge path and the polygon must be convex.
-     *
      * @param vertices list of vertices ordered by edge path
      * @throws IllegalArgumentException if the vertices are invalid
      */
@@ -62,7 +56,6 @@ public class Polygon extends Geometry {
                 throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
         }
     }
-
 
     @Override
     public Vector getNormal(Point point) {

@@ -16,6 +16,9 @@ public abstract class RadialGeometry extends Geometry {
      * @param radius the radius of the geometry
      */
     protected RadialGeometry(double radius) {
+        if (radius <= 0) {
+            throw new IllegalArgumentException("Radius must be positive.");
+        }
         this.radius = radius;
     }
 }

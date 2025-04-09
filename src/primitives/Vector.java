@@ -8,7 +8,6 @@ public class Vector extends Point {
 
     /**
      * Constructs a vector from the given x, y, and z coordinates.
-     *
      * @param x The x-coordinate of the vector.
      * @param y The y-coordinate of the vector.
      * @param z The z-coordinate of the vector.
@@ -19,7 +18,6 @@ public class Vector extends Point {
 
     /**
      * Constructs a vector from the given {@link Double3} object representing the x, y, and z coordinates.
-     *
      * @param xyz The {@link Double3} object representing the vector's coordinates.
      * @throws IllegalArgumentException If the vector is a zero vector (0, 0, 0).
      */
@@ -32,7 +30,6 @@ public class Vector extends Point {
 
     /**
      * Returns the squared length of the vector.
-     *
      * @return The squared length of the vector.
      */
     public double lengthSquared() {
@@ -41,7 +38,6 @@ public class Vector extends Point {
 
     /**
      * Returns the length (magnitude) of the vector.
-     *
      * @return The length of the vector.
      */
     public double length() {
@@ -50,7 +46,6 @@ public class Vector extends Point {
 
     /**
      * Normalizes the vector to a unit vector (length of 1).
-     *
      * @return A new normalized vector.
      */
     public Vector normalize() {
@@ -60,7 +55,6 @@ public class Vector extends Point {
 
     /**
      * Returns the cross product of this vector with another vector.
-     *
      * @param u The other vector.
      * @return A new vector representing the cross product of this vector and the input vector.
      */
@@ -68,13 +62,10 @@ public class Vector extends Point {
         double xx = xyz.d2() * u.xyz.d3() - xyz.d3() * u.xyz.d2();
         double yy = xyz.d3() * u.xyz.d1() - xyz.d1() * u.xyz.d3();
         double zz = xyz.d1() * u.xyz.d2() - xyz.d2() * u.xyz.d1();
-
         return new Vector(xx, yy, zz);
     }
 
     /**
-     * Returns the dot product of this vector with another vector.
-     *
      * @param u The other vector.
      * @return The dot product of this vector and the input vector.
      */
@@ -93,7 +84,6 @@ public class Vector extends Point {
 
     /**
      * Adds this vector to another vector and returns the resulting vector.
-     *
      * @param other The other vector to add.
      * @return A new vector representing the sum of the two vectors.
      */
@@ -108,7 +98,6 @@ public class Vector extends Point {
 
     /**
      * Scales this vector by a scalar value and returns the resulting vector.
-     *
      * @param rhs The scalar value to multiply the vector by.
      * @return A new vector representing the scaled vector.
      */

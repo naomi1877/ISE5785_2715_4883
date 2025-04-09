@@ -11,8 +11,22 @@ public class Ray {
     final Vector direction;
 
     /**
+     * Getter for head
+     * @return head.
+     */
+    public Point getHead() {
+        return head;
+    }
+    /**
+     * Getter for direction
+     * @return direction.
+     */
+    public Vector getDirection() {
+        return direction;
+    }
+
+    /**
      * Constructs a ray with a given starting point and direction.
-     *
      * @param head The starting point of the ray.
      * @param direction The direction vector of the ray.
      */
@@ -21,12 +35,10 @@ public class Ray {
         this.direction = direction.normalize();
     }
 
-
     @Override
     public String toString() {
         return "Ray: head=" + head.toString() + " direction=" + direction.toString();
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -34,10 +46,5 @@ public class Ray {
         return (o instanceof Ray other)
                 && this.head.equals(other.head)
                 && this.direction.equals(other.direction);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(head, direction);
     }
 }

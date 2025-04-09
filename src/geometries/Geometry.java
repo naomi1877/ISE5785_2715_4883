@@ -11,7 +11,6 @@ public abstract class Geometry {
 
     /**
      * Gets the normal vector of the geometry at a specific point.
-     *
      * @param p1 the point on the geometry's surface
      * @return the normal vector of the geometry at the point
      */
