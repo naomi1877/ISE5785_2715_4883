@@ -8,6 +8,7 @@ import primitives.*;
 
 /**
  * Unit tests for the {@link geometries.Plane} class.
+ * @ Author Naomie Gronstein && Efrat Brinkman.
  */
 class PlaneTests {
     /**
@@ -39,15 +40,6 @@ class PlaneTests {
      * Vector v2 with components (0, -1, 0).
      */
     Vector v2 = new Vector(0, -1, 0);
-
-
-    /**
-     * Default constructor for the PlaneTests class.
-     * Initializes the test class for testing the Plane class functionality.
-     */
-    public PlaneTests() {
-        // Default constructor
-    }
 
     /**
      * Test method for {@link geometries.Plane#Plane(primitives.Point, primitives.Point, primitives.Point)}.
