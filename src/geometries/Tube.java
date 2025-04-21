@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 /**
  * This class represents a Tube, a 3D shape defined by a radius and an axis (a Ray).
  * It extends the RadialGeometry class to inherit the radius property.
@@ -40,5 +42,10 @@ public class Tube extends RadialGeometry {
         Point centerTubePoint=(axis.getHead()).add(axis.getDirection().scale(angleValue));
         //return the normal - calculated like the Sphere's normal.
         return (point.subtract(centerTubePoint)).normalize();
+    }
+
+    @Override
+    List<Point> findIntersections(Ray ray) {
+        return List.of();
     }
 }

@@ -1,6 +1,7 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 import java.util.List;
 import static primitives.Util.isZero;
@@ -42,7 +43,7 @@ public class Polygon extends Geometry {
         plane = new Plane(vertices[0], vertices[1], vertices[2]);
         if (size == 3) return;
 
-        Vector n = plane.getNormal(vertices[0]);
+        Vector n = plane.getNormal(null);//
         Vector edge1 = vertices[size - 1].subtract(vertices[size - 2]);
         Vector edge2 = vertices[0].subtract(vertices[size - 1]);
 
@@ -59,6 +60,30 @@ public class Polygon extends Geometry {
 
     @Override
     public Vector getNormal(Point point) {
-        return plane.getNormal(point);
+        return plane.getNormal(null);//
+    }
+
+    @Override
+    List<Point> findIntersections(Ray ray) {
+        // Check if the ray intersects the plane
+        List<Point> planeIntersections = plane.findIntersections(ray);
+        if (planeIntersections == null)
+            return null; // No intersection with the plane
+
+        // Check if the intersection point is inside the polygon
+        Point intersectionPoint = planeIntersections.get(0);
+        Vector v = intersectionPoint.subtract(vertices.get(0));
+        Vector edge1 = vertices.get(1).subtract(vertices.get(0));
+        Vector edge2 = vertices.get(size - 1).subtract(vertices.get(0));
+        boolean positive = edge1.crossProduct(v).dotProduct(plane.getNormal(null)) > 0;
+        for (int i = 1; i < size; ++i) {
+            edge1 = edge2;
+            edge2 = vertices.get(i).subtract(vertices.get(i - 1));
+            v = intersectionPoint.subtract(vertices.get(i));
+            if (positive != (edge1.crossProduct(v).dotProduct(plane.getNormal(null)) > 0))
+                return null; // The intersection point is outside the polygon
+        }
+        // The intersection point is inside the polygon
+        return List.of(intersectionPoint);
     }
 }

@@ -2,6 +2,8 @@ package primitives;
 
 import java.util.Objects;
 
+import static primitives.Util.isZero;
+
 /**
  * Represents a ray in 3-dimensional space.
  * A ray has a starting point (head) and a direction.
@@ -46,5 +48,12 @@ public class Ray {
         return (o instanceof Ray other)
                 && this.head.equals(other.head)
                 && this.direction.equals(other.direction);
+    }
+
+    public Point getPoint(double t){
+        if (isZero(t)) {
+            return head;
+        }
+        return head.add(direction.scale(t));
     }
 }
