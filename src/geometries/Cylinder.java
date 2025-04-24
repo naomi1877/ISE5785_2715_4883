@@ -3,6 +3,9 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
+
 import static primitives.Util.isZero;
 
 /**
@@ -53,5 +56,11 @@ public class Cylinder extends Tube {
         }
         // Otherwise, the point is on the side → delegate to Tube
         return super.getNormal(point);
+    }
+
+    @Override
+    List<Point> findIntersections(Ray ray) {
+        return List.of();
+        //To do
     }
 }

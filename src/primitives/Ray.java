@@ -50,6 +50,10 @@ public class Ray {
                 && this.direction.equals(other.direction);
     }
 
+    /**
+     * @param t
+     * @return A point on the ray at distance t from the head.
+     */
     public Point getPoint(double t){
         if (isZero(t)) {
             return head;

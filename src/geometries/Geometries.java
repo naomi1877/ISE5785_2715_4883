@@ -10,7 +10,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Geometries extends Intersectable{
+    /**
+     * A collection of intersectable shapes.
+     */
     private final List<Intersectable> shapes =new LinkedList<>();
+
+    public Geometries() {
+    }
+
+    /**
+     * Constructor to initialize a Geometries object with a collection of intersectable shapes.
+     * @param geometries
+     */
     public  Geometries(Intersectable... geometries){
         add(geometries);
     }
@@ -18,6 +29,7 @@ public class Geometries extends Intersectable{
     public void add(Intersectable... geometries){
         Collections.addAll(shapes, geometries);
     }
+
     @Override
     List<Point> findIntersections(Ray ray) {
         List<Point> intersections = new LinkedList<>();

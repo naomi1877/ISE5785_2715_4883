@@ -39,7 +39,8 @@ public class Tube extends RadialGeometry {
         //Obtain the angle between the cylinder vector and the vector generated from the head point in the direction of the given point.
         double angleValue=(axis.getDirection()).dotProduct(point.subtract(axis.getHead()));
         //Calculating the center point of the Tube closest to the given point.
-        Point centerTubePoint=(axis.getHead()).add(axis.getDirection().scale(angleValue));
+        //Point centerTubePoint=(axis.getHead()).add(axis.getDirection().scale(angleValue));
+        Point centerTubePoint=axis.getPoint(angleValue);
         //return the normal - calculated like the Sphere's normal.
         return (point.subtract(centerTubePoint)).normalize();
     }
@@ -47,5 +48,6 @@ public class Tube extends RadialGeometry {
     @Override
     List<Point> findIntersections(Ray ray) {
         return List.of();
+        //To do
     }
 }
