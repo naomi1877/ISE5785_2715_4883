@@ -22,6 +22,7 @@ class TriangleTest {
      */
     Point p2 = new Point(-1, 0, 0);
 
+
     /**
      * A point located at (1,-1,0) in the XY plane.
      */

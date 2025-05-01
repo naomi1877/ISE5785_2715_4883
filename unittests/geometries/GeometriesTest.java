@@ -11,6 +11,7 @@ class GeometriesTest {
             new Triangle(new Point(1, 0, 0), new Point(1, 1, 0), new Point(0, 1, 0)),
             new Plane(new Point(0, 0, 3), new Vector(0, 0, 1)));
 
+
     /**
      * Test method for {@link geometries.Geometries#findIntersections(primitives.Ray)}.
      */

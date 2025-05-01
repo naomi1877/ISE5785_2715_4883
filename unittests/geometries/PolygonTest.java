@@ -20,6 +20,7 @@ class PolygonTest {
      */
     private static final double DELTA = 0.000001;
 
+
     /** Test method for {@link geometries.Polygon#Polygon(primitives.Point...)}. */
     @Test
     void testConstructor() {
