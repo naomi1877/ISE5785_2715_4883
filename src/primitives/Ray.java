@@ -61,8 +61,4 @@ public class Ray {
         return head.add(direction.scale(t));
     }
 
-    public Point getP0() {
-        return head;
-    }
-
 }
