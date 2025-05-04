@@ -99,4 +99,5 @@ class CylinderTest {
         assertEquals(v2, cylinder.getNormal(new Point(0, 0, 1)),
                 "Bad normal to cylinder7");
     }
+
 }

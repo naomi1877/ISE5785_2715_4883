@@ -26,6 +26,15 @@ public class Triangle extends Polygon {
     public Triangle(Point... vertices) {
         super(vertices);
     }
+
+    /**
+     * Constructs a triangle from three vertices and a plane.
+     * The vertices must be ordered and define a valid triangle (non-collinear).
+     * @param vertices the three vertices of the triangle
+     * @param plane the plane in which the triangle lies
+     * @throws IllegalArgumentException if the number of points is not 3
+     * or the points do not define a valid triangle
+     */
     @Override
     List<Point> findIntersections(Ray ray) {
 
@@ -39,7 +48,7 @@ public class Triangle extends Polygon {
         }
 
         double f = 1 / a;
-        Vector s = ray.getP0().subtract(vertices.get(0));
+        Vector s = ray.getHead().subtract(vertices.get(0));
         double u = f * alignZero(s.dotProduct(h));
 
         if (u <= 0 || u >= 1) {
@@ -59,7 +68,7 @@ public class Triangle extends Polygon {
             return null;
         }
 
-        return List.of(ray.getP0().add(ray.getDirection().scale(t)));
+        return List.of(ray.getHead().add(ray.getDirection().scale(t)));
     }
 
     }

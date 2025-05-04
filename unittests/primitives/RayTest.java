@@ -5,15 +5,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testing Ray
- * Author: Maor
+ * Unit tests for the {@link primitives.Ray} class.
+ * @ Author Naomie Gronstein && Efrat Brinkman.
  */
 class RayTest {
-
     private final Point p1 = new Point(1, 2, 3);
     private final Ray ray = new Ray(p1, new Vector(1, 0, 0));
-
-
     /**
      * Test method for {@link primitives.Ray#equals(Object)}.
      */
