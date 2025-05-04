@@ -69,21 +69,24 @@ public class Sphere extends RadialGeometry {
 
         // If t1 and t2 are both positive, return both intersection points
         if (t1 > 0 && t2 > 0) {
-
+            // If t1 and t2 are equal, return only one point
+            if (isZero(t1 - t2)) {
+                return List.of(ray.getPoint(t1));
+            }
            // If both intersection points are positive, return both points
             return List.of(ray.getPoint(t1), ray.getPoint(t2));
         }
 
-        // If one of the intersection points is zero, return the other point
-        if (!isZero(t1)) {
+        // If t1 is positive, return t1
+        if (t1 > 0) {
             return List.of(ray.getPoint(t1));
         }
-        if (!isZero(t2)) {
+        // If t2 is positive, return t2
+        if (t2 > 0) {
             return List.of(ray.getPoint(t2));
         }
-
-        // If both intersection points are negative, return null
-            return null;
+        // If both t1 and t2 are negative, return null
+        return null;
 
     }
 }

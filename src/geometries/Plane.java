@@ -58,11 +58,13 @@ public class Plane extends Geometry {
 
         // Check if the ray is parallel to the plane
         double denominator = normal.dotProduct(ray.getDirection());
+
         if (isZero(denominator)) {
             return null; // The ray is parallel to the plane
         }
+
         if(q.equals(ray.getHead())){
-            return List.of(q); // The ray starts on the plane
+            return null; // The ray starts on the plane
         }
         // Calculate the numerator for the intersection point
         double numerator = alignZero(normal.dotProduct(q.subtract(ray.getHead())));

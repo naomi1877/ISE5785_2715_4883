@@ -60,7 +60,53 @@ public class Cylinder extends Tube {
 
     @Override
     List<Point> findIntersections(Ray ray) {
-        return List.of();
-        //To do
+        //Cylinder is a tube with a limited height with two bases
+        //Calculate the vector from the ray's head to the tube's axis
+        Vector u = axis.getHead().subtract(ray.getHead());
+        double tm = ray.getDirection().dotProduct(u);
+        double d = Math.sqrt(u.lengthSquared() - tm * tm);
+        if (d > radius) {
+            return null; // No intersection
+        }
+        double th = Math.sqrt(radius * radius - d * d);
+        //Check if the ray intersects the tube
+        if (isZero(th)) {
+            return List.of(ray.getPoint(tm));
+        }
+        // Calculate the intersection points
+        double t1 = tm - th;
+        double t2 = tm + th;
+        // If t1 and t2 are both positive, return both intersection points
+        if (t1 > 0 && t2 > 0) {
+            // If both intersection points are positive, return both points
+            Point p1 = ray.getPoint(t1);
+            Point p2 = ray.getPoint(t2);
+            // Check if the intersection points are within the height of the cylinder
+            if (isZero(p1.subtract(axis.getHead()).dotProduct(axis.getDirection())) ||
+                    isZero(p2.subtract(axis.getHead()).dotProduct(axis.getDirection()))) {
+                return List.of(p1, p2);
+            }
+            return null; // No intersection within the height
+        }
+        // If one of the intersection points is zero, return the other point
+        if (!isZero(t1)) {
+            Point p1 = ray.getPoint(t1);
+            // Check if the intersection point is within the height of the cylinder
+            if (isZero(p1.subtract(axis.getHead()).dotProduct(axis.getDirection()))) {
+                return List.of(p1);
+            }
+            return null; // No intersection within the height
+        }
+        // If both intersection points are negative, return null
+        if (!isZero(t2)) {
+            Point p2 = ray.getPoint(t2);
+            // Check if the intersection point is within the height of the cylinder
+            if (isZero(p2.subtract(axis.getHead()).dotProduct(axis.getDirection()))) {
+                return List.of(p2);
+            }
+            return null; // No intersection within the height
+        }
+        // If both intersection points are negative, return null
+        return null;
     }
 }
