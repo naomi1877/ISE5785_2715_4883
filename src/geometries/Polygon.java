@@ -58,11 +58,25 @@ public class Polygon extends Geometry {
         }
     }
 
+    /**
+     * Constructor to initialize a Polygon object with a list of vertices.
+     * The list must be ordered by edge path and the polygon must be convex.
+     * @param vertices list of vertices ordered by edge path
+     * @throws IllegalArgumentException if the vertices are invalid
+     */
     @Override
     public Vector getNormal(Point point) {
         return plane.getNormal(null);//
     }
 
+    /**
+     * Calculates the intersection points between a ray and the polygon.
+     * The method first checks if the ray intersects the plane of the polygon,
+     * and then checks if the intersection point is inside the polygon.
+     *
+     * @param ray the ray to check for intersections with the polygon
+     * @return a list of intersection points, or null if there are no intersections
+     */
     @Override
     List<Point> findIntersections(Ray ray) {
         // Check if the ray intersects the plane

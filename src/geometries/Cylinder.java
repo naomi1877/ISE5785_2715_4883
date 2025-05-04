@@ -58,6 +58,12 @@ public class Cylinder extends Tube {
         return super.getNormal(point);
     }
 
+    /**
+     * Calculates the intersection points between a ray and the cylinder.
+     * The method uses the quadratic formula to find the intersection points.
+     * @param ray the ray to check for intersections with the cylinder
+     * @return a list of intersection points, or null if there are no intersections
+     */
     @Override
     List<Point> findIntersections(Ray ray) {
         //Cylinder is a tube with a limited height with two bases

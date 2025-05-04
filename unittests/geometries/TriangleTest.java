@@ -84,6 +84,9 @@ class TriangleTest {
         assertTrue(normal.equals(v1) || normal.equals(v2), "getNormal() wrong result");
 
     }
+    /**
+     * Test method for {@link geometries.Triangle#findIntersections(primitives.Ray)}.
+     */
     @Test
     void testFindIntersections() {
         Triangle triangle = new Triangle(new Point(1, 1, 0), p3, p2);

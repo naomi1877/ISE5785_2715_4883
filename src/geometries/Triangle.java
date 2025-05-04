@@ -26,6 +26,15 @@ public class Triangle extends Polygon {
     public Triangle(Point... vertices) {
         super(vertices);
     }
+
+    /**
+     * Constructs a triangle from three vertices and a plane.
+     * The vertices must be ordered and define a valid triangle (non-collinear).
+     * @param vertices the three vertices of the triangle
+     * @param plane the plane in which the triangle lies
+     * @throws IllegalArgumentException if the number of points is not 3
+     * or the points do not define a valid triangle
+     */
     @Override
     List<Point> findIntersections(Ray ray) {
 
