@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Testing Camera Class
-
  */
 public class CameraIntersectionsIntegrationTests {
 
