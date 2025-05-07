@@ -1,6 +1,7 @@
 package renderer;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Util;
 import primitives.Vector;
 
@@ -15,17 +16,19 @@ import static primitives.Util.isZero;
  * It includes properties such as position, direction vectors, and viewport size.
  */
 public class Camera implements Cloneable {
+
     private Camera() {}
 
     private Vector vTo; // The "to" direction vector of the camera
     private Vector vUp; // The "up" direction vector of the camera
     private Vector vRight; // The "right" direction vector of the camera
     private Point p0; // The position of the camera
-    private Point pcenter; // The center point of the viewport
+    private Point pCenter; // The center point of the viewport
     private double width = 0.0; // The width of the viewport
     private double height = 0.0; // The height of the viewport
     private double distance = 0.0; // The distance from the camera to the viewport
-
+    private int nX = 0; // horizontal resolution
+    private int nY = 0; // vertical resolution
     /**
      * Returns a new Builder instance for constructing a Camera object.
      *
@@ -44,9 +47,22 @@ public class Camera implements Cloneable {
      * @param i the row index of the pixel
      * @return a list of points representing the ray
      */
-    public List<Point> constructRay(int nX, int nY, int j, int i) {
-        // todo
-        return null;
+    public Ray constructRay(int nX, int nY, int j, int i) {
+        //calculate the size of each pixel
+        double pixelWidth = width/nX;
+        double pixelHeight = height/nY;
+
+        //calculate the center of the view plane
+        Point pCenter = p0.add(vTo.scale(distance));
+
+        //calculate the center of the pixel
+        double xJ = (j - (nX - 1) / 2.0) * pixelWidth;
+        double yI = -1* (i - (nY - 1) / 2.0) * pixelHeight;
+        Point pIJ = pCenter;
+        if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
+        if (!isZero(yI)) pIJ = pIJ.add(vUp.scale(yI));
+        //return the ray from the camera position to the pixel center
+        return new Ray(p0, pIJ.subtract(p0).normalize());//normalize or not?
     }
 
     // Getters for camera properties
@@ -66,8 +82,8 @@ public class Camera implements Cloneable {
         return p0;
     }
 
-    public Point getPcenter() {
-        return pcenter;
+    public Point getPCenter() {
+        return pCenter;
     }
 
     public double getWidth() {
@@ -107,27 +123,42 @@ public class Camera implements Cloneable {
             camera.vRight = camera.vTo.crossProduct(camera.vUp);
             return this;
         }
+
         /**
          * Sets the direction of the camera towards a target point.
          *
          * @param target the target point
          * @return the Builder instance
          */
-
         public Builder setDirection(Point target) {
-            //todo
-            return this;
+            //if camera position not set yet, cannot set direction
+            if (camera.p0 == null)
+                throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
+            // Calculate the direction vector from the camera position to the target point
+            Vector vTo = target.subtract(camera.p0).normalize();
+            Vector vUp = new Vector(0, 1, 0); // default up direction
+            return setDirection(vTo, vUp);
         }
 
+        /**
+         * Sets the direction of the camera towards a target point with a specified up vector.
+         *
+         * @param target2 the target point
+         * @param vUp the up vector
+         * @return the Builder instance
+         */
         public Builder setDirection(Point target2, Vector vUp) {
-            //todo
-            return this;
+            //if camera position not set yet, cannot set direction
+            if (camera.p0 == null)
+                throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
+            // Calculate the direction vector from the camera position to the target point
+            Vector vTo = target2.subtract(camera.p0).normalize();
+            return setDirection(vTo, vUp);
         }
 
 
         /**
          * Sets the location of the camera.
-         *
          * @param p0 the position of the camera
          * @return the Builder instance
          */
@@ -138,7 +169,6 @@ public class Camera implements Cloneable {
 
         /**
          * Sets the size of the viewport.
-         *
          * @param width the width of the viewport
          * @param height the height of the viewport
          * @return the Builder instance
@@ -171,61 +201,68 @@ public class Camera implements Cloneable {
             camera.distance = distance;
             return this;
         }
-
         /**
-         * Build and returns the constructed Camera object.
-         * This method ensure immutability by cloning the camera instance.
+         * Builds the Camera object after validating all necessary fields.
          *
-         * @return the constructed Camera object, or null if cloning fails
+         * @return a cloned Camera object with computed right vector
+         * @throws MissingResourceException if any required field is missing
+         * @throws IllegalArgumentException if any value is invalid
          */
-
         public Camera build() {
-            //todo
-            final String className = "Camera";
-            final String description = "values not set: ";
+            final String MISSING = "Missing render data";
+            final String CLASS_NAME = "Camera";
 
+            if (camera.p0 == null)
+                throw new MissingResourceException(MISSING, CLASS_NAME, "p0");
 
-            if(camera.vTo == null)
-                throw new MissingResourceException(description, className, "vTo");
-            if(camera.vUp == null)
-                throw new MissingResourceException(description, className, "vUp");
-            if(camera.p0 == null)
-                throw new MissingResourceException(description, className, "p0");
-            if(camera.pcenter == null)
-                throw new MissingResourceException(description, className, "pcenter");
-            if(camera.width ==0.0)
-                throw new MissingResourceException(description, className, "width");
-            if(camera.height == 0.0)
-                throw new MissingResourceException(description, className, "height");
-            if(camera.distance == 0.0)
-                throw new MissingResourceException(description, className, "distance");
-            if (camera.vRight == null)
-                camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            if (camera.vTo == null)
+                throw new MissingResourceException(MISSING, CLASS_NAME, "vTo");
 
+            if (camera.vUp == null)
+                throw new MissingResourceException(MISSING, CLASS_NAME, "vUp");
 
-            if (!Util.isZero(camera.vTo.dotProduct(camera.vRight)) ||
-                    !Util.isZero(camera.vTo.dotProduct(camera.vUp)) ||
-                    !Util.isZero(camera.vRight.dotProduct(camera.vUp)))
-                throw new IllegalArgumentException("vTo, vUp and vRight must be orthogonal");
-
-            if (camera.vTo.length() != 1 || camera.vUp.length() != 1 || camera.vRight.length() != 1)
-                throw new IllegalArgumentException("vTo, vUp and vRight must be normalized");
-
-            if (camera.width <= 0 || camera.height <= 0)
-                throw new IllegalArgumentException("width and height must be positive");
+            if (isZero(camera.vTo.dotProduct(camera.vUp)))
+                throw new IllegalArgumentException("vTo and vUp must be orthogonal");
 
             if (camera.distance <= 0)
-                throw new IllegalArgumentException("distance from camera to view must be positive");
+                throw new IllegalArgumentException("distance must be positive");
 
+            if (camera.width <= 0)
+                throw new IllegalArgumentException("view plane width must be positive");
+
+            if (camera.height <= 0)
+                throw new IllegalArgumentException("view plane height must be positive");
+
+            if (camera.nX <= 0)
+                throw new IllegalArgumentException("nX (horizontal resolution) must be positive");
+
+            if (camera.nY <= 0)
+                throw new IllegalArgumentException("nY (vertical resolution) must be positive");
+
+            // Normalize vTo and vUp to ensure correct computation of vRight
+            camera.vTo = camera.vTo.normalize();
+            camera.vUp = camera.vUp.normalize();
+
+            // Compute vRight = vTo x vUp
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+
+            // Return a cloned camera
             try {
-                // Clone the camera to ensure immutability
                 return (Camera) camera.clone();
             } catch (CloneNotSupportedException e) {
-                return null;
+                throw new RuntimeException("Failed to clone Camera object", e);
             }
         }
 
-        public Builder setResolution(int nx, int ny) {
+        /**
+         * Sets the resolution of the camera.
+         */
+        public Builder setResolution(int nX, int nY) {
+            // Ensure nX and nY are positive
+            if (nX <= 0 || nY <= 0)
+                throw new IllegalArgumentException("Resolution must be positive");
+            camera.nX = nX;
+            camera.nY = nY;
             return this;
         }
 
