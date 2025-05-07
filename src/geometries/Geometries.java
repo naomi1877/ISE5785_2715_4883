@@ -35,7 +35,7 @@ public class Geometries extends Intersectable{
      * @param geometries the collection of intersectable shapes to add
      */
     @Override
-    List<Point> findIntersections(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
         List<Point> intersections = new LinkedList<>();
         for (Intersectable shape : shapes) {
             List<Point> shapeIntersections = shape.findIntersections(ray);

@@ -58,7 +58,7 @@ public class Tube extends RadialGeometry {
      * @return a list of intersection points, or null if there are no intersections
      */
     @Override
-    List<Point> findIntersections(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
         //Tube is infinite, so we need to calculate the intersection with the tube's axis
         Point p0 = axis.getHead();
         Vector v = axis.getDirection();

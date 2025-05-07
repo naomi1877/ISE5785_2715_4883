@@ -65,7 +65,7 @@ public class Cylinder extends Tube {
      * @return a list of intersection points, or null if there are no intersections
      */
     @Override
-    List<Point> findIntersections(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
         //Cylinder is a tube with a limited height with two bases
         //Calculate the vector from the ray's head to the tube's axis
         Vector u = axis.getHead().subtract(ray.getHead());

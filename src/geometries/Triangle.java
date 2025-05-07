@@ -36,7 +36,7 @@ public class Triangle extends Polygon {
      * or the points do not define a valid triangle
      */
     @Override
-    List<Point> findIntersections(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
 
         Vector edge1 = vertices.get(1).subtract(vertices.get(0));
         Vector edge2 = vertices.get(2).subtract(vertices.get(0));
