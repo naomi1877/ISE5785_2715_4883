@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Integration tests for Camera ray intersections with geometries
+ * Integration tests for Camera ray intersections with geometries.
  */
 public class CameraIntersectionsIntegrationTests {
 
@@ -27,6 +27,11 @@ public class CameraIntersectionsIntegrationTests {
         assertEquals(expectedAmount, intersections, "Wrong amount of intersections");
     }
 
+
+    /**
+     * Integration tests for Camera ray intersections with spheres.
+     *  {@link geometries.Sphere#findIntersections(Ray)}
+     */
     @Test
     void testSphereIntersection() {
         Camera cam1 = Camera.getBuilder()
@@ -61,6 +66,10 @@ public class CameraIntersectionsIntegrationTests {
         amountOfIntersections(cam2, new Sphere(0.5, new Point(0, 0, 1)), 0, 3, 3);
     }
 
+    /**
+     * Integration tests for Camera ray intersections with plane.
+     * {@link geometries.Plane#findIntersections(Ray)}
+     */
     @Test
     void testPlaneIntersection() {
         Camera cam = Camera.getBuilder()
@@ -81,6 +90,10 @@ public class CameraIntersectionsIntegrationTests {
         amountOfIntersections(cam, new Plane(new Point(0, 0, -1), new Vector(0, -1, -1)), 6, 3, 3);
     }
 
+    /**
+     * Integration tests for Camera ray intersections with triangles.
+     * {@link geometries.Triangle#findIntersections(Ray)}
+     */
     @Test
     void testTriangleIntersection() {
         Camera cam = Camera.getBuilder()

@@ -66,8 +66,7 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * Constructs a ray through a specific pixel in the viewport.
-     *
+     * Constructs a ray through a specific pixel in the viewport
      * @param nX the number of pixels in the X direction
      * @param nY the number of pixels in the Y direction
      * @param j the column index of the pixel
@@ -84,7 +83,7 @@ public class Camera implements Cloneable {
 
         //calculate the center of the pixel
         double xJ = (j - (nX - 1) / 2.0) * pixelWidth;
-        double yI = -1* (i - (nY - 1) / 2.0) * pixelHeight;
+        double yI = -1 * (i - (nY - 1) / 2.0) * pixelHeight;
         Point pIJ = pCenter;
         if (!isZero(yI)) pIJ = pIJ.add(vUp.scale(yI));
         if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
