@@ -1,9 +1,8 @@
 package renderer;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
+import primitives.*;
+import scene.Scene;
+//import java.awt.Color;
 
 import java.util.List;
 import java.util.MissingResourceException;
@@ -29,6 +28,10 @@ public class Camera implements Cloneable {
     private double distance = 0.0; // The distance from the camera to the viewport
     private int nX = 1; // horizontal resolution
     private int nY = 1; // vertical resolution
+
+    /// ////////// is this nX, nY
+    private static ImageWriter imageWriter;
+    private RayTracerBase rayTracer;
 
     // Getters for camera properties
     public Vector getVTo() {
@@ -91,6 +94,53 @@ public class Camera implements Cloneable {
         //return the ray from the camera position to the pixel center
         return new Ray(p0, pIJ.subtract(p0).normalize());//normalize or not?
     }
+    private void castRay(int nx, int ny, int i, int j) {
+            Ray ray = constructRay(nx, ny, j, i);
+            Color color = rayTracer.traceRay(ray);
+            imageWriter.writePixel(j, i, color);
+    }
+
+    /**
+     * Renders the image by tracing rays through each pixel in the viewport.
+     * @return the Camera object for method chaining
+     */
+    /**
+     * Render the image
+     */
+    public Camera renderImage() {
+        int ny = imageWriter.nY();
+        int nx = imageWriter.nX();
+        for (int i = 0; i < ny; i++) {
+            for (int j = 0; j < nx; j++) {
+                castRay(nx, ny, i, j);
+            }
+        }
+        return this;
+    }
+    /**
+     * Prints a grid on the image.
+     * @param interval the interval between grid lines
+     * @param color the color of the grid lines
+     * @return the Camera object for method chaining
+     */
+        public Camera printGrid(int interval, Color color) {
+            for(int i = 0; i < imageWriter.nY(); i++) {
+                for(int j = 0; j < imageWriter.nX(); j++) {
+                    if(i % interval == 0 || j % interval == 0) {
+                        imageWriter.writePixel(j, i, color);
+                    }
+                }
+            }
+            return this;
+        }
+
+    /**
+     * Writes the image to a file.
+     * @param name the name of the image file
+     */
+    public void writeToImage(String name) {
+        imageWriter.writeToImage(name);
+    }
 
     /**
      * Builder class for constructing a Camera object.
@@ -98,6 +148,8 @@ public class Camera implements Cloneable {
     public static class Builder {
         // The camera instance being built
         private final Camera camera = new Camera();
+//        private RayTracerBase rayTracer;
+
         /**
          * Sets the location of the camera.
          * @param p0 the position of the camera
@@ -199,8 +251,40 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("Resolution must be positive");
             camera.nX = nX;
             camera.nY = nY;
+            camera.imageWriter= new ImageWriter(nX, nY);
+            //? todo
             return this;
         }
+        /**
+         * Sets the ray tracer for the camera.
+         * @param scene the scene to be rendered
+         * @param type the type of ray tracer
+         * @return the Builder instance
+         */
+
+        public Builder setRayTracer(Scene scene , RayTracerType type) {
+            // ??? todo
+            switch (type) {
+                case SIMPLE:
+                    camera.rayTracer = new SimpleRayTracer(scene);
+                    break;
+                default:
+                    camera.rayTracer = null;
+                    break;
+            }
+            return this;
+        }
+        /**
+         * Set the image writer
+         * @param imageWriter the image writer
+         * @return the camera builder
+         */
+        public Builder setImageWriter(ImageWriter imageWriter) {
+            camera.imageWriter = imageWriter;
+            return this;
+        }
+
+
         /**
          * Builds the Camera object after validating all necessary fields.
          *
@@ -254,5 +338,6 @@ public class Camera implements Cloneable {
                 throw new RuntimeException("Failed to clone Camera object", e);
             }
         }
+
     }
 }
