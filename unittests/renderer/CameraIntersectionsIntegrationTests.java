@@ -1,93 +1,102 @@
 package renderer;
 
-import geometries.Geometry;
-import geometries.Sphere;
+import geometries.*;
 import org.junit.jupiter.api.Test;
-import primitives.Point;
-import primitives.Vector;
+import primitives.*;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Testing Camera Class
+ * Integration tests for Camera ray intersections with geometries
  */
 public class CameraIntersectionsIntegrationTests {
 
-    private final Vector yAxis = new Vector(0, -1, 0);
-    private final Vector zAxis = new Vector(0, 0, -1);
-
-    private final Camera.Builder cameraBuilder = Camera.getBuilder()
-            .setDirection(zAxis, yAxis)
-            .setVpDistance(1)
-            .setVpSize(3, 3);
-
-    private final Camera camera = cameraBuilder.setLocation(new Point(0, 0, 0.5)).build();
-
     /**
-     * helper function to test the amount of intersections
+     * Helper method to test the amount of intersections
      */
-  private void amountOfIntersections(Camera camera, Geometry geometry, int expectedAmount) {
-//        int intersections = 0;
-//        for (int j = 0; j < 3; j++)
-//            for (int i = 0; i < 3; i++) {
-//                List<Point> intersectionsList = geometry.findIntersections(camera.constructRay(3, 3, i, j));
-//                intersections += intersectionsList != null ? intersectionsList.size() : 0;
-//            }
-//
-//        assertEquals(expectedAmount, intersections, "Wrong amount of intersections");
-  }
-//הבעיההלבדוק מה
+    private void amountOfIntersections(Camera camera, Geometry geometry, int expectedAmount, int nX, int nY) {
+        int intersections = 0;
+        for (int j = 0; j < nY; j++) {
+            for (int i = 0; i < nX; i++) {
+                List<Point> intersectionsList = geometry.findIntersections(camera.constructRay(nX, nY, i, j));
+                intersections += intersectionsList != null ? intersectionsList.size() : 0;
+            }
+        }
+        assertEquals(expectedAmount, intersections, "Wrong amount of intersections");
+    }
 
-    /**
-     * Test method for
-     * {@link renderer.Camera#constructRay(int, int, int, int)}.
-     */
     @Test
     void testSphereIntersection() {
+        Camera cam1 = Camera.getBuilder()
+                .setLocation(Point.ZERO)
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)) // vTo, vUp
+                .setVpSize(3, 3)
+                .setVpDistance(1)
+                .setResolution(3, 3)
+                .build();
+
+        Camera cam2 = Camera.getBuilder()
+                .setLocation(new Point(0, 0, 0.5))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpSize(3, 3)
+                .setVpDistance(1)
+                .setResolution(3, 3)
+                .build();
+
         // TC01: 2 intersections
-        amountOfIntersections(cameraBuilder.setLocation((Point) Point.ZERO).build(), new Sphere(1, new Point(0, 0, -3)), 2);
+        amountOfIntersections(cam1, new Sphere(1, new Point(0, 0, -3)), 2, 3, 3);
 
         // TC02: 18 intersections
-        amountOfIntersections(camera, new Sphere(2.5, new Point(0, 0, -2.5)), 18);
+        amountOfIntersections(cam2, new Sphere(2.5, new Point(0, 0, -2.5)), 18, 3, 3);
 
         // TC03: 10 intersections
-        amountOfIntersections(camera, new Sphere(2, new Point(0, 0, -2)), 10);
+        amountOfIntersections(cam2, new Sphere(2, new Point(0, 0, -2)), 10, 3, 3);
 
         // TC04: 9 intersections
-        amountOfIntersections(camera, new Sphere(4, new Point(0, 0, -1)), 9);
+        amountOfIntersections(cam2, new Sphere(4, new Point(0, 0, -1)), 9, 3, 3);
 
         // TC05: 0 intersections
-        amountOfIntersections(camera, new Sphere(0.5, new Point(0, 0, 1)), 0);
+        amountOfIntersections(cam2, new Sphere(0.5, new Point(0, 0, 1)), 0, 3, 3);
     }
 
-    /**
-     * Test method for
-     * {@link renderer.Camera#constructRay(int, int, int, int)}.
-     */
     @Test
     void testPlaneIntersection() {
+        Camera cam = Camera.getBuilder()
+                .setLocation(new Point(0, 0, 0.5))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpSize(3, 3)
+                .setVpDistance(1)
+                .setResolution(3, 3)
+                .build();
+
         // TC01: 9 intersections
-        amountOfIntersections(camera, new geometries.Plane(new Point(0, 0, -1), new Vector(0, 0, -1)), 9);
+        amountOfIntersections(cam, new Plane(new Point(0, 0, -1), new Vector(0, 0, -1)), 9, 3, 3);
 
         // TC02: 9 intersections
-        amountOfIntersections(camera, new geometries.Plane(new Point(0, 0, -1), new Vector(0, 1, -10)), 9);
+        amountOfIntersections(cam, new Plane(new Point(0, 0, -1), new Vector(0, 1, -10)), 9, 3, 3);
 
         // TC03: 6 intersections
-        amountOfIntersections(camera, new geometries.Plane(new Point(0, 0, -1), new Vector(0, -1, -1)), 6);
+        amountOfIntersections(cam, new Plane(new Point(0, 0, -1), new Vector(0, -1, -1)), 6, 3, 3);
     }
 
-    /**
-     * Test method for
-     * {@link renderer.Camera#constructRay(int, int, int, int)}.
-     */
     @Test
     void testTriangleIntersection() {
-        // TC01: 1 intersections
-        amountOfIntersections(camera, new geometries.Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 1);
+        Camera cam = Camera.getBuilder()
+                .setLocation(new Point(0, 0, 0.5))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpSize(3, 3)
+                .setVpDistance(1)
+                .setResolution(3, 3)
+                .build();
+
+        // TC01: 1 intersection
+        amountOfIntersections(cam,
+                new Triangle(new Point(0, 1, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 1, 3, 3);
 
         // TC02: 2 intersections
-        amountOfIntersections(camera, new geometries.Triangle(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2)),2);
+        amountOfIntersections(cam,
+                new Triangle(new Point(0, 20, -2), new Point(1, -1, -2), new Point(-1, -1, -2)), 2, 3, 3);
     }
 }

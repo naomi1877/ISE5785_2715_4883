@@ -27,13 +27,40 @@ public class Camera implements Cloneable {
     private double width = 0.0; // The width of the viewport
     private double height = 0.0; // The height of the viewport
     private double distance = 0.0; // The distance from the camera to the viewport
-    private int nX = 0; // horizontal resolution
-    private int nY = 0; // vertical resolution
-    /**
-     * Returns a new Builder instance for constructing a Camera object.
-     *
-     * @return a Builder instance
-     */
+    private int nX = 1; // horizontal resolution
+    private int nY = 1; // vertical resolution
+
+    // Getters for camera properties
+    public Vector getVTo() {
+        return vTo;
+    }
+
+    public Vector getVUp() {
+        return vUp;
+    }
+
+    public Vector getVRight() {
+        return vRight;
+    }
+
+    public Point getP0() {
+        return p0;
+    }
+
+    public Point getPCenter() { return pCenter; }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
     public static Builder getBuilder() {
         return new Builder();
     }
@@ -59,54 +86,30 @@ public class Camera implements Cloneable {
         double xJ = (j - (nX - 1) / 2.0) * pixelWidth;
         double yI = -1* (i - (nY - 1) / 2.0) * pixelHeight;
         Point pIJ = pCenter;
-        if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
         if (!isZero(yI)) pIJ = pIJ.add(vUp.scale(yI));
+        if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
+
         //return the ray from the camera position to the pixel center
         return new Ray(p0, pIJ.subtract(p0).normalize());//normalize or not?
-    }
-
-    // Getters for camera properties
-    public Vector getVTo() {
-        return vTo;
-    }
-
-    public Vector getVUp() {
-        return vUp;
-    }
-
-    public Vector getVRight() {
-        return vRight;
-    }
-
-    public Point getP0() {
-        return p0;
-    }
-
-    public Point getPCenter() {
-        return pCenter;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public double getDistance() {
-        return distance;
     }
 
     /**
      * Builder class for constructing a Camera object.
      */
     public static class Builder {
+        // The camera instance being built
         private final Camera camera = new Camera();
-
+        /**
+         * Sets the location of the camera.
+         * @param p0 the position of the camera
+         * @return the Builder instance
+         */
+        public Builder setLocation(Point p0) {
+            camera.p0 = p0;
+            return this;
+        }
         /**
          * Sets the direction vectors of the camera.
-         *
          * @param vTo the "to" direction vector
          * @param vUp the "up" direction vector
          * @return the Builder instance
@@ -116,33 +119,36 @@ public class Camera implements Cloneable {
             // Ensure vTo and vUp are orthogonal
             if (!isZero(vTo.dotProduct(vUp)))
                 throw new IllegalArgumentException("vTo and vUp must be orthogonal");
-
             // Normalize and set the direction vectors
             camera.vUp = vUp.normalize();
             camera.vTo = vTo.normalize();
-            camera.vRight = camera.vTo.crossProduct(camera.vUp);
+            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
             return this;
         }
-
         /**
          * Sets the direction of the camera towards a target point.
-         *
-         * @param target the target point
+         * If vTo is parallel to Vector.AXIS_Y, a different up vector (AXIS_Z) is used to avoid zero vector in cross product.
+         * @param target the point the camera looks at
          * @return the Builder instance
          */
         public Builder setDirection(Point target) {
-            //if camera position not set yet, cannot set direction
             if (camera.p0 == null)
                 throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
-            // Calculate the direction vector from the camera position to the target point
-            Vector vTo = target.subtract(camera.p0).normalize();
-            Vector vUp = new Vector(0, 1, 0); // default up direction
-            return setDirection(vTo, vUp);
+            // Calculate vTo from p0 to target
+            camera.vTo = target.subtract(camera.p0).normalize();
+            // Choose a default up vector
+            Vector tempUp = Vector.AXIS_Y;
+            // Avoid parallel vectors
+            if (camera.vTo.equals(Vector.AXIS_Y) || camera.vTo.equals(Vector.AXIS_Y.scale(-1))) {
+                tempUp = Vector.AXIS_Z;
+            }
+            // Compute vRight and vUp in correct orthogonal right-handed system
+            camera.vRight = tempUp.crossProduct(camera.vTo).normalize();
+            camera.vUp = camera.vTo.crossProduct(camera.vRight).normalize();
+            return this;
         }
-
         /**
          * Sets the direction of the camera towards a target point with a specified up vector.
-         *
          * @param target2 the target point
          * @param vUp the up vector
          * @return the Builder instance
@@ -155,18 +161,6 @@ public class Camera implements Cloneable {
             Vector vTo = target2.subtract(camera.p0).normalize();
             return setDirection(vTo, vUp);
         }
-
-
-        /**
-         * Sets the location of the camera.
-         * @param p0 the position of the camera
-         * @return the Builder instance
-         */
-        public Builder setLocation(Point p0) {
-            camera.p0 = p0;
-            return this;
-        }
-
         /**
          * Sets the size of the viewport.
          * @param width the width of the viewport
@@ -178,16 +172,13 @@ public class Camera implements Cloneable {
             // Ensure width and height are positive
             if (alignZero(width) <= 0 || alignZero(height) <= 0)
                 throw new IllegalArgumentException("Width and height must be positive");
-
             // Set the viewport size
             camera.width = width;
             camera.height = height;
             return this;
         }
-
         /**
          * Sets the distance from the camera to the viewport.
-         *
          * @param distance the distance to the viewport
          * @return the Builder instance
          * @throws IllegalArgumentException if distance is not positive
@@ -196,9 +187,19 @@ public class Camera implements Cloneable {
             // Ensure distance is positive
             if (alignZero(distance) <= 0)
                 throw new IllegalArgumentException("Distance must be positive");
-
             // Set the distance
             camera.distance = distance;
+            return this;
+        }
+        /**
+         * Sets the resolution of the camera.
+         */
+        public Builder setResolution(int nX, int nY) {
+            // Ensure nX and nY are positive
+            if (nX <= 0 || nY <= 0)
+                throw new IllegalArgumentException("Resolution must be positive");
+            camera.nX = nX;
+            camera.nY = nY;
             return this;
         }
         /**
@@ -221,23 +222,23 @@ public class Camera implements Cloneable {
             if (camera.vUp == null)
                 throw new MissingResourceException(MISSING, CLASS_NAME, "vUp");
 
-            if (isZero(camera.vTo.dotProduct(camera.vUp)))
+            if ((camera.vTo.dotProduct(camera.vUp)) != 0)
                 throw new IllegalArgumentException("vTo and vUp must be orthogonal");
 
-            if (camera.distance <= 0)
-                throw new IllegalArgumentException("distance must be positive");
+            if (camera.distance == 0)
+                throw new MissingResourceException(MISSING,CLASS_NAME,"distance must be set");
 
-            if (camera.width <= 0)
-                throw new IllegalArgumentException("view plane width must be positive");
+            if (camera.width == 0)
+                throw new MissingResourceException(MISSING,CLASS_NAME,"view plane width must be positive");
 
-            if (camera.height <= 0)
-                throw new IllegalArgumentException("view plane height must be positive");
+            if (camera.height == 0)
+                throw new MissingResourceException(MISSING,CLASS_NAME,"view plane height must be positive");
 
-            if (camera.nX <= 0)
-                throw new IllegalArgumentException("nX (horizontal resolution) must be positive");
+            if (camera.nX == 0)
+                throw new MissingResourceException(MISSING,CLASS_NAME,"nX (horizontal resolution) must be positive");
 
-            if (camera.nY <= 0)
-                throw new IllegalArgumentException("nY (vertical resolution) must be positive");
+            if (camera.nY == 0)
+                throw new MissingResourceException(MISSING,CLASS_NAME,"nY (vertical resolution) must be positive");
 
             // Normalize vTo and vUp to ensure correct computation of vRight
             camera.vTo = camera.vTo.normalize();
@@ -249,22 +250,10 @@ public class Camera implements Cloneable {
             // Return a cloned camera
             try {
                 return (Camera) camera.clone();
-            } catch (CloneNotSupportedException e) {
+            }
+            catch (CloneNotSupportedException e) {
                 throw new RuntimeException("Failed to clone Camera object", e);
             }
         }
-
-        /**
-         * Sets the resolution of the camera.
-         */
-        public Builder setResolution(int nX, int nY) {
-            // Ensure nX and nY are positive
-            if (nX <= 0 || nY <= 0)
-                throw new IllegalArgumentException("Resolution must be positive");
-            camera.nX = nX;
-            camera.nY = nY;
-            return this;
-        }
-
     }
 }
