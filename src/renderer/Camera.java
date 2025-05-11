@@ -2,7 +2,7 @@ package renderer;
 
 import primitives.*;
 import scene.Scene;
-//import java.awt.Color;
+
 
 import java.util.List;
 import java.util.MissingResourceException;
@@ -284,6 +284,15 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Set the ray tracer
+         * @param rayTracer the ray tracer
+         * @return the camera builder
+         */
+        public Builder setRayTracer(RayTracerBase rayTracer) {
+            camera.rayTracer = rayTracer;
+            return this;
+        }
 
         /**
          * Builds the Camera object after validating all necessary fields.
