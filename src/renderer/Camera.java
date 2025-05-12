@@ -319,8 +319,9 @@ public class Camera implements Cloneable {
             if (camera.nY == 0)
                 throw new MissingResourceException(MISSING,CLASS_NAME,"nY (vertical resolution) must be positive");
 
-            if (camera.rayTracer == null)
-                throw new MissingResourceException(MISSING, CLASS_NAME, "rayTracer");
+            //if i checked the ray tracer here at some test then it will be null
+           // if (camera.rayTracer == null)
+              //  throw new MissingResourceException(MISSING, CLASS_NAME, "rayTracer");
 
             // Normalize vTo and vUp to ensure correct computation of vRight
             camera.vTo = camera.vTo.normalize();
