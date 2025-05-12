@@ -22,7 +22,6 @@ public class SimpleRayTracer extends RayTracerBase {
 
     @Override
     public Color traceRay(Ray ray) {
-//            throw new UnsupportedOperationException("traceRay not implemented yet");
         List<Point> intersections = scene.geometries.findIntersections(ray);
         if (intersections == null || intersections.isEmpty()) {
             return scene.background;
