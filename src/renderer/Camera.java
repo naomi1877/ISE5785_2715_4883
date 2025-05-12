@@ -312,10 +312,10 @@ public class Camera implements Cloneable {
 
             if (camera.height == 0)
                 throw new MissingResourceException(MISSING,CLASS_NAME,"view plane height must be positive");
-
+//מיותר לא?
             if (camera.nX == 0)
                 throw new MissingResourceException(MISSING,CLASS_NAME,"nX (horizontal resolution) must be positive");
-
+//מיותר?
             if (camera.nY == 0)
                 throw new MissingResourceException(MISSING,CLASS_NAME,"nY (vertical resolution) must be positive");
 
