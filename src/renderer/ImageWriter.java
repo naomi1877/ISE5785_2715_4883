@@ -1,6 +1,7 @@
 package renderer;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.*;
 
 import javax.imageio.ImageIO;
@@ -61,7 +62,7 @@ final class ImageWriter {
     * to pixel color matrix in the directory of the project
     * @param imageName the name of png file
     */
-   void writeToImage(String imageName) {
+   void writeToImage( String imageName) {
       try {
          File file = new File(FOLDER_PATH + '/' + imageName + ".png");
          ImageIO.write(image, "png", file);
