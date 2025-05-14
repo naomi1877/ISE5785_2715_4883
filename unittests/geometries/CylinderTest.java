@@ -13,6 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class CylinderTest {
     /**
+     * default constructor
+     */
+    public CylinderTest() {
+    }
+
+    /**
      * Vector v1 with components (0, 0, -1).
      */
     private final Vector v1 = new Vector(0, 0, -1);

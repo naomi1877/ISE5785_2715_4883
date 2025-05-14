@@ -4,7 +4,20 @@ import org.junit.jupiter.api.Test;
 import primitives.Color;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Unit tests for the {@link renderer.ImageWriter} class.
+ */
 class ImageWriterTest {
+    /**
+     * default constructor
+     */
+    public ImageWriterTest() {
+    }
+
+    /**
+     * Test method for {@link renderer.ImageWriter#ImageWriter(int, int)}.
+     */
     @Test
     void  testImageWriter() {
         //arrange

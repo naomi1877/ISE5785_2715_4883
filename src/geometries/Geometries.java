@@ -34,7 +34,11 @@ public class Geometries extends Intersectable {
     public Geometries(Intersectable... geometries) {
         add(geometries);
     }
-
+/**
+     * Constructor to initialize a Geometries object with a collection of intersectable shapes.
+     *
+     * @param geometries a collection of intersectable shapes
+     */
     public void add(Intersectable... geometries) {
         Collections.addAll(shapes, geometries);
     }

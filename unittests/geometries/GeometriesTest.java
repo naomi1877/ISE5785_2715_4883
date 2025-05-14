@@ -5,8 +5,19 @@ import primitives.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the {@link geometries.Geometries} class.
+ */
 class GeometriesTest {
+    /**
+     * default constructor
+     */
+    public GeometriesTest() {
+    }
 
+    /**
+     * A point used in some tests
+     */
     private final Geometries geometries = new Geometries(new Sphere(1, new Point(0, 0, 1)),
             new Triangle(new Point(1, 0, 0), new Point(1, 1, 0), new Point(0, 1, 0)),
             new Plane(new Point(0, 0, 3), new Vector(0, 0, 1)));

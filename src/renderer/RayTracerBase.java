@@ -8,6 +8,9 @@ import scene.Scene;
  * Abstract class for ray tracing
  */
 public abstract class RayTracerBase {
+    /**
+     * The scene to trace rays through
+     */
     protected final Scene scene;
 
     /**

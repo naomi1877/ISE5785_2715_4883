@@ -8,6 +8,11 @@ import primitives.Vector;
  * Any geometry must implement the method to return its normal vector at a specific point.
  */
 public abstract class Geometry extends Intersectable {
+    /**
+     * Default constructor for the Geometry class.
+     */
+    public Geometry() {
+    }
 
     /**
      * Gets the normal vector of the geometry at a specific point.

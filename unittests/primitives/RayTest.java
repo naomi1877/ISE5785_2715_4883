@@ -11,7 +11,18 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class RayTest {
+    /**
+     * default constructor
+     */
+    public RayTest() {
+    }
+/**
+     * A point used in some tests.
+     */
     private final Point p1 = new Point(1, 2, 3);
+    /**
+     * A point used in some tests.
+     */
     private final Ray ray = new Ray(p1, new Vector(1, 0, 0));
     /**
      * Test method for {@link primitives.Ray#equals(Object)}.
@@ -29,7 +40,9 @@ class RayTest {
         // TC03: t is zero
         assertEquals(p1, ray.getPoint(0), "Bad getPoint with t=0");
     }
-
+    /**
+     * Test method for {@link primitives.Ray#findClosestPoint(List)}.
+     */
     @Test
     void testFindClosestPoint() {
         Ray ray = new Ray(new Point(0, 0, 0), new Vector(1, 0, 0));

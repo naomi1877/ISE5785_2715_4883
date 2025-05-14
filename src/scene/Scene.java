@@ -11,15 +11,26 @@ import primitives.Color;
  * It is PDS - Plain Data Structure
  */
 public class Scene {
-
+    /**
+     * The name of the scene.
+     */
     public String name;
+    /**
+     * The background color of the scene.
+     */
     public Color background = Color.BLACK;
+    /**
+     * The ambient light in the scene.
+     */
     public AmbientLight ambientLight = AmbientLight.NONE;
+    /**
+     * The geometries in the scene.
+     */
     public Geometries geometries = new Geometries();
 
     /**
-     *
-     * @param name
+     * Constructor for Scene
+     * @param name the name of the scene
      */
     public Scene(String name) {
         this.name = name;
@@ -37,8 +48,8 @@ public class Scene {
     }
 
     /**
-     *
-     * @param ambientLight
+     * Sets the ambient light of the scene.
+     * @param ambientLight The {@link AmbientLight} object representing the ambient light in the scene.
      * @return Scene
      */
     public Scene setAmbientLight(AmbientLight ambientLight) {
@@ -47,13 +58,15 @@ public class Scene {
     }
 
     /**
+     * Sets the geometries of the scene.
      *
-     * @param geometries
-     * @return Scene
+     * @param geometries The {@link Geometries} object containing the shapes to include in the scene.
+     * @return The current {@link Scene} instance (for method chaining).
      */
     public Scene setGeometries(Geometries geometries) {
         this.geometries = geometries;
         return this;
     }
+
 
 }

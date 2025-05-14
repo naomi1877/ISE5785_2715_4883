@@ -14,6 +14,13 @@ import java.util.List;
  */
 class PlaneTests {
     /**
+     * default constructor
+     */
+    public PlaneTests() {
+
+    }
+
+    /**
      * Point p1 with coordinates (0, 1, 1).
      */
     private final Point p1 = new Point(0, 1, 1);

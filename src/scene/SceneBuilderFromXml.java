@@ -19,6 +19,15 @@ import java.io.File;
  * background color, ambient light, and geometries (spheres, triangles, planes, etc.).
  */
 public class SceneBuilderFromXml {
+    /**
+     * Default constructor for SceneBuilderFromXml.
+     */
+    public SceneBuilderFromXml() {
+    }
+
+    /**
+     * The path to the folder containing the XML files.
+     */
     private static final String FOLDER_PATH = System.getProperty("user.dir") + "/xml";
     /**
      * Builds a Scene object from an XML file.
@@ -84,11 +93,12 @@ public class SceneBuilderFromXml {
         }
     }
 
-    // ==================== HELPERS ====================
-
-    // Parsing methods for different attributes in the XML file
-
-    // Parsing color from a string
+    // HELPERS
+    /**
+     * Parses a color from a string.
+     * @param str the string representation of the color
+     * @return a Color object
+     */
     private static Color parseColor(String str) {
         //split the string by whitespace and parse each component
         String[] parts = str.trim().split("\\s+");
@@ -100,7 +110,11 @@ public class SceneBuilderFromXml {
         );
     }
 
-    // Parsing point from a string
+    /**
+     * Parses a point from a string.
+     * @param str the string representation of the point
+     * @return a Point object
+     */
     private static Point parsePoint(String str) {
         String[] parts = str.trim().split("\\s+");
         if (parts.length != 3) throw new IllegalArgumentException("Point must have 3 coordinates");
@@ -112,6 +126,13 @@ public class SceneBuilderFromXml {
     }
 
     // Parsing vector from a string
+
+    /**
+     * Parses a vector from a string.
+     * @param str the string representation of the vector
+     * @return a Vector object
+     *
+     */
     private static Vector parseVector(String str) {
         String[] parts = str.trim().split("\\s+");
         if (parts.length != 3) throw new IllegalArgumentException("Vector must have 3 components");
@@ -124,7 +145,13 @@ public class SceneBuilderFromXml {
 
     // Parsing geometries from XML elements
     // Each geometry type has its own parsing method
-    // For example, parsing a sphere
+
+
+    /**
+     * Parses a sphere from an XML element.
+     * @param element the XML element representing the sphere
+     * @return a Sphere object
+     */
     private static Sphere parseSphere(Element element) {
         Point center = parsePoint(element.getAttribute("center"));
         double radius = Double.parseDouble(element.getAttribute("radius"));
@@ -138,6 +165,12 @@ public class SceneBuilderFromXml {
     }
 
     // Parsing a triangle
+
+    /**
+     *  Parses a triangle from an XML element.
+     * @param element the XML element representing the triangle
+     * @return a Triangle object
+     */
     private static Triangle parseTriangle(Element element) {
         Point p0 = parsePoint(element.getAttribute("p0"));
         Point p1 = parsePoint(element.getAttribute("p1"));
@@ -151,7 +184,11 @@ public class SceneBuilderFromXml {
         return triangle;
     }
 
-    // Parsing a plane
+    /**
+     * Parses a plane from an XML element.
+     * @param element the XML element representing the plane
+     * @return a Plane object
+     */
     private static Plane parsePlane(Element element) {
         // Assuming the plane is defined by a point and a normal vector
         Point q = parsePoint(element.getAttribute("q"));
@@ -166,6 +203,11 @@ public class SceneBuilderFromXml {
     }
 
     // Parsing a cylinder
+    /**
+     * Parses a cylinder from an XML element.
+     * @param element the XML element representing the cylinder
+     * @return a Cylinder object
+     */
     private static Cylinder parseCylinder(Element element) {
         double radius = Double.parseDouble(element.getAttribute("radius"));
         double height = Double.parseDouble(element.getAttribute("height"));

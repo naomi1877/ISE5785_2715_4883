@@ -13,6 +13,12 @@ import renderer.Camera;
  * @author Dan
  */
 class CameraTest {
+    /**
+     * default constructor
+     */
+    public CameraTest() {
+    }
+
     /** Camera builder for the tests */
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
             .setLocation(Point.ZERO)
@@ -55,13 +61,18 @@ class CameraTest {
         // BV05: 3X3 Center of Left Side (1,0)
         assertEquals(new Ray(Point.ZERO, new Vector(2, 0, -10)),
                 camera2.constructRay(3, 3, 0, 1), BAD_RAY);
+        /**
+         * BV06: 3X3 Corner (0,0)
+         */
 
-        // BV06: 3X3 Corner (0,0)
         assertEquals(new Ray(Point.ZERO, new Vector(2, -2, -10)),
                 camera2.constructRay(3, 3, 0, 0), BAD_RAY);
 
     }
-
+/**
+     * Test method for
+     * {@link renderer.Camera#constructRay(int, int, int, int)}.
+     */
     @Test
     void testBuilder() {
         cameraBuilder.setVpSize(4, 4).setResolution(2, 2);

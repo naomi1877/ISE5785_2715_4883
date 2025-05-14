@@ -15,6 +15,12 @@ import static primitives.Util.isZero;
  */
 public final class Main {
     /**
+     * Default constructor
+     */
+    public Main() {
+    }
+
+    /**
      * A point for tests at (1,2,3)
      */
     private static final Point P1 = new Point(1, 2, 3);
