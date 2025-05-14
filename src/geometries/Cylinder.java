@@ -36,20 +36,15 @@ public class Cylinder extends Tube {
 
     @Override
     public Vector getNormal(Point point) {
-        // Vector from bottom base to the point
         Vector v = point.subtract(axis.getHead());
-        // Projection of v on the axis direction
         double projection = axis.getDirection().dotProduct(v);
 
-        // If point is on the bottom base
         if (isZero(projection)) {
-            return axis.getDirection().scale(-1); // opposite to direction
+            return axis.getDirection().scale(-1);
         }
-        // If point is on the top base
         if (isZero(projection - hight)) {
             return axis.getDirection();
         }
-        // Otherwise, the point is on the side → delegate to Tube
         return super.getNormal(point);
     }
 

@@ -8,8 +8,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * The Geometries class represents a collection of geometric shapes.
+ * It implements the Composite design pattern by allowing to treat multiple {@link Intersectable} objects as a single object.
+ * This class enables combining multiple geometries and finding their intersections collectively.
+ */
 public class Geometries extends Intersectable {
+
     /**
      * A collection of intersectable shapes.
      */
