@@ -30,6 +30,7 @@ public class Camera implements Cloneable {
     private int nY = 1; // vertical resolution
 
     private static ImageWriter imageWriter;
+
     private RayTracerBase rayTracer;
 
     // Getters for camera properties
@@ -81,7 +82,8 @@ public class Camera implements Cloneable {
         double pixelHeight = height/nY;
 
         //calculate the center of the view plane
-        Point pCenter = p0.add(vTo.scale(distance));
+        Point pCenter =p0.add(vTo.scale(distance));
+
 
         //calculate the center of the pixel
         double xJ = (j - (nX - 1) / 2.0) * pixelWidth;
@@ -266,6 +268,9 @@ public class Camera implements Cloneable {
                 case SIMPLE:
                     camera.rayTracer = new SimpleRayTracer(scene);
                     break;
+//                case GRID:
+//                    camera.rayTracer = new GridRayTracer(scene);
+//                    break;
                 default:
                     camera.rayTracer = new SimpleRayTracer(null);
                     break;
@@ -312,16 +317,16 @@ public class Camera implements Cloneable {
 
             if (camera.height == 0)
                 throw new MissingResourceException(MISSING,CLASS_NAME,"view plane height must be positive");
-//מיותר לא?
-            if (camera.nX == 0)
+            //??
+            if (camera.nX <= 0)
                 throw new MissingResourceException(MISSING,CLASS_NAME,"nX (horizontal resolution) must be positive");
-//מיותר?
-            if (camera.nY == 0)
+            //??
+            if (camera.nY <= 0)
                 throw new MissingResourceException(MISSING,CLASS_NAME,"nY (vertical resolution) must be positive");
 
-            //if i checked the ray tracer here at some test then it will be null
-           // if (camera.rayTracer == null)
-              //  throw new MissingResourceException(MISSING, CLASS_NAME, "rayTracer");
+            //check if imageWriter is null
+           if (camera.rayTracer == null)
+               camera.rayTracer = new SimpleRayTracer(null);
 
             // Normalize vTo and vUp to ensure correct computation of vRight
             camera.vTo = camera.vTo.normalize();

@@ -85,14 +85,15 @@ public class RenderTests {
    @Test
    public void basicRenderXml() {
       // build the scene from XML file
-      Scene scene = SceneBuilderFromXml.buildSceneFromXml("C:\\Users\\Naomi\\ISE5785_2715_4883\\xml\\renderTestTwoColors.xml");
+      //"C:\\Users\\Naomi\\ISE5785_2715_4883\\xml\\renderTestTwoColors.xml"
+      Scene scene = SceneBuilderFromXml.buildSceneFromXml("renderTestTwoColors");
       camera
          .setRayTracer(scene, RayTracerType.SIMPLE) //
          .setResolution(1000, 1000) //
          .build() //
          .renderImage() //
          .printGrid(100, new Color(YELLOW)) //
-         .writeToImage("xml render test");
+         .writeToImage("xml render test 2");
    }
 
 //   /** Test for JSON based scene - for bonus */
