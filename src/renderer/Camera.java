@@ -15,58 +15,146 @@ import static primitives.Util.isZero;
  * It includes properties such as position, direction vectors, and viewport size.
  */
 public class Camera implements Cloneable {
-
+    /**
+     * Default constructor for the Camera class.
+     */
     private Camera() {}
 
-    private Vector vTo; // The "to" direction vector of the camera
-    private Vector vUp; // The "up" direction vector of the camera
-    private Vector vRight; // The "right" direction vector of the camera
-    private Point p0; // The position of the camera
-    private Point pCenter; // The center point of the viewport
-    private double width = 0.0; // The width of the viewport
-    private double height = 0.0; // The height of the viewport
-    private double distance = 0.0; // The distance from the camera to the viewport
-    private int nX = 1; // horizontal resolution
-    private int nY = 1; // vertical resolution
-
+    /**
+     * The "to" direction vector of the camera.
+     */
+    private Vector vTo;
+    /**
+     * The "up" direction vector of the camera.
+     */
+    private Vector vUp;
+    /**
+     * The "right" direction vector of the camera.
+     */
+    private Vector vRight;
+    /**
+     * The position of the camera.
+     */
+    private Point p0;
+    /**
+     * The center point of the viewport.
+     */
+    private Point pCenter;
+    /**
+     * The width of the viewport.
+     */
+    private double width = 0.0;
+    /**
+     * The height of the viewport.
+     */
+    private double height = 0.0;
+    /**
+     * The distance from the camera to the viewport.
+     */
+    private double distance = 0.0;
+    /**
+     * The horizontal resolution of the image.
+     */
+    private int nX = 1;
+    /**
+     * The vertical resolution of the image.
+     */
+    private int nY = 1;
+    /**
+     * The image writer used to create the image.
+     */
     private static ImageWriter imageWriter;
-
+/**
+     * The ray tracer used to trace rays in the scene.
+     */
     private RayTracerBase rayTracer;
 
-    // Getters for camera properties
+    /**
+     * Returns the forward direction vector of the camera (vTo).
+     *
+     * @return the vector pointing in the direction the camera is facing
+     */
     public Vector getVTo() {
         return vTo;
     }
 
+    /**
+     * Returns the upward direction vector of the camera (vUp).
+     *
+     * @return the vector pointing upward relative to the camera
+     */
     public Vector getVUp() {
         return vUp;
     }
 
+    /**
+     * Returns the rightward direction vector of the camera (vRight),
+     * which is orthogonal to both vTo and vUp.
+     *
+     * @return the vector pointing to the right side of the camera
+     */
     public Vector getVRight() {
         return vRight;
     }
 
+    /**
+     * Returns the position of the camera in 3D space (p0).
+     *
+     * @return the origin point of the camera
+     */
     public Point getP0() {
         return p0;
     }
 
-    public Point getPCenter() { return pCenter; }
+    /**
+     * Returns the center point of the view plane (pCenter),
+     * which is located at a fixed distance from the camera in the direction of vTo.
+     *
+     * @return the center point of the view plane
+     */
+    public Point getPCenter() {
+        return pCenter;
+    }
 
+
+    /**
+     * Returns the width of the view plane.
+     *
+     * @return the width of the view plane
+     */
     public double getWidth() {
         return width;
     }
 
+
+    /**
+     * Returns the height of the view plane.
+     *
+     * @return the height of the view plane
+     */
     public double getHeight() {
         return height;
     }
 
+    /**
+     * Returns the distance from the camera to the view plane.
+     *
+     * @return the distance from the camera to the view plane
+     */
     public double getDistance() {
         return distance;
     }
 
+
+    /**
+     * Returns a new instance of the {@code Builder} for constructing a {@code Camera} object.
+     *
+     * @return a new Builder instance
+     */
     public static Builder getBuilder() {
         return new Builder();
     }
+
 
     /**
      * Constructs a ray through a specific pixel in the viewport
@@ -95,6 +183,14 @@ public class Camera implements Cloneable {
         //return the ray from the camera position to the pixel center
         return new Ray(p0, pIJ.subtract(p0).normalize());//normalize or not?
     }
+
+    /**
+     * Casts a ray through a specific pixel in the viewport and writes the color to the image.
+     * @param nx the number of pixels in the X direction
+     * @param ny the number of pixels in the Y direction
+     * @param i the row index of the pixel
+     * @param j the column index of the pixel
+     */
     private void castRay(int nx, int ny, int i, int j) {
             Ray ray = constructRay(nx, ny, j, i);
             Color color = rayTracer.traceRay(ray);
@@ -107,6 +203,7 @@ public class Camera implements Cloneable {
      */
     /**
      * Render the image
+     * @return the camera object
      */
     public Camera renderImage() {
         if (imageWriter == null || rayTracer == null)
@@ -149,7 +246,15 @@ public class Camera implements Cloneable {
      * Builder class for constructing a Camera object.
      */
     public static class Builder {
-        // The camera instance being built
+        /**
+         * Default constructor for the Builder class.
+         */
+        public Builder() {
+        }
+
+        /**
+         * The Camera object being built.
+         */
         private final Camera camera = new Camera();
         /**
          * Sets the location of the camera.
@@ -245,6 +350,9 @@ public class Camera implements Cloneable {
         }
         /**
          * Sets the resolution of the camera.
+         * @param nX the horizontal resolution
+         * @param nY the vertical resolution
+         * @return the Builder instance
          */
         public Builder setResolution(int nX, int nY) {
             // Ensure nX and nY are positive

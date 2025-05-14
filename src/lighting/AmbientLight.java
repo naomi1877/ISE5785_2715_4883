@@ -30,7 +30,7 @@ public class AmbientLight {
 
     /**
      * Constructor for AmbientLight with default intensity
-     * @return
+     * @return the default ambient light
      */
     public Color getIntensity() {
         return intensity;

@@ -11,11 +11,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Integration tests for Camera ray intersections with geometries.
  */
 public class CameraIntersectionsIntegrationTests {
+    /**
+     * defoult constractor
+     */
+    public CameraIntersectionsIntegrationTests() {
+    }
 
     /**
-     * Helper method to test the amount of intersections
-     * with a given geometry and camera.
-     * @param camera the camera to use
+     * Helper method to test the number of intersection points between a geometry and rays constructed by a camera.
+     * The method casts rays through a view plane defined by the given resolution (nX by nY),
+     * counts all intersection points with the specified geometry, and compares the total to the expected amount.
+     *
+     * @param camera the camera that constructs the rays
+     * @param geometry the geometry to test intersections with
+     * @param expectedAmount the expected number of intersection points
+     * @param nX the number of columns (pixels in width) in the view plane
+     * @param nY the number of rows (pixels in height) in the view plane
      */
     private void amountOfIntersections(Camera camera, Geometry geometry, int expectedAmount, int nX, int nY) {
         int intersections = 0;
@@ -27,6 +38,7 @@ public class CameraIntersectionsIntegrationTests {
         }
         assertEquals(expectedAmount, intersections, "Wrong amount of intersections");
     }
+
 
 
     /**
