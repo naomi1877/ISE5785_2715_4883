@@ -6,7 +6,6 @@ import primitives.Vector;
 
 import java.util.List;
 
-import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -76,24 +75,17 @@ public class Polygon extends Geometry {
         if (planeIntersections == null)
             return null; // No intersection with the plane
 
-        Point intersectionPoint = planeIntersections.get(0);
-        Vector n= plane.getNormal(null);
         // Check if the intersection point is inside the polygon
+        Point intersectionPoint = planeIntersections.get(0);
         Vector v = intersectionPoint.subtract(vertices.get(0));
         Vector edge1 = vertices.get(1).subtract(vertices.get(0));
         Vector edge2 = vertices.get(size - 1).subtract(vertices.get(0));
-        double sign = alignZero(edge1.crossProduct(v).dotProduct(n));
-
-
-        if(isZero(sign))return  null;
-        boolean positive =sign>0;
-
+        boolean positive = edge1.crossProduct(v).dotProduct(plane.getNormal(null)) > 0;
         for (int i = 1; i < size; ++i) {
             edge1 = edge2;
             edge2 = vertices.get(i).subtract(vertices.get(i - 1));
             v = intersectionPoint.subtract(vertices.get(i));
-            sign=alignZero(edge1.crossProduct(v).dotProduct(n));
-            if (positive != (sign>0) ||isZero(sign))
+            if (positive != (edge1.crossProduct(v).dotProduct(plane.getNormal(null)) > 0))
                 return null; // The intersection point is outside the polygon
         }
         // The intersection point is inside the polygon

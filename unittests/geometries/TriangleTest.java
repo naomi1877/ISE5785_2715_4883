@@ -131,10 +131,9 @@ class TriangleTest {
         // ================= external Tests =================
         // TC07: the triangle is in an angle
         Triangle triangle2 = new Triangle(p3, p2, p1);
-        assertNull(triangle2.findIntersections(
-                        new Ray(new Point(-1, -1, -1), new Vector(1, 1, 1))),
-                "Intersection on a triangle's vertex should return null");
-
+        assertEquals(1, triangle2.findIntersections(
+                        new Ray(new Point(-1, -1, -1), new Vector(1, 1, 1))).size(),
+                "Failed to find the intersection point when the intersection point is inside the triangle");
     }
 
 }
