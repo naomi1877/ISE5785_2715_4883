@@ -8,9 +8,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link geometries.Sphere} class.
- * @ Author Naomie Gronstein && Efrat Brinkman.
+ * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class SphereTest {
+    /**
+     * default constructor
+     */
+    public SphereTest() {
+    }
 
     /**
      * Vector v1 with components (1, 0, 0).

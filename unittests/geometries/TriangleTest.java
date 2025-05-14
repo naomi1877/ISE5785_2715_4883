@@ -9,9 +9,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link geometries.Triangle} class.
- * @ Author Naomie Gronstein && Efrat Brinkman.
+ * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class TriangleTest {
+    /**
+     * default constructor
+     */
+    public TriangleTest() {
+    }
+
     /**
      * A point at the origin (0,0,0).
             */

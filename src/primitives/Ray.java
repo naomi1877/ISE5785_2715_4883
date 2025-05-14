@@ -10,18 +10,27 @@ import static primitives.Util.isZero;
  * A ray has a starting point (head) and a direction.
  */
 public class Ray {
+    /**
+     * The starting point of the ray.
+     */
     final Point head;
+    /**
+     * The direction of the ray.
+     */
     final Vector direction;
 
     /**
      * Getter for head
+     *
      * @return head.
      */
     public Point getHead() {
         return head;
     }
+
     /**
      * Getter for direction
+     *
      * @return direction.
      */
     public Vector getDirection() {
@@ -30,7 +39,8 @@ public class Ray {
 
     /**
      * Constructs a ray with a given starting point and direction.
-     * @param head The starting point of the ray.
+     *
+     * @param head      The starting point of the ray.
      * @param direction The direction vector of the ray.
      */
     public Ray(Point head, Vector direction) {
@@ -54,10 +64,11 @@ public class Ray {
 
     /**
      * Returns a point on the ray at a distance t from the head.
+     *
      * @param t The distance from the head to the point.
      * @return The point on the ray at distance t from the head.
      */
-    public Point getPoint(double t){
+    public Point getPoint(double t) {
         if (isZero(t)) {
             return head;
         }
@@ -66,10 +77,11 @@ public class Ray {
 
     /**
      * Finds the closest point to the ray from a list of points.
+     *
      * @param points The list of points to search.
      * @return The closest point to the ray.
      */
-    public Point findClosestPoint(List<Point> points){
+    public Point findClosestPoint(List<Point> points) {
         if (points == null || points.isEmpty()) {
             return null;
         }
@@ -77,7 +89,7 @@ public class Ray {
         // Initialize the closest point to the first point in the list
         double minDistance = head.distanceSquared(closestPoint);
 
-        for (Point p: points){
+        for (Point p : points) {
             double distance = head.distanceSquared(p);
             if (distance < minDistance) {
                 closestPoint = p;

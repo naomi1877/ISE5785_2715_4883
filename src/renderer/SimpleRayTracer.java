@@ -14,6 +14,7 @@ import java.util.List;
 public class SimpleRayTracer extends RayTracerBase {
     /**
      * Constructor
+     *
      * @param scene the scene to trace rays through
      */
     public SimpleRayTracer(Scene scene) {
@@ -30,6 +31,12 @@ public class SimpleRayTracer extends RayTracerBase {
         return calcColor(closestPoint);
     }
 
+    /**
+     * Calculate the color at the intersection point.
+     *
+     * @param point the intersection point
+     * @return the color at the intersection point
+     */
     private Color calcColor(Point point) {
         return scene.ambientLight.getIntensity();
     }

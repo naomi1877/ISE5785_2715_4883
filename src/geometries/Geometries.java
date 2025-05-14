@@ -9,31 +9,32 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Geometries extends Intersectable{
+public class Geometries extends Intersectable {
     /**
      * A collection of intersectable shapes.
      */
-    private final List<Intersectable> shapes =new LinkedList<>();
+    private final List<Intersectable> shapes = new LinkedList<>();
 
+    /**
+     * Default constructor to initialize an empty Geometries object.
+     */
     public Geometries() {
     }
 
     /**
      * Constructor to initialize a Geometries object with a collection of intersectable shapes.
-     * @param geometries
+     *
+     * @param geometries a collection of intersectable shapes
      */
-    public  Geometries(Intersectable... geometries){
+    public Geometries(Intersectable... geometries) {
         add(geometries);
     }
 
-    public void add(Intersectable... geometries){
+    public void add(Intersectable... geometries) {
         Collections.addAll(shapes, geometries);
     }
 
-    /**
-     * Adds a collection of intersectable shapes to the Geometries object.
-     * @param geometries the collection of intersectable shapes to add
-     */
+
     @Override
     public List<Point> findIntersections(Ray ray) {
         List<Point> intersections = new LinkedList<>();

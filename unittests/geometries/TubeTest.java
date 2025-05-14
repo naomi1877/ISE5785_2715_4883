@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link geometries.Tube} class.
- * @ Author Naomie Gronstein && Efrat Brinkman.
+ * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class TubeTest {
     /**
@@ -19,6 +19,11 @@ class TubeTest {
      */
     private final Tube tube = new Tube(1,new Ray(Point.ZERO, new Vector(0, 0, 1)));
 
+    /**
+     * defult constractur
+     */
+    public TubeTest() {
+    }
 
     /**
      * Test method for {@link geometries.Tube} constructor.

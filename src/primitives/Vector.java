@@ -6,12 +6,24 @@ package primitives;
  */
 public class Vector extends Point {
 
-    public static final Vector AXIS_Z = new Vector(0,0,1);
-    public static final Vector AXIS_Y = new Vector(0,1,0);
-    public static final Vector AXIS_X = new Vector(1,0,0);
+    /**
+     * A constant representing the zero vector (0, 0, 0).
+     */
+    public static final Vector AXIS_Z = new Vector(0, 0, 1);
+
+    /**
+     * A constant representing the unit vector along the Y-axis (0, 1, 0).
+     */
+    public static final Vector AXIS_Y = new Vector(0, 1, 0);
+
+    /**
+     * A constant representing the unit vector along the X-axis (1, 0, 0).
+     */
+    public static final Vector AXIS_X = new Vector(1, 0, 0);
 
     /**
      * Constructs a vector from the given x, y, and z coordinates.
+     *
      * @param x The x-coordinate of the vector.
      * @param y The y-coordinate of the vector.
      * @param z The z-coordinate of the vector.
@@ -22,6 +34,7 @@ public class Vector extends Point {
 
     /**
      * Constructs a vector from the given {@link Double3} object representing the x, y, and z coordinates.
+     *
      * @param xyz The {@link Double3} object representing the vector's coordinates.
      * @throws IllegalArgumentException If the vector is a zero vector (0, 0, 0).
      */
@@ -34,6 +47,7 @@ public class Vector extends Point {
 
     /**
      * Returns the squared length of the vector.
+     *
      * @return The squared length of the vector.
      */
     public double lengthSquared() {
@@ -42,6 +56,7 @@ public class Vector extends Point {
 
     /**
      * Returns the length (magnitude) of the vector.
+     *
      * @return The length of the vector.
      */
     public double length() {
@@ -50,6 +65,7 @@ public class Vector extends Point {
 
     /**
      * Normalizes the vector to a unit vector (length of 1).
+     *
      * @return A new normalized vector.
      */
     public Vector normalize() {
@@ -59,6 +75,7 @@ public class Vector extends Point {
 
     /**
      * Returns the cross product of this vector with another vector.
+     *
      * @param u The other vector.
      * @return A new vector representing the cross product of this vector and the input vector.
      */
@@ -70,6 +87,7 @@ public class Vector extends Point {
     }
 
     /**
+     * Returns the dot product of this vector with another vector.
      * @param u The other vector.
      * @return The dot product of this vector and the input vector.
      */
@@ -88,6 +106,7 @@ public class Vector extends Point {
 
     /**
      * Adds this vector to another vector and returns the resulting vector.
+     *
      * @param other The other vector to add.
      * @return A new vector representing the sum of the two vectors.
      */
@@ -102,6 +121,7 @@ public class Vector extends Point {
 
     /**
      * Scales this vector by a scalar value and returns the resulting vector.
+     *
      * @param rhs The scalar value to multiply the vector by.
      * @return A new vector representing the scaled vector.
      */

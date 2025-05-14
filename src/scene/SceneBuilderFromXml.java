@@ -13,7 +13,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
 public class SceneBuilderFromXml {
-
+    /**
+     *
+     * @param filePath
+     * @return
+     */
     public static Scene buildSceneFromXml(String filePath) {
         try {
             // Parse and normalize the XML document
@@ -71,8 +75,13 @@ public class SceneBuilderFromXml {
         }
     }
 
-    // ==================== HELPERS ====================
+    // HELPERS
 
+    /**
+     *
+     * @param str
+     * @return Color
+     */
     private static Color parseColor(String str) {
         String[] parts = str.trim().split("\\s+");
         if (parts.length != 3) throw new IllegalArgumentException("Color must have 3 components");
@@ -83,6 +92,11 @@ public class SceneBuilderFromXml {
         );
     }
 
+    /**
+     *
+     * @param str
+     * @return Point
+     */
     private static Point parsePoint(String str) {
         String[] parts = str.trim().split("\\s+");
         if (parts.length != 3) throw new IllegalArgumentException("Point must have 3 coordinates");
@@ -92,6 +106,12 @@ public class SceneBuilderFromXml {
                 Double.parseDouble(parts[2])
         );
     }
+
+    /**
+     * Parses a vector from a string.
+     * @param str The string representation of the vector, e.g., "1 2 3".
+     * @return A Vector object.
+     */
     private static Vector parseVector(String str) {
         String[] parts = str.trim().split("\\s+");
         if (parts.length != 3) throw new IllegalArgumentException("Vector must have 3 components");
@@ -102,18 +122,28 @@ public class SceneBuilderFromXml {
         );
     }
 
+    /**
+     *
+     * @param element
+     * @return
+     */
     private static Sphere parseSphere(Element element) {
         Point center = parsePoint(element.getAttribute("center"));
         double radius = Double.parseDouble(element.getAttribute("radius"));
         Sphere sphere = new Sphere(radius, center);
 
         if (element.hasAttribute("emission")) {
-           // sphere.setEmission(parseColor(element.getAttribute("emission")));
+            // sphere.setEmission(parseColor(element.getAttribute("emission")));
         }
 
         return sphere;
     }
 
+    /**
+     *
+     * @param element
+     * @return Triangle
+     */
     private static Triangle parseTriangle(Element element) {
         Point p0 = parsePoint(element.getAttribute("p0"));
         Point p1 = parsePoint(element.getAttribute("p1"));
@@ -121,24 +151,34 @@ public class SceneBuilderFromXml {
         Triangle triangle = new Triangle(p0, p1, p2);
 
         if (element.hasAttribute("emission")) {
-         //   triangle.setEmission(parseColor(element.getAttribute("emission")));
+            //   triangle.setEmission(parseColor(element.getAttribute("emission")));
         }
 
         return triangle;
     }
 
+    /**
+     *
+     * @param element
+     * @return Plane
+     */
     private static Plane parsePlane(Element element) {
         Point q = parsePoint(element.getAttribute("q"));
         Vector normal = parseVector(element.getAttribute("normal"));
         Plane plane = new Plane(q, normal);
 
         if (element.hasAttribute("emission")) {
-          //  plane.setEmission(parseColor(element.getAttribute("emission")));
+            //  plane.setEmission(parseColor(element.getAttribute("emission")));
         }
 
         return plane;
     }
 
+    /**
+     *
+     * @param element
+     * @return Cylinder
+     */
     private static Cylinder parseCylinder(Element element) {
         double radius = Double.parseDouble(element.getAttribute("radius"));
         double height = Double.parseDouble(element.getAttribute("height"));
@@ -147,7 +187,7 @@ public class SceneBuilderFromXml {
         Cylinder cylinder = new Cylinder(radius, new Ray(head, direction), height);
 
         if (element.hasAttribute("emission")) {
-          //  cylinder.setEmission(parseColor(element.getAttribute("emission")));
+            //  cylinder.setEmission(parseColor(element.getAttribute("emission")));
         }
 
         return cylinder;

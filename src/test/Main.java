@@ -11,7 +11,7 @@ import static primitives.Util.isZero;
  * Test program for the 1st stage
  *
  * @author Naomie Gronstein 342582715 naomi0556751877@gmail.com
- *     &amp; Efrat Brinkman 215704883 efratbrinkman@gmail.com
+ * &amp; Efrat Brinkman 215704883 efratbrinkman@gmail.com
  */
 public final class Main {
     /**

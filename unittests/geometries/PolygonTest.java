@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing Polygons
- * @ Author Naomie Gronstein && Efrat Brinkman.
+ * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class PolygonTest {
     /**

@@ -12,6 +12,7 @@ public abstract class RayTracerBase {
 
     /**
      * Constructor
+     *
      * @param scene the scene to trace rays through
      */
     protected RayTracerBase(Scene scene) {
@@ -20,6 +21,7 @@ public abstract class RayTracerBase {
 
     /**
      * Trace a single ray and return the color it sees
+     *
      * @param ray the ray to trace
      * @return the color seen by the ray
      */

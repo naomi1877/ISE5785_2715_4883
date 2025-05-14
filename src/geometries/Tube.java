@@ -31,13 +31,7 @@ public class Tube extends RadialGeometry {
         this.axis = axis;
     }
 
-    /**
-     * Calculates the normal vector to the surface of the infinite tube at a given point.
-     * The normal is computed as the vector from the closest point on the tube's axis to the given point.
-     *
-     * @param point the point on the surface of the tube
-     * @return the normalized normal vector at the given point
-     */
+
     @Override
     public Vector getNormal(Point point) {
         //Calculate the projection of the point onto the cylinder axis.
@@ -50,32 +44,26 @@ public class Tube extends RadialGeometry {
         return (point.subtract(centerTubePoint)).normalize();
     }
 
-    /**
-     * Calculates the intersection points between a ray and the tube.
-     * The method uses the quadratic formula to find the intersection points.
-     *
-     * @param ray the ray to check for intersections with the tube
-     * @return a list of intersection points, or null if there are no intersections
-     */
+
     @Override
     public List<Point> findIntersections(Ray ray) {
         //Tube is infinite, so we need to calculate the intersection with the tube's axis
         Point p0 = axis.getHead();
         Vector v = axis.getDirection();
         //axisHeadToRayHead: the vector from the tube's axis to the ray's head
-        Vector u =ray.getHead().subtract(p0);
+        Vector u = ray.getHead().subtract(p0);
         //Calculate the projection of the vector from the ray's head to the tube's axis onto the tube's axis
         double impoU = v.dotProduct(u);       //impoU: the projection of the vector from the tube's axis to the ray's head onto the tube's axis
         double impoRay = v.dotProduct(ray.getDirection());        //impoRay: the projection of the ray's direction onto the tube's axis
         //Check if the ray is parallel to the tube's axis
-        if(isZero(ray.getDirection().crossProduct(v).lengthSquared())){
+        if (isZero(ray.getDirection().crossProduct(v).lengthSquared())) {
             //The ray is parallel to the tube's axis
-                return null;
+            return null;
         }
         //ΔP⊥: component of u orthogonal to v
-        Vector vPerpendicular =isZero(impoU)? u : u.subtract(v.scale(impoU));
+        Vector vPerpendicular = isZero(impoU) ? u : u.subtract(v.scale(impoU));
         // component of ray orthogonal to v
-        Vector rayPerpendicular =isZero(impoRay)? ray.getDirection() :  ray.getDirection().subtract(v.scale(impoRay));
+        Vector rayPerpendicular = isZero(impoRay) ? ray.getDirection() : ray.getDirection().subtract(v.scale(impoRay));
 
         //At^2 +Bt+C=0 : the equation of the intersection between the ray and the tube
         //Quadratic coefficients for the intersection equation
@@ -85,7 +73,7 @@ public class Tube extends RadialGeometry {
 
         // Calculate the delta
         double delta = alignZero((b * b) - (4 * a * c));
-        if (delta < 0 ) {//|| isZero(delta)
+        if (delta < 0) {//|| isZero(delta)
             return null; // No intersection
         }
         // Calculate the intersection points

@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Unit tests for the {@link geometries.Plane} class.
- * @ Author Naomie Gronstein && Efrat Brinkman.
+ *@author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class PlaneTests {
     /**

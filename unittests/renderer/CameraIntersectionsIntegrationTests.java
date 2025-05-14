@@ -14,6 +14,8 @@ public class CameraIntersectionsIntegrationTests {
 
     /**
      * Helper method to test the amount of intersections
+     * with a given geometry and camera.
+     * @param camera the camera to use
      */
     private void amountOfIntersections(Camera camera, Geometry geometry, int expectedAmount, int nX, int nY) {
         int intersections = 0;

@@ -26,6 +26,7 @@ public class Plane extends Geometry {
 
     /**
      * Constructor to initialize a Plane object with three points
+     *
      * @param p1 the first point defining the plane
      * @param p2 the second point defining the plane
      * @param p3 the third point defining the plane
@@ -40,7 +41,8 @@ public class Plane extends Geometry {
 
     /**
      * Constructor to initialize a Plane object with a point and a normal vector.
-     * @param q the point on the plane
+     *
+     * @param q      the point on the plane
      * @param normal the normal vector of the plane
      */
     public Plane(Point q, Vector normal) {
@@ -48,27 +50,15 @@ public class Plane extends Geometry {
         this.normal = normal.normalize();
     }
 
-    /**
-     * Calculates the normal vector to the plane at a given point.
-     * The normal is constant for the entire plane.
-     *
-     * @param unused the point on the plane (not used in this implementation)
-     * @return the normalized normal vector of the plane
-     */
-@Override
+
+    @Override
     public Vector getNormal(Point unused) {
         return normal;
     }
 
-    /**
-     * Calculates the intersection points between a ray and the plane.
-     * The method checks if the ray is parallel to the plane and calculates the intersection point if not.
-     *
-     * @param ray the ray to check for intersections with the plane
-     * @return a list of intersection points, or null if there are no intersections
-     */
+
     @Override
-   public List<Point> findIntersections(Ray ray) {
+    public List<Point> findIntersections(Ray ray) {
 
         // Check if the ray is parallel to the plane
         double denominator = normal.dotProduct(ray.getDirection());
@@ -77,7 +67,7 @@ public class Plane extends Geometry {
             return null; // The ray is parallel to the plane
         }
 
-        if(q.equals(ray.getHead())){
+        if (q.equals(ray.getHead())) {
             return null; // The ray starts on the plane
         }
         // Calculate the numerator for the intersection point

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link geometries.Cylinder} class.
- *@ Author Naomie Gronstein && Efrat Brinkman.
+ *@author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class CylinderTest {
     /**
