@@ -2,12 +2,11 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
-import primitives.Vector;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
 /**
  * The Geometries class represents a collection of geometric shapes.
  * It implements the Composite design pattern by allowing to treat multiple {@link Intersectable} objects as a single object.
@@ -34,7 +33,8 @@ public class Geometries extends Intersectable {
     public Geometries(Intersectable... geometries) {
         add(geometries);
     }
-/**
+
+    /**
      * Constructor to initialize a Geometries object with a collection of intersectable shapes.
      *
      * @param geometries a collection of intersectable shapes

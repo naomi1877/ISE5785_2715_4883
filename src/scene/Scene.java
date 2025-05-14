@@ -30,6 +30,7 @@ public class Scene {
 
     /**
      * Constructor for Scene
+     *
      * @param name the name of the scene
      */
     public Scene(String name) {
@@ -49,6 +50,7 @@ public class Scene {
 
     /**
      * Sets the ambient light of the scene.
+     *
      * @param ambientLight The {@link AmbientLight} object representing the ambient light in the scene.
      * @return Scene
      */

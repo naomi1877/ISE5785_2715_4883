@@ -4,6 +4,7 @@ import primitives.Point;
 import primitives.Ray;
 
 import java.util.List;
+
 /**
  * The Intersectable class represents a geometric object that can be intersected by rays.
  * It serves as an abstract base class for all geometries that can be intersected.

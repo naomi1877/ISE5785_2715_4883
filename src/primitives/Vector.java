@@ -88,6 +88,7 @@ public class Vector extends Point {
 
     /**
      * Returns the dot product of this vector with another vector.
+     *
      * @param u The other vector.
      * @return The dot product of this vector and the input vector.
      */

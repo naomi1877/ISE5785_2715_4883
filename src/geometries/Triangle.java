@@ -7,7 +7,6 @@ import primitives.Vector;
 import java.util.List;
 
 import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
 
 /**
  * This class represents a Triangle, a polygon with exactly three vertices.
@@ -19,9 +18,10 @@ public class Triangle extends Polygon {
     /**
      * Constructs a triangle from three vertices.
      * The vertices must be ordered and define a valid triangle (non-collinear).
+     *
      * @param vertices the three vertices of the triangle
      * @throws IllegalArgumentException if the number of points is not 3
-     * or the points do not define a valid triangle
+     *                                  or the points do not define a valid triangle
      */
     public Triangle(Point... vertices) {
         super(vertices);
@@ -38,7 +38,7 @@ public class Triangle extends Polygon {
         double a = alignZero(edge1.dotProduct(h));
 
         // If the determinant is close to zero, the ray is parallel to the triangle
-        if (a== 0) {
+        if (a == 0) {
             return null;
         }
 
@@ -71,5 +71,5 @@ public class Triangle extends Polygon {
         // Calculate the intersection point
         return List.of(ray.getHead().add(ray.getDirection().scale(t)));
     }
-    }
+}
 

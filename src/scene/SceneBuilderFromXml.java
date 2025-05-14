@@ -2,13 +2,15 @@ package scene;
 
 import geometries.*;
 import lighting.AmbientLight;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
@@ -20,15 +22,16 @@ import java.io.File;
  */
 public class SceneBuilderFromXml {
     /**
+     * The path to the folder containing the XML files.
+     */
+    private static final String FOLDER_PATH = System.getProperty("user.dir") + "/xml";
+
+    /**
      * Default constructor for SceneBuilderFromXml.
      */
     public SceneBuilderFromXml() {
     }
 
-    /**
-     * The path to the folder containing the XML files.
-     */
-    private static final String FOLDER_PATH = System.getProperty("user.dir") + "/xml";
     /**
      * Builds a Scene object from an XML file.
      *
@@ -94,8 +97,10 @@ public class SceneBuilderFromXml {
     }
 
     // HELPERS
+
     /**
      * Parses a color from a string.
+     *
      * @param str the string representation of the color
      * @return a Color object
      */
@@ -112,6 +117,7 @@ public class SceneBuilderFromXml {
 
     /**
      * Parses a point from a string.
+     *
      * @param str the string representation of the point
      * @return a Point object
      */
@@ -129,9 +135,9 @@ public class SceneBuilderFromXml {
 
     /**
      * Parses a vector from a string.
+     *
      * @param str the string representation of the vector
      * @return a Vector object
-     *
      */
     private static Vector parseVector(String str) {
         String[] parts = str.trim().split("\\s+");
@@ -149,6 +155,7 @@ public class SceneBuilderFromXml {
 
     /**
      * Parses a sphere from an XML element.
+     *
      * @param element the XML element representing the sphere
      * @return a Sphere object
      */
@@ -158,8 +165,8 @@ public class SceneBuilderFromXml {
         Sphere sphere = new Sphere(radius, center);
 
         //if (element.hasAttribute("emission")) {
-           // sphere.setEmission(parseColor(element.getAttribute("emission")));
-      //  }
+        // sphere.setEmission(parseColor(element.getAttribute("emission")));
+        //  }
 
         return sphere;
     }
@@ -167,7 +174,8 @@ public class SceneBuilderFromXml {
     // Parsing a triangle
 
     /**
-     *  Parses a triangle from an XML element.
+     * Parses a triangle from an XML element.
+     *
      * @param element the XML element representing the triangle
      * @return a Triangle object
      */
@@ -186,6 +194,7 @@ public class SceneBuilderFromXml {
 
     /**
      * Parses a plane from an XML element.
+     *
      * @param element the XML element representing the plane
      * @return a Plane object
      */
@@ -203,8 +212,10 @@ public class SceneBuilderFromXml {
     }
 
     // Parsing a cylinder
+
     /**
      * Parses a cylinder from an XML element.
+     *
      * @param element the XML element representing the cylinder
      * @return a Cylinder object
      */

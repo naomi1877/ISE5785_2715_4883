@@ -1,7 +1,6 @@
 package primitives;
 
 import java.util.List;
-import java.util.Objects;
 
 import static primitives.Util.isZero;
 
@@ -20,6 +19,17 @@ public class Ray {
     final Vector direction;
 
     /**
+     * Constructs a ray with a given starting point and direction.
+     *
+     * @param head      The starting point of the ray.
+     * @param direction The direction vector of the ray.
+     */
+    public Ray(Point head, Vector direction) {
+        this.head = head;
+        this.direction = direction.normalize();
+    }
+
+    /**
      * Getter for head
      *
      * @return head.
@@ -35,17 +45,6 @@ public class Ray {
      */
     public Vector getDirection() {
         return direction;
-    }
-
-    /**
-     * Constructs a ray with a given starting point and direction.
-     *
-     * @param head      The starting point of the ray.
-     * @param direction The direction vector of the ray.
-     */
-    public Ray(Point head, Vector direction) {
-        this.head = head;
-        this.direction = direction.normalize();
     }
 
     @Override
