@@ -61,7 +61,6 @@ public class Polygon extends Geometry {
         }
     }
 
-
     @Override
     public Vector getNormal(Point point) {
         return plane.getNormal(null);//
@@ -69,26 +68,29 @@ public class Polygon extends Geometry {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // Check if the ray intersects the plane
-        List<Point> planeIntersections = plane.findIntersections(ray);
-        if (planeIntersections == null)
+        List<Intersection> planeIntersections = plane.calculateIntersections(ray);
+        if (planeIntersections == null) {
             return null; // No intersection with the plane
+        }
+
+        Point intersectionPoint = planeIntersections.get(0).point;
 
         // Check if the intersection point is inside the polygon
-        Point intersectionPoint = planeIntersections.get(0);
-        Vector v = intersectionPoint.subtract(vertices.get(0));
-        Vector edge1 = vertices.get(1).subtract(vertices.get(0));
-        Vector edge2 = vertices.get(size - 1).subtract(vertices.get(0));
-        boolean positive = edge1.crossProduct(v).dotProduct(plane.getNormal(null)) > 0;
-        for (int i = 1; i < size; ++i) {
-            edge1 = edge2;
-            edge2 = vertices.get(i).subtract(vertices.get(i - 1));
-            v = intersectionPoint.subtract(vertices.get(i));
-            if (positive != (edge1.crossProduct(v).dotProduct(plane.getNormal(null)) > 0))
-                return null; // The intersection point is outside the polygon
+        Vector v1, v2;
+        for (int i = 0; i < size; ++i) {
+            v1 = vertices.get(i).subtract(intersectionPoint);
+            v2 = vertices.get((i + 1) % size).subtract(intersectionPoint);
+            if (v1.crossProduct(v2).dotProduct(plane.getNormal(null)) <= 0) {
+                return null; // Intersection point is outside the polygon
+            }
         }
-        // The intersection point is inside the polygon
-        return List.of(intersectionPoint);
+
+        return List.of(new Intersection(this, intersectionPoint));
+
+
     }
+
+
 }

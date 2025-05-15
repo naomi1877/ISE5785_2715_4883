@@ -1,5 +1,7 @@
 package primitives;
 
+import geometries.Intersectable;
+
 import java.util.List;
 
 import static primitives.Util.isZero;
@@ -55,11 +57,9 @@ public class Ray {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        return (o instanceof Ray other)
-                && this.head.equals(other.head)
-                && this.direction.equals(other.direction);
+        if (!(o instanceof Ray other)) return false;
+        return this.head.equals(other.head) && this.direction.equals(other.direction);
     }
-
 
     /**
      * Returns a point on the ray at a distance t from the head.

@@ -46,7 +46,7 @@ public class Tube extends RadialGeometry {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         //Tube is infinite, so we need to calculate the intersection with the tube's axis
         Point p0 = axis.getHead();
         Vector v = axis.getDirection();
@@ -89,14 +89,14 @@ public class Tube extends RadialGeometry {
                 t1 = t2;
                 t2 = temp;
             }
-            return List.of(ray.getPoint(t1), ray.getPoint(t2));
+            return List.of(new Intersection(this, ray.getPoint(t1)), new Intersection(this, ray.getPoint(t2)));
         }
         // If one of the intersection points is zero, return the other point
         if (t1 > 0) {
-            return List.of(ray.getPoint(t1));
+            return List.of(new Intersection(this, ray.getPoint(t1)));
         }
         if (t2 > 0) {
-            return List.of(ray.getPoint(t2));
+            return List.of(new Intersection(this, ray.getPoint(t2)));
         }
         return null; // No intersection
     }

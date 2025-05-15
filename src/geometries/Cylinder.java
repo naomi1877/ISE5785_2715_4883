@@ -50,7 +50,7 @@ public class Cylinder extends Tube {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         //Cylinder is a tube with a limited height with two bases
         //Calculate the vector from the ray's head to the tube's axis
         Vector u = axis.getHead().subtract(ray.getHead());
@@ -62,7 +62,7 @@ public class Cylinder extends Tube {
         double th = Math.sqrt(radius * radius - d * d);
         //Check if the ray intersects the tube
         if (isZero(th)) {
-            return List.of(ray.getPoint(tm));
+            return List.of(new Intersection(this, ray.getPoint(tm)));
         }
         // Calculate the intersection points
         double t1 = tm - th;
@@ -75,7 +75,7 @@ public class Cylinder extends Tube {
             // Check if the intersection points are within the height of the cylinder
             if (isZero(p1.subtract(axis.getHead()).dotProduct(axis.getDirection())) ||
                     isZero(p2.subtract(axis.getHead()).dotProduct(axis.getDirection()))) {
-                return List.of(p1, p2);
+                return List.of(new Intersection(this, p1), new Intersection(this, p2));
             }
             return null; // No intersection within the height
         }
@@ -84,7 +84,7 @@ public class Cylinder extends Tube {
             Point p1 = ray.getPoint(t1);
             // Check if the intersection point is within the height of the cylinder
             if (isZero(p1.subtract(axis.getHead()).dotProduct(axis.getDirection()))) {
-                return List.of(p1);
+                return List.of(new Intersection(this, p1));
             }
             return null; // No intersection within the height
         }
@@ -93,7 +93,7 @@ public class Cylinder extends Tube {
             Point p2 = ray.getPoint(t2);
             // Check if the intersection point is within the height of the cylinder
             if (isZero(p2.subtract(axis.getHead()).dotProduct(axis.getDirection()))) {
-                return List.of(p2);
+                return List.of(new Intersection(this, p2));
             }
             return null; // No intersection within the height
         }

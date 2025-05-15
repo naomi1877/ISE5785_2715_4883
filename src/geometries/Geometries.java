@@ -1,6 +1,5 @@
 package geometries;
 
-import primitives.Point;
 import primitives.Ray;
 
 import java.util.Collections;
@@ -45,10 +44,10 @@ public class Geometries extends Intersectable {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> intersections = new LinkedList<>();
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
+        List<Intersection> intersections = new LinkedList<>();
         for (Intersectable shape : shapes) {
-            List<Point> shapeIntersections = shape.findIntersections(ray);
+            List<Intersection> shapeIntersections = shape.calculateIntersections(ray);
             if (shapeIntersections != null) {
                 intersections.addAll(shapeIntersections);
             }

@@ -7,7 +7,6 @@ import primitives.Vector;
 import java.util.List;
 
 import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
 
 /**
  * This class represents a Plane in 3D space, defined by a point and a normal vector.
@@ -58,20 +57,20 @@ public class Plane extends Geometry {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 
         // Check if the ray is parallel to the plane
-        double denominator = normal.dotProduct(ray.getDirection());
+        double denominator = alignZero(normal.dotProduct(ray.getDirection()));
 
-        if (isZero(denominator)) {
+        if (denominator == 0) {
             return null; // The ray is parallel to the plane
         }
-
         if (q.equals(ray.getHead())) {
             return null; // The ray starts on the plane
         }
         // Calculate the numerator for the intersection point
-        double numerator = alignZero(normal.dotProduct(q.subtract(ray.getHead())));
+        Vector q0 = q.subtract(ray.getHead());
+        double numerator = alignZero(normal.dotProduct(q0));
         // Calculate the t parameter for the intersection point
         double t = alignZero(numerator / denominator);
         if (t <= 0) {
@@ -79,7 +78,7 @@ public class Plane extends Geometry {
         }
 
         // Calculate the intersection point
-        Point intersectionPoint = ray.getHead().add(ray.getDirection().scale(t));
-        return List.of(intersectionPoint);
+        Point intersectionPoint = ray.getPoint(t);
+        return List.of(new Intersection(this, intersectionPoint));
     }
 }

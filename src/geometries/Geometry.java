@@ -1,5 +1,6 @@
 package geometries;
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
@@ -8,10 +9,23 @@ import primitives.Vector;
  * Any geometry must implement the method to return its normal vector at a specific point.
  */
 public abstract class Geometry extends Intersectable {
+
+
+    protected Color emission = Color.BLACK;
+
     /**
      * Default constructor for the Geometry class.
      */
     public Geometry() {
+    }
+
+    public Color getEmission() {
+        return emission;
+    }
+
+    public Geometry setEmission(Color emission) {
+        this.emission = emission;
+        return this;
     }
 
     /**

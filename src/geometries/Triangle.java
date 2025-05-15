@@ -28,7 +28,7 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 
         // Check if the ray's head is inside the triangle
         Vector edge1 = vertices.get(1).subtract(vertices.get(0));
@@ -69,7 +69,7 @@ public class Triangle extends Polygon {
         }
 
         // Calculate the intersection point
-        return List.of(ray.getHead().add(ray.getDirection().scale(t)));
+        return List.of(new Intersection(this, ray.getPoint(t)));
     }
 }
 

@@ -23,5 +23,40 @@ public abstract class Intersectable {
      * @param ray the ray to check for intersections
      * @return a list of intersection points
      */
-    public abstract List<Point> findIntersections(Ray ray);
+    public final List<Point> findIntersections(Ray ray) {
+        var list = calculateIntersections(ray);
+        return list == null ? null : list.stream().map(intersection -> intersection.point).toList();
+    }
+
+    public final List<Intersection> calculateIntersections(Ray ray) {
+        return calculateIntersectionsHelper(ray);
+    }
+
+    protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray);
+
+
+    public static class Intersection {
+        public final Geometry geometry;
+        public final Point point;
+
+        public Intersection(Geometry geometry, Point point) {
+            this.geometry = geometry;
+            this.point = point;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (!(obj instanceof Intersection other)) return false;
+            return this.geometry == other.geometry && this.point.equals(other.point);
+        }
+
+        @Override
+        public String toString() {
+            return "Intersection{" +
+                    "geometry=" + geometry +
+                    ", point=" + point +
+                    '}';
+        }
+    }
 }
