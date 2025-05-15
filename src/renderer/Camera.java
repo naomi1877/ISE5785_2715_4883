@@ -174,7 +174,9 @@ public class Camera implements Cloneable {
         //calculate the center of the pixel
         double xJ = (j - (nX - 1) / 2.0) * pixelWidth;
         double yI = -1 * (i - (nY - 1) / 2.0) * pixelHeight;
+
         Point pIJ = pCenter;
+        //calculate the current pixel
         if (!isZero(yI)) pIJ = pIJ.add(vUp.scale(yI));
         if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
 
@@ -303,8 +305,8 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
             // Calculate vTo from p0 to target
             camera.vTo = target.subtract(camera.p0).normalize();
-            camera.vRight = camera.vTo.crossProduct(Vector.AXIS_Y).normalize();
-            camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
+            Vector vRight = camera.vTo.crossProduct(Vector.AXIS_Y).normalize();
+            camera.vUp = vRight.crossProduct(camera.vTo).normalize();
             // camera.vUp = camera.vTo.crossProduct(Vector.AXIS_Y).normalize();
             return this;
         }
@@ -322,11 +324,11 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
             // Calculate the direction vector from the camera position to the target point
             camera.vTo = target2.subtract(camera.p0).normalize();
-            camera.vRight = camera.vTo.crossProduct(vUp).normalize();
+            Vector vRight = camera.vTo.crossProduct(vUp).normalize();
             // if(!isZero(camera.vTo.dotProduct(camera.vRight)))
             //   throw new IllegalArgumentException("vUp and vTo must be orthogonal");
             //fix the up vector because it may not be orthogonal to vTo;
-            camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
+            camera.vUp = vRight.crossProduct(camera.vTo).normalize();
             return this;
         }
 
@@ -436,9 +438,6 @@ public class Camera implements Cloneable {
             if (camera.vUp == null)
                 throw new MissingResourceException(MISSING, CLASS_NAME, "vUp");
 
-            if ((camera.vTo.dotProduct(camera.vUp)) != 0)
-                throw new IllegalArgumentException("vTo and vUp must be orthogonal");
-
             if (camera.distance == 0)
                 throw new MissingResourceException(MISSING, CLASS_NAME, "distance must be set");
 
@@ -463,7 +462,7 @@ public class Camera implements Cloneable {
             camera.vUp = camera.vUp.normalize();
 
             // Compute vRight = vTo x vUp
-            camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            camera.vRight = camera.vTo.crossProduct(camera.vUp);
 
             // Return a cloned camera
             try {

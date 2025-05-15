@@ -83,6 +83,7 @@ public class Vector extends Point {
         double xx = xyz.d2() * u.xyz.d3() - xyz.d3() * u.xyz.d2();
         double yy = xyz.d3() * u.xyz.d1() - xyz.d1() * u.xyz.d3();
         double zz = xyz.d1() * u.xyz.d2() - xyz.d2() * u.xyz.d1();
+
         return new Vector(xx, yy, zz);
     }
 
@@ -96,13 +97,15 @@ public class Vector extends Point {
         double xx = xyz.d1() * u.xyz.d1();
         double yy = xyz.d2() * u.xyz.d2();
         double zz = xyz.d3() * u.xyz.d3();
+
         return xx + yy + zz;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        return (o instanceof Vector vector) && xyz.equals(vector.xyz);
+        if (!(o instanceof Vector vector)) return false;
+        return xyz.equals(vector.xyz);
     }
 
     /**
@@ -115,10 +118,6 @@ public class Vector extends Point {
         return new Vector(xyz.add(other.xyz));
     }
 
-    @Override
-    public String toString() {
-        return xyz.toString();
-    }
 
     /**
      * Scales this vector by a scalar value and returns the resulting vector.

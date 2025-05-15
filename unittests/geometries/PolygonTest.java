@@ -13,6 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class PolygonTest {
     /**
+     * default constructor
+     */
+    public PolygonTest() {
+    }
+
+    /**
      * Delta value for accuracy when comparing the numbers of type 'double' in
      * assertEquals
      */
