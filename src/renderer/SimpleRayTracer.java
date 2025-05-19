@@ -51,37 +51,16 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return the color at the intersection point
      */
     private Color calcColor(Intersection intersection, Ray ray) {
-        //todo
-        return null;
+
+        Color emission = intersection.geometry.getEmission();
+
+        Double3 kA = intersection.geometry.getMaterial().kA;
+
+        Color ambient = scene.ambientLight.getIntensity().scale(kA);
+
+        return emission.add(ambient);
     }
 
-//    private Color calcColor(Point point) {
-//        return scene.ambientLight.getIntensity();
-//    }
-//    private Color calcColor(Intersection point, Vector direction) {
-//        Color color = point.geometry.getEmission().add(scene.ambientLight.getIntensity()); // Ia * ka + Ie
-//        Vector n = point.geometry.getNormal(point.point);
-//
-//        //store the values of the material
-//        int nShininess = point.geometry.getMaterial().nShininess;
-//        Double3 kD = point.geometry.getMaterial().kD;
-//        Double3 kS = point.geometry.getMaterial().kS;
-//
-//        double nv = Util.alignZero(n.dotProduct(direction));
-//        if (nv == 0d) return Color.BLACK;
-//
-//        // Calculate the color of the point by adding the diffusive and specular components
-//        for (var lightSource : scene.lights) {
-//            Vector l = lightSource.getL(point.point).normalize();
-//            double nl = n.dotProduct(l);
-//
-//            if (Util.alignZero(nl * nv) > 0) { // Only if nl and nv have the same sign
-//                Color lightIntensity = lightSource.getIntensity(point.point);
-//                color = color.add(calcDiffusive(kD, nl, lightIntensity))
-//                        .add(calcSpecular(kS, l, n, nl, direction, nShininess, lightIntensity));
-//            }
-//        }
-//
-//        return color;
-//    }
+
 }
+

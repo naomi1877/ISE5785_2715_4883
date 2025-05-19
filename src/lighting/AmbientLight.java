@@ -8,15 +8,11 @@ import primitives.Color;
  * have a specific direction.
  * The intensity of the ambient light is represented by a color.
  */
-public class AmbientLight {
+public class AmbientLight extends Light {
     /**
      * A constant representing no ambient light (black).
      */
     public static final AmbientLight NONE = new AmbientLight(Color.BLACK);
-    /**
-     * The intensity of the ambient light.
-     */
-    private final Color intensity;
 
     /**
      * Constructor for AmbientLight
@@ -24,17 +20,9 @@ public class AmbientLight {
      * @param intensity the intensity of the ambient light
      */
     public AmbientLight(Color intensity) {
-        this.intensity = intensity;
+        super(intensity);
 
     }
 
-    /**
-     * Constructor for AmbientLight with default intensity
-     *
-     * @return the default ambient light
-     */
-    public Color getIntensity() {
-        return intensity;
     }
 
-}
