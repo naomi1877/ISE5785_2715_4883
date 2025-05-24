@@ -32,6 +32,11 @@ public abstract class Intersectable {
         return calculateIntersectionsHelper(ray);
     }
 
+    /**
+     * This method is an abstract method that must be implemented by subclasses to calculate intersections : NVI
+     * @param ray the ray to check for intersections
+     * @return a list of intersection points
+     */
     protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray);
 
 

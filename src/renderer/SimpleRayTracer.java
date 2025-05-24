@@ -41,26 +41,24 @@ public class SimpleRayTracer extends RayTracerBase {
             return scene.background;
         }
         Intersection closestPoint = ray.findClosestIntersection( intersections);
-        return calcColor(closestPoint, ray);
+        return calcColor(closestPoint);
     }
 
     /**
      * Calculate the color at the intersection point.
-     *
-     * @param
+     * @param intersection the intersection point
      * @return the color at the intersection point
      */
-    private Color calcColor(Intersection intersection, Ray ray) {
+    private Color calcColor(Intersection intersection) {
 
         Color emission = intersection.geometry.getEmission();
 
+        // Get the ambient light coefficient
         Double3 kA = intersection.geometry.getMaterial().kA;
 
+        // Calculate the ambient light color = environment light * kA
         Color ambient = scene.ambientLight.getIntensity().scale(kA);
-
+        // Add the emission color
         return emission.add(ambient);
     }
-
-
 }
-
