@@ -50,7 +50,7 @@ public abstract class Intersectable {
         public final Material material;
 
         //Direction from camera to intersection point (v)
-        public Vector rayDirection;
+        public Vector toViewer;
         //The normal vector at the intersection point (n)
         public Vector normalAtPoint;
         //Dot product of the normal vector and the ray direction vector (n·v)
@@ -59,7 +59,7 @@ public abstract class Intersectable {
         //Light source at the intersection point
         public LightSource lightSource;
         //Direction from light source to intersection point
-        public Vector lightDirection;
+        public Vector toLight;
         //Dot product of the normal vector and the light direction vector.
         public double nDotL;
 

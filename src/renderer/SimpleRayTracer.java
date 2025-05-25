@@ -8,6 +8,7 @@ import geometries.Intersectable. Intersection;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -31,7 +32,7 @@ public class SimpleRayTracer extends RayTracerBase {
             return scene.background;
         }
         Intersection closestPoint = ray.findClosestIntersection( intersections);
-        return calcColor(closestPoint);
+        return calcColor(closestPoint,ray);
     }
 
     /**
@@ -39,64 +40,67 @@ public class SimpleRayTracer extends RayTracerBase {
      * @param intersection the intersection point
      * @return the color at the intersection point
      */
-    private Color calcColor(Intersection intersection) {
-
-        Color emission = intersection.geometry.getEmission();
-
-        // Get the ambient light coefficient
-        Double3 kA = intersection.geometry.getMaterial().kA;
-
-        // Calculate the ambient light color = environment light * kA
-        Color ambient = scene.ambientLight.getIntensity().scale(kA);
-        // Add the emission color
-        return emission.add(ambient);
+    private Color calcColor(Intersection intersection, Ray ray) {
+       if(!preprocessIntersection(intersection,ray.getDirection()))
+           //if the point is not illuminated at all
+            return Color.BLACK;
+        return calcColorLocalEffects(intersection);
     }
+
     public boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
         // Set the ray direction and normal at the intersection point
-        intersection.rayDirection = rayDirection.normalize();
+        intersection.toViewer = rayDirection.normalize();
         intersection.normalAtPoint = intersection.geometry.getNormal(intersection.point);
         // Calculate the dot product of the normal and ray direction
         intersection.nDotV = intersection.normalAtPoint.dotProduct(rayDirection);
-        if(isZero(intersection.nDotV)) {
-            // If the dot product is zero, the ray is perpendicular to the surface
-            return false;
-        }
-        // If the ray is not perpendicular, return true
-        return true;
+        // If the dot product is zero, the ray is perpendicular to the surface, and if not - return true
+        return !isZero(intersection.nDotV);
     }
+
     public boolean setLightSource(Intersection intersection, LightSource lightSource) {
         // Set the light source and calculate the direction and dot product
         intersection.lightSource = lightSource;
-        intersection.lightDirection = lightSource.getL(intersection.point).normalize();
-        intersection.nDotL= intersection.normalAtPoint.dotProduct(intersection.lightDirection);
-        if (isZero(intersection.nDotL)) {
-            // If the dot product is zero, the light source is perpendicular to the surface
-            return false;
-        }
-        // If the light source is not perpendicular, return true
+        intersection.toLight = lightSource.getL(intersection.point).normalize();
+        intersection.nDotL= intersection.normalAtPoint.dotProduct(intersection.toLight);
+        // If the dot product is zero, the light source is perpendicular to the surface, and if not - return true
+        if (alignZero(intersection.nDotL * intersection.nDotV) <= 0) return false;
         return true;
     }
 
     private Color calcColorLocalEffects(Intersection intersection) {
-        Double3 kd = calcDiffusive(intersection);
-        Double3 ks = calcSpecular(intersection);
-        Color lightIntensity = intersection.lightSource.getIntensity(intersection.point);
-        //We need to check something? ---
-        return lightIntensity.scale(kd.add(ks));
+
+        Color color = intersection.geometry.getEmission();
+
+        for (LightSource light : scene.lights) {
+            if (!setLightSource(intersection, light)) continue;
+
+            Color lightIntensity = light.getIntensity(intersection.point);
+            //diffusive
+            Double3 kd = calcDiffusive(intersection);
+            //specular
+            Double3 ks = calcSpecular(intersection);
+            Double3 combinedEffect = kd.add(ks);
+            Color scaleLight= lightIntensity.scale(combinedEffect);
+            color = color.add(scaleLight);
+        }
+        return color;
     }
 
     private Double3 calcDiffusive(Intersection intersection) {
+        //kD * |n·l|
         return intersection.material.kD.scale(Math.abs(intersection.nDotL));
     }
+
     private Double3 calcSpecular(Intersection intersection) {
-        Vector r = intersection.lightDirection.subtract(
+        Vector r = intersection.toLight.subtract(
                 intersection.normalAtPoint.scale(2 * intersection.nDotL)).normalize();
 
-        double minusVR = -intersection.rayDirection.dotProduct(r);
+        double minusVR = -intersection.toViewer.dotProduct(r);
         if (minusVR <= 0) return Double3.ZERO;
 
+        //kS * pow(..., shininess)
         return intersection.material.kS.scale(
-                Math.pow(minusVR, intersection.material.nSh));
+                Math.pow(minusVR, intersection.material.nShininess));
     }
 
 }

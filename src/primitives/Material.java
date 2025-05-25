@@ -7,7 +7,7 @@ public class Material {
 
     public Double3 kS = Double3.ZERO;
 
-    public int nSh = 0;
+    public int nShininess = 0;
 
     public Material setKA(Double3 kA) {
         this.kA = kA;
@@ -40,7 +40,7 @@ public class Material {
         if (nSh < 0) {
             throw new IllegalArgumentException("Shininess value cannot be negative");
         }
-        this.nSh = nSh;
+        this.nShininess = nSh;
         return this;
     }
 }
