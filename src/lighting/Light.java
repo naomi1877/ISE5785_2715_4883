@@ -1,6 +1,7 @@
 package lighting;
 
 import primitives.Color;
+import primitives.Point;
 
 /**
  * Abstract class Light is the basic class representing a light source in the 3D space.
@@ -28,4 +29,6 @@ import primitives.Color;
     public Color getIntensity() {
         return intensity;
     }
+
+    public abstract Color getIntensity(Point p);
 }

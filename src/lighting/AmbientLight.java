@@ -1,6 +1,7 @@
 package lighting;
 
 import primitives.Color;
+import primitives.Point;
 
 /**
  * Ambient light class represents the ambient light in the scene.
@@ -24,5 +25,10 @@ public class AmbientLight extends Light {
 
     }
 
+    @Override
+    public Color getIntensity(Point p) {
+        return intensity; // זהה לשימוש ב-getIntensity()
     }
+
+}
 
