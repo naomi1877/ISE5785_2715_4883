@@ -47,6 +47,7 @@ public class SimpleRayTracer extends RayTracerBase {
         return calcColorLocalEffects(intersection);
     }
 
+
     public boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
         // Set the ray direction and normal at the intersection point
         intersection.toViewer = rayDirection.normalize();
