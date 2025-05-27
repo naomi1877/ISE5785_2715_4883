@@ -200,4 +200,50 @@ class LightsTests {
          .writeToImage("lightTrianglesSpotSharp");
    }
 
+
+   @Test
+   void trianglesAllLights() {
+      scene2.geometries.add(triangle1, triangle2);
+
+      // Directional light בכיוון אחיד – מהצד הימני
+      scene2.lights.add(new DirectionalLight(new Color(150, 150, 600), new Vector(2, 1, -1)));
+
+      // Point light במרכז הזירה – אור רך
+      scene2.lights.add(new PointLight(new Color(300, 300, 100), new Point(0, 50, -50))
+              .setKL(0.001).setKQ(0.0001));
+
+      // Spot light ממוקד כלפי פינה של המשולש
+      scene2.lights.add(new SpotLight(new Color(1000, 500, 500), new Point(50, -50, 25), new Vector(-1, 2, -2))
+              .setKL(0.0012).setKQ(0.00025));
+
+      camera2.setResolution(500, 500)
+              .build()
+              .renderImage()
+              .writeToImage("trianglesAllLights");
+   }
+
+
+
+   @Test
+   void sphereAllLights() {
+      scene1.geometries.add(sphere);
+
+      // Directional light מלמעלה-צד, כאילו אור שמש חזק
+      scene1.lights.add(new DirectionalLight(new Color(400, 300, 200), new Vector(-1, -1, -0.5)));
+
+      // Point light מהצד השמאלי קרוב
+      scene1.lights.add(new PointLight(new Color(500, 200, 100), new Point(-30, 30, 20))
+              .setKL(0.0005).setKQ(0.00005));
+
+      // Spot light מהפינה השמאלית אחורית
+      scene1.lights.add(new SpotLight(new Color(700, 400, 250), new Point(-70, -50, 40), new Vector(1, 1, -1))
+              .setKL(0.0008).setKQ(0.0002));
+
+      camera1.setResolution(500, 500)
+              .build()
+              .renderImage()
+              .writeToImage("sphereAllLights");
+   }
+
+
 }
