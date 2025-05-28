@@ -22,9 +22,7 @@ import primitives.Point;
     }
 
     /**
-     * Getter for the intensity field.
-     *
-     * @return the intensity of the light
+     * constructor
      */
     public Color getIntensity() {
         return intensity;

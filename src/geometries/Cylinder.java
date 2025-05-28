@@ -30,24 +30,39 @@ public class Cylinder extends Tube {
      */
     public Cylinder(double radius, Ray axis, double hight) {
         super(radius, axis);
-        this.hight = hight;
+        if (isZero(hight) || hight < 0) {
+            throw new IllegalArgumentException("Height cannot be zero");
+        }
+        else this.hight = hight;
     }
-
 
     @Override
     public Vector getNormal(Point point) {
-        Vector v = point.subtract(axis.getHead());
-        double projection = axis.getDirection().dotProduct(v);
-
-        if (isZero(projection)) {
-            return axis.getDirection().scale(-1);
+        if (point.equals(axis.getHead()))//////////////////////////////////////////////////;//
+            return axis.getNormalVec().scale(-1);
+        double t = axis.getNormalVec().dotProduct(point.subtract(axis.getHead()));
+        if (t == hight) {
+            return axis.getNormalVec();
         }
-        if (isZero(projection - hight)) {
-            return axis.getDirection();
+        if (t == 0) {
+            return axis.getNormalVec().scale(-1);
+        } else {
+            return super.getNormal(point);
         }
-        return super.getNormal(point);
     }
-
+//@Override
+//public Vector getNormal(Point point) {
+//    Vector v = point.subtract(axis.getHead());
+//    double projection = axis.getDirection().dotProduct(v);
+//
+//    if (isZero(projection)) {
+//        return axis.getDirection().scale(-1);
+//    }
+//    if (isZero(projection - hight)) {
+//        return axis.getDirection();
+//    }
+//    return super.getNormal(point);
+//}
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {

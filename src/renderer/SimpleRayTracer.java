@@ -47,7 +47,13 @@ public class SimpleRayTracer extends RayTracerBase {
         return calcColorLocalEffects(intersection);
     }
 
-
+ /**
+     * Preprocess the intersection point by setting the ray direction and normal at the intersection point.
+     * If the dot product of the normal and ray direction is zero, it means the ray is perpendicular to the surface.
+     * @param intersection the intersection point
+     * @param rayDirection the direction of the ray
+     * @return true if the intersection is valid, false otherwise
+     */
     public boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
         // Set the ray direction and normal at the intersection point
         intersection.toViewer = rayDirection.normalize();
@@ -57,7 +63,13 @@ public class SimpleRayTracer extends RayTracerBase {
         // If the dot product is zero, the ray is perpendicular to the surface, and if not - return true
         return !isZero(intersection.nDotV);
     }
-
+   /**
+     * Set the light source for the intersection point and calculate the direction to the light source.
+     * If the dot product of the normal and light direction is zero, it means the light source is perpendicular to the surface.
+     * @param intersection the intersection point
+     * @param lightSource the light source
+     * @return true if the light source is valid, false otherwise
+     */
     public boolean setLightSource(Intersection intersection, LightSource lightSource) {
         // Set the light source and calculate the direction and dot product
         intersection.lightSource = lightSource;
@@ -74,7 +86,10 @@ public class SimpleRayTracer extends RayTracerBase {
 
         for (LightSource light : scene.lights) {
             if (!setLightSource(intersection, light)) continue;
-
+            /**
+             * Calculate the light intensity at the intersection point.
+             * If the light source is not visible from the intersection point, skip it.
+             */
             Color lightIntensity = light.getIntensity(intersection.point);
             //diffusive
             Double3 kd = calcDiffusive(intersection);
@@ -86,6 +101,13 @@ public class SimpleRayTracer extends RayTracerBase {
         }
         return color;
     }
+
+    /**
+     * Calculates the diffuse component of lighting at the intersection point.
+     *
+     * @param intersection the intersection data
+     * @return the diffuse light intensity as a {@code Double3}
+     */
 
     private Double3 calcDiffusive(Intersection intersection) {
         //kD * |n·l|

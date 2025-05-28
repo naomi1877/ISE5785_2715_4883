@@ -16,18 +16,19 @@ public class SpotLight extends PointLight{
 
     private final Vector direction;
 
-    //for Bonus:
+    /**
+     * The narrow beam factor of the spotlight.
+     */
     private double narrowBeam = 1;
 
 
 
     /**
-     * Constructor for SpotLight
+     * Sets the narrow beam factor of the spotlight.
      *
      * @param intensity the intensity of the light
-     * @param position  the position of the light source
-     * @param direction the direction of the light beam
      */
+
     public SpotLight(Color intensity, Point position, Vector direction) {
         super(intensity, position);
         this.direction = direction.normalize();
@@ -47,6 +48,11 @@ public class SpotLight extends PointLight{
         super.setKQ(kQ);
         return this;
     }
+    /**
+     * Setter for the direction of the spotlight
+     *
+     * @return the direction vector of the spotlight
+     */
 
     public SpotLight setNarrowBeam(double nb) {
         this.narrowBeam = nb;

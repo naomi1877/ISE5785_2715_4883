@@ -50,6 +50,25 @@ public class Ray {
         return direction;
     }
 
+    /**
+     * Returns the normalized direction vector of the ray.
+     *
+     * @return the normalized direction vector of the ray
+     */
+    public Vector getNormalVector() {
+        return direction.normalize();
+    }
+
+
+    /**
+     * Returns the normalized direction vector of the ray.
+     *
+     * @return the normalized direction vector of the ray
+     */
+    public Vector getNormalVec() {return direction.normalize();}
+
+
+
     @Override
     public String toString() {
         return "Ray: head=" + head.toString() + " direction=" + direction.toString();
@@ -82,9 +101,12 @@ public class Ray {
      * @return The closest point to the ray.
      */
     public Point findClosestPoint(List<Point> points) {
-        return points == null ? null
-                : findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
+        if (points == null || points.isEmpty()) {
+            return null;
+        } else
+            return findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
     }
+
 
     public Intersection findClosestIntersection(List<Intersection> list) {
         Intersection closest = null;

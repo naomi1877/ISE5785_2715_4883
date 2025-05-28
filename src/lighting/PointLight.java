@@ -5,21 +5,26 @@ import primitives.Double3;
 import primitives.Point;
 import primitives.Vector;
 
+
 public class PointLight extends Light implements LightSource{
     /**
      * The position of the point light in 3D space.
      */
     private final Point position;
 
-/**
+   /**
      * Attenuation factors for the point light.
      * kC - constant attenuation
-     * kL - linear attenuation
+     */
+    private Double3 kC = Double3.ONE;
+    /**
+     *  kL - linear attenuation
+     */
+    private Double3 kL = Double3.ZERO;
+    /**
      * kQ - quadratic attenuation
      */
-    private Double3 kC = Double3.ONE; // constant attenuation
-    private Double3 kL = Double3.ZERO; // linear attenuation
-    private Double3 kQ = Double3.ZERO; // quadratic attenuation
+    private Double3 kQ = Double3.ZERO;
 
     /**
      * Constructor for PointLight

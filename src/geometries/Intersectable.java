@@ -65,9 +65,13 @@ public abstract class Intersectable {
 
 
         public Intersection(Geometry geometry, Point point) {
+            if (geometry != null )
+                this.material=geometry.getMaterial();
+            else
+                this.material=null;
             this.geometry = geometry;
             this.point = point;
-            this.material = geometry.getMaterial();
+
         }
 
         @Override

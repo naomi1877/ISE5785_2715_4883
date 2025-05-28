@@ -96,7 +96,9 @@ public class RenderTests {
    }
 
 
-   // For stage 6 part 2
+   /**
+    * Test for ambient material
+    */
    @Test
    void ambientMaterialTest() {Scene scene = new Scene("Multi color").setAmbientLight(new AmbientLight(new Color(WHITE)));
       scene.geometries //
