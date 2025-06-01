@@ -36,4 +36,9 @@ public class DirectionalLight  extends Light implements LightSource{
         // Directional light always has the same direction
         return direction;
     }
+
+    @Override
+    public double getDistance(Point point) {
+        return Double.POSITIVE_INFINITY; // Directional light is considered to be infinitely far away
+    }
 }

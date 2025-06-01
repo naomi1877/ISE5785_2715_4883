@@ -43,6 +43,7 @@ public class SpotLight extends PointLight{
         super.setKL(kL);
         return this;
     }
+
 @Override
     public SpotLight setKQ(double kQ) {
         super.setKQ(kQ);

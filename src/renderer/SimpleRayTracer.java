@@ -27,7 +27,7 @@ public class SimpleRayTracer extends RayTracerBase {
 
     @Override
     public Color traceRay(Ray ray) {
-        List<Intersection> intersections = scene.geometries.calculateIntersections( ray);
+        List<Intersection> intersections = scene.geometries.calculateIntersections( ray, distanceToLight);
         if (intersections == null || intersections.isEmpty()) {
             return scene.background;
         }
@@ -46,7 +46,23 @@ public class SimpleRayTracer extends RayTracerBase {
             return Color.BLACK;
         return calcColorLocalEffects(intersection);
     }
+    private boolean unshaded(Intersection intersection) {
 
+
+        // Check if the intersection point is illuminated by any light source
+        for (LightSource lightSource : scene.lights) {
+            if (!setLightSource(intersection, lightSource)) continue;
+            Vector pointToLight = intersection.toLight.scale(-1);
+            Ray shadowRay = new Ray(intersection.point, pointToLight,intersection.normalAtPoint);
+            // Check if the shadow ray intersects with any geometry in the scene
+            double distanceToLight = lightSource.getDistance(intersection.point);
+            List<Intersection> shadowIntersections = scene.geometries.calculateIntersections(shadowRay, distanceToLight);
+            // If the dot product of the normal and light direction is positive, the point is illuminated
+            if (intersection.nDotL > 0) return false;
+        }
+        // If no light source illuminates the point, it is unshaded
+        return true;
+    }
  /**
      * Preprocess the intersection point by setting the ray direction and normal at the intersection point.
      * If the dot product of the normal and ray direction is zero, it means the ray is perpendicular to the surface.

@@ -12,14 +12,15 @@ import static primitives.Util.isZero;
  * A ray has a starting point (head) and a direction.
  */
 public class Ray {
+    private static final double DELTA = 0.1 ;
     /**
      * The starting point of the ray.
      */
-    final Point head;
+    private final Point head;
     /**
      * The direction of the ray.
      */
-    final Vector direction;
+    private  final Vector direction;
 
     /**
      * Constructs a ray with a given starting point and direction.
@@ -32,6 +33,12 @@ public class Ray {
         this.direction = direction.normalize();
     }
 
+    public Ray(Point head, Vector direction, Vector normal){
+        // If the direction is perpendicular to the normal, adjust the head position slightly
+        double t = direction.dotProduct(normal);
+        this.direction = direction.normalize();
+        this.head = head.add(normal.scale(t < 0 ? -DELTA : DELTA));
+    }
     /**
      * Getter for head
      *

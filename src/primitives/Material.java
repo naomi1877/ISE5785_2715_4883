@@ -8,6 +8,8 @@ public class Material {
     public Double3 kS = Double3.ZERO;
 
     public int nShininess = 0;
+    public Double3 kT= Double3.ZERO;
+    public Double3 kR= Double3.ZERO;
 
     public Material setKA(Double3 kA) {
         this.kA = kA;
@@ -41,6 +43,26 @@ public class Material {
             throw new IllegalArgumentException("Shininess value cannot be negative");
         }
         this.nShininess = nSh;
+        return this;
+    }
+
+    public Material setKT(double kt) {
+        this.kT=new Double3(kt);
+        return this;
+    }
+
+    public Material setKT(Double3 kt) {
+        this.kT = kt;
+        return this;
+    }
+
+    public Material setKR(Double3 kr) {
+        this.kR = kr;
+        return this;
+    }
+
+    public Material setKR(double kr) {
+        this.kR = new Double3(kr);
         return this;
     }
 }

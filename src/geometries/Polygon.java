@@ -70,7 +70,7 @@ public class Polygon extends Geometry {
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // Check if the ray intersects the plane
-        List<Intersection> planeIntersections = plane.calculateIntersections(ray);
+        List<Intersection> planeIntersections = plane.calculateIntersections(ray, distanceToLight);
         if (planeIntersections == null) {
             return null; // No intersection with the plane
         }

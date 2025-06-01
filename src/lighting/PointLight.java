@@ -41,6 +41,10 @@ public class PointLight extends Light implements LightSource{
      * @param kC the constant attenuation factor
      * @return the current PointLight object (for method chaining)
      */
+    public PointLight setKC(Double3 kC) {
+        this.kC = kC;
+        return this;
+    }
     public PointLight setKC(double kC) {
         this.kC = new Double3(kC);
         return this;
@@ -51,8 +55,12 @@ public class PointLight extends Light implements LightSource{
      * @param kL the linear attenuation factor
      * @return the current PointLight object (for method chaining)
      */
+    public PointLight setKL(Double3 kL) {
+        this.kL = kL;
+        return this;
+    }
     public PointLight setKL(double kL) {
-        this.kL =  new Double3(kL);
+        this.kL = new Double3(kL);
         return this;
     }
 
@@ -65,6 +73,11 @@ public class PointLight extends Light implements LightSource{
         this.kQ = new Double3(kQ);
         return this;
     }
+    public PointLight setKQ(Double3 kQ) {
+        this.kQ = kQ;
+        return this;
+    }
+
 
     @Override
     public Color getIntensity(Point p) {
@@ -89,5 +102,10 @@ public class PointLight extends Light implements LightSource{
         }
         Vector direction = p.subtract(position);
         return direction.normalize();
+    }
+
+    @Override
+    public double getDistance(Point point) {
+        return position.distance(point);
     }
 }
