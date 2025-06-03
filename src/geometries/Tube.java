@@ -45,7 +45,7 @@ public class Tube extends RadialGeometry {
     }
 
 
-    @Override
+//    @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         //Tube is infinite, so we need to calculate the intersection with the tube's axis
         Point p0 = axis.getHead();
@@ -100,4 +100,51 @@ public class Tube extends RadialGeometry {
         }
         return null; // No intersection
     }
+
+    @Override
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight) {
+        Point p0 = axis.getHead();
+        Vector v = axis.getDirection();
+        Vector u = ray.getHead().subtract(p0);
+
+        double impoU = v.dotProduct(u);
+        double impoRay = v.dotProduct(ray.getDirection());
+
+
+        if (isZero(ray.getDirection().crossProduct(v).lengthSquared())) {
+            return null;
+        }
+
+        Vector vPerpendicular = isZero(impoU) ? u : u.subtract(v.scale(impoU));
+        Vector rayPerpendicular = isZero(impoRay) ? ray.getDirection() : ray.getDirection().subtract(v.scale(impoRay));
+
+        double a = rayPerpendicular.lengthSquared();
+        double b = alignZero(2 * rayPerpendicular.dotProduct(vPerpendicular));
+        double c = alignZero(vPerpendicular.lengthSquared() - radius * radius);
+
+        double delta = alignZero(b * b - 4 * a * c);
+        if (delta < 0) {
+            return null;
+        }
+
+        double sqrtDelta = Math.sqrt(delta);
+        double t1 = alignZero((-b - sqrtDelta) / (2 * a));
+        double t2 = alignZero((-b + sqrtDelta) / (2 * a));
+
+        List<Intersection> intersections = new java.util.ArrayList<>();
+
+        if (t1 > 0 && t1 <= distanceToLight) {
+            intersections.add(new Intersection(this, ray.getPoint(t1)));
+        }
+        if (t2 > 0 && t2 <= distanceToLight) {
+            intersections.add(new Intersection(this, ray.getPoint(t2)));
+        }
+
+        if (intersections.isEmpty()) {
+            return null;
+        }
+
+        return intersections;
+    }
+
 }

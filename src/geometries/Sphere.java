@@ -37,7 +37,7 @@ public class Sphere extends RadialGeometry {
     }
 
 
-    @Override
+//    @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         Vector v = ray.getDirection();
         Point p = ray.getHead();
@@ -86,5 +86,47 @@ public class Sphere extends RadialGeometry {
 
     }
 
+
+    @Override
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight) {
+        Vector v = ray.getDirection();
+        Point p = ray.getHead();
+
+        // Check if the ray's head is at the center of the sphere
+        if (p.equals(center))
+            if (radius <= distanceToLight)
+                return List.of(new Intersection(this, ray.getPoint(radius)));
+            else
+                return null;
+
+        Vector u = center.subtract(ray.getHead());
+        double tm = v.dotProduct(u);
+        double dSquared = u.lengthSquared() - tm * tm;
+        double radiusSquared = radius * radius;
+
+        if (dSquared > radiusSquared) {
+            return null; // No intersection
+        }
+
+        double th = Math.sqrt(radiusSquared - dSquared);
+        double t1 = tm - th;
+        double t2 = tm + th;
+
+
+        List<Intersection> intersections = new java.util.ArrayList<>();
+
+        if (t1 > 0 && t1 <= distanceToLight) {
+            intersections.add(new Intersection(this, ray.getPoint(t1)));
+        }
+        if (t2 > 0 && t2 <= distanceToLight) {
+            intersections.add(new Intersection(this, ray.getPoint(t2)));
+        }
+
+        if (intersections.isEmpty()) {
+            return null;
+        }
+
+        return intersections;
+    }
 
 }
