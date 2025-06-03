@@ -200,6 +200,10 @@ class LightsTests {
          .writeToImage("lightTrianglesSpotSharp");
    }
 
+    /**
+     * Produce a picture of two triangles lighted by all three types of lights
+     * (directional, point, and spot).
+     */
 
    @Test
    void trianglesAllLights() {
@@ -222,7 +226,10 @@ class LightsTests {
               .writeToImage("trianglesAllLights");
    }
 
-
+    /**
+     * Produce a picture of a sphere lighted by all three types of lights
+     * (directional, point, and spot).
+     */
 
    @Test
    void sphereAllLights() {

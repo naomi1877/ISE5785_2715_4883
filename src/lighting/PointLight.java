@@ -6,6 +6,11 @@ import primitives.Point;
 import primitives.Vector;
 
 
+/**
+ * PointLight class represents a point light source in a 3D scene.
+ * It extends the Light class and implements the LightSource interface.
+ * The light has a position in space and its intensity decreases with distance.
+ */
 public class PointLight extends Light implements LightSource{
     /**
      * The position of the point light in 3D space.
@@ -45,6 +50,11 @@ public class PointLight extends Light implements LightSource{
         this.kC = kC;
         return this;
     }
+    /**
+     * Sets the constant attenuation factor of the point light.
+     * @param kC the constant attenuation factor as a double
+     * @return the current PointLight object (for method chaining)
+     */
     public PointLight setKC(double kC) {
         this.kC = new Double3(kC);
         return this;
@@ -59,6 +69,11 @@ public class PointLight extends Light implements LightSource{
         this.kL = kL;
         return this;
     }
+    /**
+     * Sets the linear attenuation factor of the point light.
+     * @param kL the linear attenuation factor as a double
+     * @return the current PointLight object (for method chaining)
+     */
     public PointLight setKL(double kL) {
         this.kL = new Double3(kL);
         return this;
@@ -73,6 +88,11 @@ public class PointLight extends Light implements LightSource{
         this.kQ = new Double3(kQ);
         return this;
     }
+    /**
+     * Sets the quadratic attenuation factor of the point light.
+     * @param kQ the quadratic attenuation factor as a Double3 object
+     * @return the current PointLight object (for method chaining)
+     */
     public PointLight setKQ(Double3 kQ) {
         this.kQ = kQ;
         return this;

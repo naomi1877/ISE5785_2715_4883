@@ -13,7 +13,10 @@ import static primitives.Util.alignZero;
  * between the light's direction and the vector from the light to the point.
  */
 public class SpotLight extends PointLight{
-
+    /**
+     * The direction of the spotlight beam.
+     * It is normalized to ensure consistent calculations.
+     */
     private final Vector direction;
 
     /**
@@ -24,11 +27,12 @@ public class SpotLight extends PointLight{
 
 
     /**
-     * Sets the narrow beam factor of the spotlight.
+     * Constructs a SpotLight instance with the specified intensity, position, and direction.
      *
-     * @param intensity the intensity of the light
+     * @param intensity the color intensity of the spotlight
+     * @param position  the position point of the spotlight in 3D space
+     * @param direction the direction vector of the spotlight; will be normalized automatically
      */
-
     public SpotLight(Color intensity, Point position, Vector direction) {
         super(intensity, position);
         this.direction = direction.normalize();
@@ -49,10 +53,12 @@ public class SpotLight extends PointLight{
         super.setKQ(kQ);
         return this;
     }
+
     /**
-     * Setter for the direction of the spotlight
+     * Sets the narrow beam factor of the spotlight.
      *
-     * @return the direction vector of the spotlight
+     * @param nb the narrow beam value to set; typically a double representing the beam's concentration
+     * @return this SpotLight instance, to allow method chaining
      */
 
     public SpotLight setNarrowBeam(double nb) {

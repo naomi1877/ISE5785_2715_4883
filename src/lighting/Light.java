@@ -22,11 +22,20 @@ import primitives.Point;
     }
 
     /**
-     * constructor
+     * Returns the base intensity of the color.
+     *
+     * @return the color intensity
      */
     public Color getIntensity() {
         return intensity;
     }
 
+    /**
+     * Abstract method to get the color intensity at a specific point.
+     *
+     * @param p the point to calculate intensity at
+     * @return the color intensity at point p
+     */
     public abstract Color getIntensity(Point p);
+
 }

@@ -4,6 +4,11 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
+/**
+ * DirectionalLight class represents a directional light source in a 3D scene.
+ * It extends the Light class and implements the LightSource interface.
+ * The light has a constant direction and intensity, independent of the position in space.
+ */
 public class DirectionalLight  extends Light implements LightSource{
     /**
      * The direction of the light.

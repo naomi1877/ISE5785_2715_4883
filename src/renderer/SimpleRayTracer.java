@@ -41,15 +41,28 @@ public class SimpleRayTracer extends RayTracerBase {
 
     /**
      * Calculate the color at the intersection point.
+     * If the intersection is not illuminated, return black.
+     * Otherwise, calculate the local effects (diffuse and specular) at the intersection point.
+     *
      * @param intersection the intersection point
+     * @param ray  the ray that intersects with the geometry
      * @return the color at the intersection point
      */
+
     private Color calcColor(Intersection intersection, Ray ray) {
         if(!preprocessIntersection(intersection,ray.getDirection()))
             //if the point is not illuminated at all
             return Color.BLACK;
         return calcColorLocalEffects(intersection);
     }
+    /**
+     * Check if the intersection point is unshaded by any geometry.
+     * This method casts a shadow ray towards the light source and checks for intersections.
+     * If there are no intersections before reaching the light source, the point is considered unshaded.
+     *
+     * @param intersection the intersection point
+     * @return true if the point is unshaded, false otherwise
+     */
     private boolean unshaded(Intersection intersection) {
         Vector lightDirection = intersection.toLight.scale(-1);
         Vector delta = intersection.normalAtPoint.scale(intersection.nDotV < 0 ? DELTA : -DELTA);
@@ -117,17 +130,29 @@ public class SimpleRayTracer extends RayTracerBase {
         }
 
     /**
-     * Calculates the diffuse component of lighting at the intersection point.
-     *
-     * @param intersection the intersection data
-     * @return the diffuse light intensity as a {@code Double3}
-     */
+ * Calculates the diffuse component of the lighting at the given intersection point.
+            *
+            * This is computed as the material's diffuse coefficient (kD) scaled by the
+            * absolute value of the dot product between the surface normal and the light direction.
+            *
+            * @param intersection the intersection data containing material properties and lighting info
+ * @return the diffuse light intensity as a {@code Double3} representing RGB color components
+ */
 
     private Double3 calcDiffusive(Intersection intersection) {
         //kD * |n·l|
         return intersection.material.kD.scale(Math.abs(intersection.nDotL));
     }
 
+    /**
+     * Calculates the specular component of the lighting at the given intersection point.
+     * This is computed as the material's specular coefficient (kS) scaled by the
+     * power of the dot product between the reflected light direction and the viewer direction,
+     * raised to the material's shininess factor (nShininess).
+     *
+     * @param intersection the intersection data containing material properties and lighting info
+     * @return the specular light intensity as a {@code Double3} representing RGB color components
+     */
     private Double3 calcSpecular(Intersection intersection) {
         Vector r = intersection.toLight.subtract(
                 intersection.normalAtPoint.scale(2 * intersection.nDotL)).normalize();

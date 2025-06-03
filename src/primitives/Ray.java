@@ -12,6 +12,10 @@ import static primitives.Util.isZero;
  * A ray has a starting point (head) and a direction.
  */
 public class Ray {
+    /**
+     * A small constant used to adjust the head position of the ray
+     * to avoid precision issues such as self-intersection.
+     */
     private static final double DELTA = 0.1 ;
     /**
      * The starting point of the ray.
@@ -32,7 +36,16 @@ public class Ray {
         this.head = head;
         this.direction = direction.normalize();
     }
-
+    /**
+     * Constructs a Ray with a given starting point (head), direction, and a normal vector.
+     * If the direction is perpendicular (or nearly perpendicular) to the normal,
+     * the starting point is slightly adjusted along the normal by a small constant {@code DELTA}
+     * to avoid precision issues such as self-intersection.
+     *
+     * @param head the starting point of the ray
+     * @param direction the direction vector of the ray (will be normalized)
+     * @param normal the normal vector used to adjust the starting point if needed
+     */
     public Ray(Point head, Vector direction, Vector normal){
         // If the direction is perpendicular to the normal, adjust the head position slightly
         double t = direction.dotProduct(normal);
@@ -114,7 +127,12 @@ public class Ray {
             return findClosestIntersection(points.stream().map(p -> new Intersection(null, p)).toList()).point;
     }
 
-
+    /**
+     * Finds the closest intersection from a list of intersections relative to a reference point.
+     *
+     * @param list the list of intersections to search
+     * @return the closest {@code Intersection} object to the reference point {@code head}, or {@code null} if the list is empty or null
+     */
     public Intersection findClosestIntersection(List<Intersection> list) {
         Intersection closest = null;
         double minDistance = Double.POSITIVE_INFINITY;

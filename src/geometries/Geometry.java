@@ -11,9 +11,17 @@ import primitives.Vector;
  */
 public abstract class Geometry extends Intersectable {
 
+    /**
+     * The emission color of the geometry, which is the color emitted by the geometry itself.
+     * Default value is black (no emission).
+     */
 
     protected Color emission = Color.BLACK;
 
+    /**
+     * The material of the geometry, which defines its surface properties such as reflectivity, transparency, etc.
+     * Default value is a new Material instance with default properties.
+     */
     private Material material = new Material();
 
 
@@ -23,10 +31,21 @@ public abstract class Geometry extends Intersectable {
     public Geometry() {
     }
 
+    /**
+     * Gets the emission color of the geometry.
+     *
+     * @return the emission color
+     */
     public Color getEmission() {
         return emission;
     }
 
+    /**
+     * Sets the emission color of the geometry.
+     *
+     * @param emission the color to set as the emission color
+     * @return the geometry instance with the updated emission color
+     */
     public Geometry setEmission(Color emission) {
         this.emission = emission;
         return this;

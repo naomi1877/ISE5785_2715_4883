@@ -31,38 +31,65 @@ public abstract class Intersectable {
         return list == null ? null : list.stream().map(intersection -> intersection.point).toList();
     }
 
+    /**
+     * This method calculates the intersections of a ray with the geometry.
+     * It is a public method that calls the protected abstract method to perform the actual calculation.
+     *
+     * @param ray the ray to check for intersections
+     * @return a list of Intersection objects representing the intersection points
+     */
     public final List<Intersection> calculateIntersections(Ray ray) {
         return calculateIntersectionsHelper(ray);
     }
 
     /**
-     * This method is an abstract method that must be implemented by subclasses to calculate intersections : NVI
+     * This is a protected abstract method that must be implemented by subclasses to calculate intersections.
+     * It is called by the public method calculateIntersections.
+     *
      * @param ray the ray to check for intersections
-     * @return a list of intersection points
+     * @return a list of Intersection objects representing the intersection points
      */
     protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray);
 
 
+    /**
+     * Represents an intersection point between a ray and a geometry.
+     */
     public static class Intersection {
-        //Fixed fields: geometry, point, and material
+        /** The intersected geometry */
         public final Geometry geometry;
+
+        /** The point of intersection */
         public final Point point;
+
+        /** Material at the intersection */
         public final Material material;
 
-        //Direction from camera to intersection point (v)
+        /** Vector pointing toward the viewer */
         public Vector toViewer;
-        //The normal vector at the intersection point (n)
+
+        /** Normal vector at the intersection point */
         public Vector normalAtPoint;
-        //Dot product of the normal vector and the ray direction vector (n·v)
+
+        /** Dot product of normal and viewer vectors */
         public double nDotV;
 
-        //Light source at the intersection point
+        /** The light source affecting the point */
         public LightSource lightSource;
-        //Direction from light source to intersection point
+
+        /** Vector pointing toward the light source */
         public Vector toLight;
-        //Dot product of the normal vector and the light direction vector.
+
+        /** Dot product of normal and light direction vectors */
         public double nDotL;
 
+        /**
+         * Constructor for the Intersection class.
+         * Initializes the intersection with a geometry, point, and material.
+         *
+         * @param geometry the geometry of the intersection
+         * @param point    the point of intersection
+         */
 
         public Intersection(Geometry geometry, Point point) {
             if (geometry != null )
