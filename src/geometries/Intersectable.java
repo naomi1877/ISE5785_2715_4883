@@ -30,12 +30,9 @@ public abstract class Intersectable {
         var list = calculateIntersections(ray);
         return list == null ? null : list.stream().map(intersection -> intersection.point).toList();
     }
-    public final List<Intersection> calculateIntersections(Ray ray) {
-        return calculateIntersectionsHelper(ray, Double.POSITIVE_INFINITY);
-    }
 
-    public final List<Intersection> calculateIntersections(Ray ray, double distanceToLight) {
-        return calculateIntersectionsHelper(ray, distanceToLight);
+    public final List<Intersection> calculateIntersections(Ray ray) {
+        return calculateIntersectionsHelper(ray);
     }
 
     /**
@@ -43,7 +40,7 @@ public abstract class Intersectable {
      * @param ray the ray to check for intersections
      * @return a list of intersection points
      */
-    protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight);
+    protected abstract List<Intersection> calculateIntersectionsHelper(Ray ray);
 
 
     public static class Intersection {

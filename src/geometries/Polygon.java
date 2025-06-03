@@ -92,33 +92,33 @@ public class Polygon extends Geometry {
 
     }
 
-
-    @Override
-    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight) {
-        List<Intersection> planeIntersections = plane.calculateIntersections(ray, distanceToLight);
-        if (planeIntersections == null) {
-            return null;
-        }
-
-        Point intersectionPoint = planeIntersections.get(0).point;
-        Vector normal = plane.getNormal(null);
-
-
-        for (int i = 0; i < size; ++i) {
-            Vector v1 = vertices.get(i).subtract(intersectionPoint);
-            Vector v2 = vertices.get((i + 1) % size).subtract(intersectionPoint);
-            if (v1.crossProduct(v2).dotProduct(normal) <= 0) {
-                return null;
-            }
-        }
-
-
-        double actualDistance = ray.getHead().distance(intersectionPoint);
-        if (actualDistance > distanceToLight) {
-            return null;
-        }
-
-
-        return List.of(new Intersection(this, intersectionPoint));
-    }
+//
+//    @Override
+//    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight) {
+//        List<Intersection> planeIntersections = plane.calculateIntersections(ray, distanceToLight);
+//        if (planeIntersections == null) {
+//            return null;
+//        }
+//
+//        Point intersectionPoint = planeIntersections.get(0).point;
+//        Vector normal = plane.getNormal(null);
+//
+//
+//        for (int i = 0; i < size; ++i) {
+//            Vector v1 = vertices.get(i).subtract(intersectionPoint);
+//            Vector v2 = vertices.get((i + 1) % size).subtract(intersectionPoint);
+//            if (v1.crossProduct(v2).dotProduct(normal) <= 0) {
+//                return null;
+//            }
+//        }
+//
+//
+//        double actualDistance = ray.getHead().distance(intersectionPoint);
+//        if (actualDistance > distanceToLight) {
+//            return null;
+//        }
+//
+//
+//        return List.of(new Intersection(this, intersectionPoint));
+//    }
 }

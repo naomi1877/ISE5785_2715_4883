@@ -44,10 +44,10 @@ public class Geometries extends Intersectable {
 
 
     @Override
-    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {//, double distanceToLight
         List<Intersection> intersections = new LinkedList<>();
         for (Intersectable shape : shapes) {
-            List<Intersection> shapeIntersections = shape.calculateIntersections(ray, distanceToLight);
+            List<Intersection> shapeIntersections = shape.calculateIntersections(ray);//distanceToLight
             if (shapeIntersections != null) {
                 intersections.addAll(shapeIntersections);
             }

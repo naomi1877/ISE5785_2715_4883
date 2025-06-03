@@ -51,20 +51,18 @@ public class SimpleRayTracer extends RayTracerBase {
         return calcColorLocalEffects(intersection);
     }
     private boolean unshaded(Intersection intersection) {
-
-
-        // Check if the intersection point is illuminated by any light source
-        for (LightSource lightSource : scene.lights) {
-            if (!setLightSource(intersection, lightSource)) continue;
-            Vector pointToLight = intersection.toLight.scale(-1);
-            Ray shadowRay = new Ray(intersection.point, pointToLight,intersection.normalAtPoint);
-            // Check if the shadow ray intersects with any geometry in the scene
-            double distanceToLight = lightSource.getDistance(intersection.point);
-            List<Intersection> shadowIntersections = scene.geometries.calculateIntersections(shadowRay, distanceToLight);
-            // If the dot product of the normal and light direction is positive, the point is illuminated
-//            if (intersection.nDotL > 0) return false;
+        Vector lightDirection = intersection.toLight.scale(-1);
+        Vector delta = intersection.normalAtPoint.scale(intersection.nDotV < 0 ? DELTA : -DELTA);
+        Ray lightRay = new Ray(intersection.point.add(delta), lightDirection);
+        double lightDistance = intersection.lightSource.getDistance(intersection.point);
+        List<Intersection> intersections = scene.geometries.calculateIntersections(lightRay);
+        if (intersections == null) return true;
+        for (Intersection hit : intersections) {
+            double hitDistance = hit.point.distance(intersection.point);
+            if (hitDistance < lightDistance - DELTA) {
+                return false;
+            }
         }
-        // If no light source illuminates the point, it is unshaded
         return true;
     }
     /**
