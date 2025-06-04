@@ -17,12 +17,6 @@ public class Material {
     /** Specular reflection coefficient */
     public Double3 kS = Double3.ZERO;
 
-
-    /**
-     * The shininess coefficient for specular reflection.
-     */
-    public int nShininess = 0;
-
     /**
      * The transparency coefficient.
      */
@@ -32,6 +26,13 @@ public class Material {
      * The reflection coefficient.
      */
     public Double3 kR = Double3.ZERO;
+
+    /**
+     * The shininess coefficient for specular reflection.
+     */
+    public int nShininess = 0;
+
+
 
     /**
      * Sets the ambient reflection coefficient.

@@ -21,6 +21,19 @@ public class SimpleRayTracer extends RayTracerBase {
      */
     private static final double DELTA = 0.1;
 
+    /**
+     * Maximum number of color levels for the ray tracer
+     */
+    private static final int MAX_CALC_COLOR_LEVEL = 10;
+    /**
+     * Minimum color level for the ray tracer
+     */
+    private static final double MIN_CALC_COLOR_K = 0.001;
+    /**
+     * Initial value for the ambient light intensity
+     */
+    private static final Double3 INITIAL_K = Double3.ONE;
+
 
     /**
      * Constructor
@@ -53,6 +66,10 @@ public class SimpleRayTracer extends RayTracerBase {
         if(!preprocessIntersection(intersection,ray.getDirection()))
             //if the point is not illuminated at all
             return Color.BLACK;
+        return calcColorLocalEffects(intersection);
+    }
+
+    private Color calcColor(Intersection intersection, int level, double k){
         return calcColorLocalEffects(intersection);
     }
     /**
