@@ -134,6 +134,9 @@ public class Ray {
      * @return the closest {@code Intersection} object to the reference point {@code head}, or {@code null} if the list is empty or null
      */
     public Intersection findClosestIntersection(List<Intersection> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
         Intersection closest = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Intersection point : list) {
@@ -145,5 +148,6 @@ public class Ray {
         }
         return closest;
     }
+
 
 }

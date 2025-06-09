@@ -4,7 +4,7 @@ import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
 
-import geometries.Intersectable. Intersection;
+import geometries.Intersectable.Intersection;
 
 import java.util.List;
 
@@ -47,31 +47,62 @@ public class SimpleRayTracer extends RayTracerBase {
     @Override
     public Color traceRay(Ray ray) {
         var intersections = scene.geometries.calculateIntersections(ray);
-        return intersections == null
-                ? scene.background
-                : calcColor(ray.findClosestIntersection(intersections), ray);
+        if (intersections == null)
+            return scene.background;
+        Intersection closestIntersection = ray.findClosestIntersection(intersections);
+        return closestIntersection == null ? scene.background : calcColor(closestIntersection, ray);
+    }
+
+
+    private Intersection findClosestIntersection(Ray ray) {
+        var intersections = scene.geometries.calculateIntersections(ray);
+        return ray.findClosestIntersection(intersections);
     }
 
     /**
      * Calculate the color at the intersection point.
      * If the intersection is not illuminated, return black.
-     * Otherwise, calculate the local effects (diffuse and specular) at the intersection point.
+     * Otherwise, calculate the local and global effects at the intersection point.
      *
      * @param intersection the intersection point
      * @param ray  the ray that intersects with the geometry
      * @return the color at the intersection point
      */
-
     private Color calcColor(Intersection intersection, Ray ray) {
-        if(!preprocessIntersection(intersection,ray.getDirection()))
-            //if the point is not illuminated at all
+        if (!preprocessIntersection(intersection, ray.getDirection()))
             return Color.BLACK;
-        return calcColorLocalEffects(intersection);
+        Color color = scene.ambientLight.getIntensity().scale(intersection.material.kA);
+        color = color.add(calcColor(intersection, MAX_CALC_COLOR_LEVEL, INITIAL_K.d1())); // קריאה לרקורסיה עם רמות
+        return color;
     }
 
-    private Color calcColor(Intersection intersection, int level, double k){
-        return calcColorLocalEffects(intersection);
+
+    private Color calcColor(Intersection intersection, int level, double k) {
+        Color color = calcColorLocalEffects(intersection);
+        if (level == 1)
+            return color;
+        return color.add(calcGlobalEffects(intersection, level, new Double3(k)));
     }
+
+
+    private Color calcGlobalEffects(Intersection intersection, int level, Double3 k) {
+        return calcColorGlobalEffect(constructRefractedRay(intersection), level, k, intersection.material.kT)
+                .add(calcColorGlobalEffect(constructReflectedRay(intersection), level, k, intersection.material.kR));
+    }
+
+
+    private Color calcColorGlobalEffect(Ray ray, int level, Double3 k, Double3 kx) {
+        Double3 kkx = k.product(kx);
+        if (kkx.lowerThan(MIN_CALC_COLOR_K))
+            return Color.BLACK;
+        Intersection intersection = findClosestIntersection(ray);
+        if (intersection == null)
+            return scene.background.scale(kx);
+        return preprocessIntersection(intersection, ray.getDirection())
+                ? calcColor(intersection, level - 1, kkx.d1()).scale(kx)
+                : Color.BLACK;
+    }
+
     /**
      * Check if the intersection point is unshaded by any geometry.
      * This method casts a shadow ray towards the light source and checks for intersections.
@@ -88,13 +119,19 @@ public class SimpleRayTracer extends RayTracerBase {
         List<Intersection> intersections = scene.geometries.calculateIntersections(lightRay);
         if (intersections == null) return true;
         for (Intersection hit : intersections) {
+            if (hit.geometry == intersection.geometry) {
+                continue;
+            }
             double hitDistance = hit.point.distance(intersection.point);
             if (hitDistance < lightDistance - DELTA) {
-                return false;
+                if (hit.geometry.getMaterial().kT.lowerThan(MIN_CALC_COLOR_K)) {
+                    return false;
+                }
             }
         }
         return true;
     }
+
     /**
      * Preprocess the intersection point by setting the ray direction and normal at the intersection point.
      * If the dot product of the normal and ray direction is zero, it means the ray is perpendicular to the surface.
@@ -103,14 +140,13 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return true if the intersection is valid, false otherwise
      */
     public boolean preprocessIntersection(Intersection intersection, Vector rayDirection) {
-        // Set the ray direction and normal at the intersection point
-        intersection.toViewer = rayDirection.normalize();
+        if (intersection.geometry == null) return false;
+        intersection.toViewer = rayDirection;
         intersection.normalAtPoint = intersection.geometry.getNormal(intersection.point);
-        // Calculate the dot product of the normal and ray direction
-        intersection.nDotV = intersection.normalAtPoint.dotProduct(rayDirection);
-        // If the dot product is zero, the ray is perpendicular to the surface, and if not - return true
+        intersection.nDotV = intersection.toViewer.dotProduct(intersection.normalAtPoint);
         return !isZero(intersection.nDotV);
     }
+
     /**
      * Set the light source for the intersection point and calculate the direction to the light source.
      * If the dot product of the normal and light direction is zero, it means the light source is perpendicular to the surface.
@@ -119,13 +155,10 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return true if the light source is valid, false otherwise
      */
     public boolean setLightSource(Intersection intersection, LightSource lightSource) {
-        // Set the light source and calculate the direction and dot product
         intersection.lightSource = lightSource;
         intersection.toLight = lightSource.getL(intersection.point).normalize();
-        intersection.nDotL= intersection.normalAtPoint.dotProduct(intersection.toLight);
-        // If the dot product is zero, the light source is perpendicular to the surface, and if not - return true
-        if (alignZero(intersection.nDotL * intersection.nDotV) <= 0) return false;
-        return true;
+        intersection.nDotL = intersection.normalAtPoint.dotProduct(intersection.toLight);
+        return alignZero(intersection.nDotL) * intersection.nDotV > 0;
     }
 
     /**
@@ -134,30 +167,30 @@ public class SimpleRayTracer extends RayTracerBase {
      * @param intersection the intersection
      * @return the color from local lighting effects
      */
-        private Color calcColorLocalEffects(Intersection intersection) {
-            Color color = intersection.geometry.getEmission();
-            for (LightSource lightSource : scene.lights) {
-                if (!setLightSource(intersection, lightSource) || !unshaded(intersection)) continue;
-                Color lightIntensity = lightSource.getIntensity(intersection.point);
-                Color diffuse = lightIntensity.scale(calcDiffusive(intersection));
-                Color specular = lightIntensity.scale(calcSpecular(intersection));
-                color = color.add(diffuse, specular);
-            }
-            return color;
+    private Color calcColorLocalEffects(Intersection intersection) {
+        Color color = intersection.geometry.getEmission();
+        for (LightSource lightSource : scene.lights) {
+            if (!setLightSource(intersection, lightSource)) continue;
+            Double3 ktr = transparency(intersection);
+            if (ktr.lowerThan(MIN_CALC_COLOR_K)) continue;
+            Color lightIntensity = lightSource.getIntensity(intersection.point).scale(ktr);
+            Color diffuse = lightIntensity.scale(calcDiffusive(intersection));
+            Color specular = lightIntensity.scale(calcSpecular(intersection));
+            color = color.add(diffuse, specular);
         }
+        return color;
+    }
 
     /**
- * Calculates the diffuse component of the lighting at the given intersection point.
-            *
-            * This is computed as the material's diffuse coefficient (kD) scaled by the
-            * absolute value of the dot product between the surface normal and the light direction.
-            *
-            * @param intersection the intersection data containing material properties and lighting info
- * @return the diffuse light intensity as a {@code Double3} representing RGB color components
- */
-
+     * Calculate the diffuse component of the lighting at the given intersection point.
+     *
+     * This is computed as the material's diffuse coefficient (kD) scaled by the
+     * absolute value of the dot product between the surface normal and the light direction.
+     *
+     * @param intersection the intersection data containing material properties and lighting info
+     * @return the diffuse light intensity as a {@code Double3} representing RGB color components
+     */
     private Double3 calcDiffusive(Intersection intersection) {
-        //kD * |n·l|
         return intersection.material.kD.scale(Math.abs(intersection.nDotL));
     }
 
@@ -177,15 +210,55 @@ public class SimpleRayTracer extends RayTracerBase {
         double minusVR = -intersection.toViewer.dotProduct(r);
         if (minusVR <= 0) return Double3.ZERO;
 
-        //kS * pow(..., shininess)
         return intersection.material.kS.scale(
                 Math.pow(minusVR, intersection.material.nShininess));
     }
+
     /**
-     * Check if the intersection is unshaded by any geometry
+     * Calculate the transparency factor at the intersection point
      *
      * @param intersection the intersection
-     * @return true if unshaded, false otherwise
+     * @return the transparency factor
      */
+    private Double3 transparency(Intersection intersection) {
+        Vector lightDirection = intersection.toLight.scale(-1);
+        Ray shadowRay = new Ray(intersection.point, lightDirection, intersection.normalAtPoint);
+        List<Intersection> shadowIntersections = scene.geometries.calculateIntersections(shadowRay);
+
+        if (shadowIntersections == null || shadowIntersections.isEmpty()) return Double3.ONE;
+
+        Double3 ktr = Double3.ONE;
+        double lightDistance = intersection.lightSource.getDistance(intersection.point);
+
+        for (Intersection hit : shadowIntersections) {
+            if (alignZero(hit.point.distance(intersection.point) - lightDistance) < 0) {
+                ktr = ktr.product(hit.geometry.getMaterial().kT);
+                if (ktr.lowerThan(MIN_CALC_COLOR_K)) return Double3.ZERO;
+            }
+        }
+
+        return ktr;
+    }
+
+    /**
+     * Construct a reflected ray from the intersection point
+     *
+     * @param intersection the intersection
+     * @return the reflected ray
+     */
+    private Ray constructReflectedRay(Intersection intersection) {
+        Vector n = intersection.normalAtPoint;
+        return new Ray(intersection.point, intersection.toViewer.subtract(n.scale(2 * intersection.toViewer.dotProduct(n))), n);
+    }
+
+    /**
+     * Construct a refracted ray from the intersection point
+     *
+     * @param intersection the intersection
+     * @return the refracted ray
+     */
+    private Ray constructRefractedRay(Intersection intersection) {
+        return new Ray(intersection.point, intersection.toViewer, intersection.normalAtPoint);
+    }
 
 }
