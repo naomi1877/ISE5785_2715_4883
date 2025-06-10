@@ -319,16 +319,33 @@ public class Camera implements Cloneable {
          * @return the Builder instance
          */
         public Builder setDirection(Point target2, Vector vUp) {
-            //if camera position not set yet, cannot set direction
+//            //if camera position not set yet, cannot set direction
+//            if (camera.p0 == null)
+//                throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
+//            // Calculate the direction vector from the camera position to the target point
+//            camera.vTo = target2.subtract(camera.p0).normalize();
+//            Vector vRight = camera.vTo.crossProduct(vUp).normalize();
+//            // if(!isZero(camera.vTo.dotProduct(camera.vRight)))
+//            //   throw new IllegalArgumentException("vUp and vTo must be orthogonal");
+//            //fix the up vector because it may not be orthogonal to vTo;
+//            camera.vUp = vRight.crossProduct(camera.vTo).normalize();
+//            return this;
             if (camera.p0 == null)
                 throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
-            // Calculate the direction vector from the camera position to the target point
-            camera.vTo = target2.subtract(camera.p0).normalize();
-            Vector vRight = camera.vTo.crossProduct(vUp).normalize();
-            // if(!isZero(camera.vTo.dotProduct(camera.vRight)))
-            //   throw new IllegalArgumentException("vUp and vTo must be orthogonal");
-            //fix the up vector because it may not be orthogonal to vTo;
+
+            Vector vTo = target2.subtract(camera.p0);
+            if (vTo.equals(Vector.ZERO)) // או שימוש ב-Util.isZero אם את משתמשת בווקטור שאינו סטטי
+                throw new IllegalArgumentException("Target point must not be the same as camera position (creates zero direction vector)");
+
+            camera.vTo = vTo.normalize();
+
+            Vector vRight = camera.vTo.crossProduct(vUp);
+            if (vRight.equals(Vector.ZERO))
+                throw new IllegalArgumentException("Up vector cannot be parallel to direction vector");
+
+            vRight = vRight.normalize();
             camera.vUp = vRight.crossProduct(camera.vTo).normalize();
+
             return this;
         }
 
