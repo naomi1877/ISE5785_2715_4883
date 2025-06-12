@@ -1,0 +1,34 @@
+package geometries;
+
+import org.junit.jupiter.api.Test;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static primitives.Util.isZero;
+
+class ConeTest {
+
+    @Test
+    void testConeRayHitsBothBases() {
+        // קרן שעוברת בציר z מלמעלה למטה (אורך 10)
+        Ray axis = new Ray(new Point(0, 0, 0), new Vector(0, 0, 1));
+
+        // יוצרים קונוס עם רדיוס תחתון 5, רדיוס עליון 3, גובה 10
+        Cone cone = new Cone(3, 5, axis, 10);
+
+        // קרן שיורדת דרך ציר הקונוס – אמורה לפגוע בשני הבסיסים
+        Ray ray = new Ray(new Point(0, 0, 15), new Vector(0, 0, -1));
+
+        List<Intersectable.Intersection> intersections = cone.calculateIntersectionsHelper(ray);
+        System.out.println(intersections);
+        assertNotNull(intersections, "Expected intersections with cone");
+        assertEquals(2, intersections.size(), "Ray should intersect both bases");
+
+    }
+
+
+}
