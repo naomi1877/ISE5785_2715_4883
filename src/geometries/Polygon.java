@@ -6,6 +6,7 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -80,9 +81,23 @@ public class Polygon extends Geometry {
         // Check if the intersection point is inside the polygon
         Vector v1, v2;
         for (int i = 0; i < size; ++i) {
-            v1 = vertices.get(i).subtract(intersectionPoint);
-            v2 = vertices.get((i + 1) % size).subtract(intersectionPoint);
-            if (v1.crossProduct(v2).dotProduct(plane.getNormal(null)) <= 0) {
+            Point p1 = vertices.get(i);
+            Point p2 = vertices.get((i + 1) % size);
+            if (intersectionPoint.equals(p1) || intersectionPoint.equals(p2)) continue;
+            try {
+                v1 = p1.subtract(intersectionPoint);
+                v2 = p2.subtract(intersectionPoint);
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+            Vector cross;
+            try{
+                cross = v1.crossProduct(v2);
+            } catch (IllegalArgumentException e) {
+                continue; // Points are collinear, skip this edge
+            }
+
+            if (alignZero(cross.dotProduct(plane.getNormal(null)) )<= 0) {
                 return null; // Intersection point is outside the polygon
             }
         }
@@ -92,33 +107,37 @@ public class Polygon extends Geometry {
 
     }
 
-//
-//    @Override
-//    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight) {
-//        List<Intersection> planeIntersections = plane.calculateIntersections(ray, distanceToLight);
-//        if (planeIntersections == null) {
-//            return null;
-//        }
-//
-//        Point intersectionPoint = planeIntersections.get(0).point;
-//        Vector normal = plane.getNormal(null);
-//
-//
-//        for (int i = 0; i < size; ++i) {
-//            Vector v1 = vertices.get(i).subtract(intersectionPoint);
-//            Vector v2 = vertices.get((i + 1) % size).subtract(intersectionPoint);
-//            if (v1.crossProduct(v2).dotProduct(normal) <= 0) {
-//                return null;
-//            }
-//        }
-//
-//
-//        double actualDistance = ray.getHead().distance(intersectionPoint);
-//        if (actualDistance > distanceToLight) {
-//            return null;
-//        }
-//
-//
-//        return List.of(new Intersection(this, intersectionPoint));
-//    }
+    public boolean isOn(Point point) {
+        // Step 1: Check if point is on the same plane
+        Vector n = this.getNormal(point);
+        Vector qToP = point.subtract(this.vertices.get(0)); // using one of the polygon's base points
+        double distance = alignZero(n.dotProduct(qToP));
+        if (!isZero(distance)) {
+            return false; // point is not on the plane
+        }
+        // Step 2: Check if the point is inside the polygon
+        int size = this.vertices.size();
+        Vector v1, v2;
+        for (int i = 0; i < size; ++i) {
+            try {
+                v1 = this.vertices.get(i).subtract(point);
+                v2 = this.vertices.get((i + 1) % size).subtract(point);
+            }
+            catch (IllegalArgumentException e) {
+                continue; // in case the point is on a vertex – skip
+            }
+            try {
+                Vector cross = v1.crossProduct(v2);
+                if (alignZero(cross.dotProduct(n)) < 0) {
+                    return false; // point is outside
+                }
+            }
+            catch (IllegalArgumentException e) {
+                continue; // in case of zero vector in cross product
+            }
+        }
+        return true; // point is on the plane and inside the polygon
+    }
+
+
 }
