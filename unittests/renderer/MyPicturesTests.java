@@ -902,7 +902,7 @@ void testTransparentPyramidRender() {
                 .setResolution(800, 800)
                 .build()
                 .renderImage()
-                .writeToImage("windmillPyramid14");
+                .writeToImage("windmillPyramid13");
     }
 
 
