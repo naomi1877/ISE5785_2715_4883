@@ -906,97 +906,6 @@ void testTransparentPyramidRender() {
     }
 
     @Test
-    void mysticObservatory1() {
-        // Create a simplified, elegant mystical scene
-        scene.geometries.add(
-                // Dark reflective floor
-                new Plane(new Point(0, -60, 0), new Vector(0, 1, 0))
-                        .setEmission(new Color(5, 5, 10))
-                        .setMaterial(new Material()
-                                .setKD(0.3).setKS(0.4).setShininess(120)
-                                .setKR(0.7)),
-
-                // Back wall - very dark
-                new Plane(new Point(0, 0, -120), new Vector(0, 0, 1))
-                        .setEmission(new Color(3, 3, 8))
-                        .setMaterial(new Material()
-                                .setKD(0.8).setKS(0.2).setShininess(50)),
-
-                // Left wall - dark purple
-                new Plane(new Point(-100, 0, 0), new Vector(1, 0, 0))
-                        .setEmission(new Color(15, 5, 25))
-                        .setMaterial(new Material()
-                                .setKD(0.7).setKS(0.3).setShininess(60)),
-
-                // Right wall - dark blue
-                new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0))
-                        .setEmission(new Color(5, 10, 20))
-                        .setMaterial(new Material()
-                                .setKD(0.7).setKS(0.3).setShininess(60)),
-
-                // Large central crystal orb - the main focal point
-                new Sphere(35d, new Point(0, -15, -50))
-                        .setEmission(new Color(10, 10, 20))
-                        .setMaterial(new Material()
-                                .setKD(0.1).setKS(0.3).setShininess(400)
-                                .setKT(0.85).setKR(0.15)),
-
-                // Large mirror sphere - left side, reflects the crystal
-                new Sphere(25d, new Point(-45, -25, -30))
-                        .setEmission(new Color(8, 8, 12))
-                        .setMaterial(new Material()
-                                .setKD(0.1).setKS(0.2).setShininess(500)
-                                .setKR(0.95)),
-
-                // Glowing energy orb - right side, completes the triangle
-                new Sphere(20d, new Point(40, -30, -35))
-                        .setEmission(new Color(255, 120, 255))
-                        .setMaterial(new Material()
-                                .setKD(0.2).setKS(0.6).setShininess(200)
-                                .setKT(0.4).setKR(0.1)));
-
-        // Very dark ambient light
-        scene.setAmbientLight(new AmbientLight(new Color(5, 5, 8)));
-
-        // Main focused light source - with radius for soft shadows
-        scene.lights.add(
-                new PointLight(
-                        new Color(180, 120, 250),
-                        new Point(0, 30, -10))
-                        .setKL(0.001).setKQ(0.0001)
-
-        );
-
-        // Secondary accent light - smaller radius for more focused soft shadows
-        scene.lights.add(
-                new PointLight(
-                        new Color(100, 180, 120),
-                        new Point(-50, 10, 10))
-                        .setKL(0.002).setKQ(0.0002)
-
-        );
-
-        // Side light for shadow contrast - medium radius
-        scene.lights.add(
-                new PointLight(
-                        new Color(120, 80, 160),
-                        new Point(60, -5, -20))
-                        .setKL(0.003).setKQ(0.0003)
-
-        );
-
-        // Camera positioned for optimal viewing of all effects
-        cameraBuilder
-                .setLocation(new Point(0, 20, 120))
-                .setDirection(new Point(0, -10, -40), Vector.AXIS_Y)
-                .setVpDistance(100)
-                .setVpSize(200, 200)
-                .setResolution(800, 800)
-                .build()
-                .renderImage()
-                .writeToImage("mysticObservatorywitheshadoRadios");
-    }
-    @Test
     void windmillPyramid15() {
         Scene scene = new Scene("Windmill With Pyramid Blades");
         Point pivot = new Point(0, 150, 49); // נקודת חיבור הכנפיים
@@ -1095,11 +1004,6 @@ void testTransparentPyramidRender() {
                                 .setKS(0.2)    // השתקפות מבריקה נמוכה
                                 .setShininess(500) // מאוד מבריק (עוד יותר מהקודם)
                                 .setKR(0.95)), // השתקפות מאוד גבוהה - מראה כמעט מושלם
-//                        .setEmission(new Color(255, 120, 255))
-//                        .setMaterial(new Material()
-//                                .setKD(0.2).setKS(0.6).setShininess(200)
-//                                .setKT(0.4).setKR(0.1)),
-
 
                 new Sphere(25, new Point(120, 10, 150)) // שמאלי - שמור כפי שהיה
                         .setEmission(new Color(10, 10, 20))
