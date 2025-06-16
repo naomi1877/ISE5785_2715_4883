@@ -905,6 +905,236 @@ void testTransparentPyramidRender() {
                 .writeToImage("windmillPyramid13");
     }
 
+    @Test
+    void mysticObservatory1() {
+        // Create a simplified, elegant mystical scene
+        scene.geometries.add(
+                // Dark reflective floor
+                new Plane(new Point(0, -60, 0), new Vector(0, 1, 0))
+                        .setEmission(new Color(5, 5, 10))
+                        .setMaterial(new Material()
+                                .setKD(0.3).setKS(0.4).setShininess(120)
+                                .setKR(0.7)),
 
+                // Back wall - very dark
+                new Plane(new Point(0, 0, -120), new Vector(0, 0, 1))
+                        .setEmission(new Color(3, 3, 8))
+                        .setMaterial(new Material()
+                                .setKD(0.8).setKS(0.2).setShininess(50)),
+
+                // Left wall - dark purple
+                new Plane(new Point(-100, 0, 0), new Vector(1, 0, 0))
+                        .setEmission(new Color(15, 5, 25))
+                        .setMaterial(new Material()
+                                .setKD(0.7).setKS(0.3).setShininess(60)),
+
+                // Right wall - dark blue
+                new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0))
+                        .setEmission(new Color(5, 10, 20))
+                        .setMaterial(new Material()
+                                .setKD(0.7).setKS(0.3).setShininess(60)),
+
+                // Large central crystal orb - the main focal point
+                new Sphere(35d, new Point(0, -15, -50))
+                        .setEmission(new Color(10, 10, 20))
+                        .setMaterial(new Material()
+                                .setKD(0.1).setKS(0.3).setShininess(400)
+                                .setKT(0.85).setKR(0.15)),
+
+                // Large mirror sphere - left side, reflects the crystal
+                new Sphere(25d, new Point(-45, -25, -30))
+                        .setEmission(new Color(8, 8, 12))
+                        .setMaterial(new Material()
+                                .setKD(0.1).setKS(0.2).setShininess(500)
+                                .setKR(0.95)),
+
+                // Glowing energy orb - right side, completes the triangle
+                new Sphere(20d, new Point(40, -30, -35))
+                        .setEmission(new Color(255, 120, 255))
+                        .setMaterial(new Material()
+                                .setKD(0.2).setKS(0.6).setShininess(200)
+                                .setKT(0.4).setKR(0.1)));
+
+        // Very dark ambient light
+        scene.setAmbientLight(new AmbientLight(new Color(5, 5, 8)));
+
+        // Main focused light source - with radius for soft shadows
+        scene.lights.add(
+                new PointLight(
+                        new Color(180, 120, 250),
+                        new Point(0, 30, -10))
+                        .setKL(0.001).setKQ(0.0001)
+
+        );
+
+        // Secondary accent light - smaller radius for more focused soft shadows
+        scene.lights.add(
+                new PointLight(
+                        new Color(100, 180, 120),
+                        new Point(-50, 10, 10))
+                        .setKL(0.002).setKQ(0.0002)
+
+        );
+
+        // Side light for shadow contrast - medium radius
+        scene.lights.add(
+                new PointLight(
+                        new Color(120, 80, 160),
+                        new Point(60, -5, -20))
+                        .setKL(0.003).setKQ(0.0003)
+
+        );
+
+        // Camera positioned for optimal viewing of all effects
+        cameraBuilder
+                .setLocation(new Point(0, 20, 120))
+                .setDirection(new Point(0, -10, -40), Vector.AXIS_Y)
+                .setVpDistance(100)
+                .setVpSize(200, 200)
+                .setResolution(800, 800)
+                .build()
+                .renderImage()
+                .writeToImage("mysticObservatorywitheshadoRadios");
+    }
+    @Test
+    void windmillPyramid15() {
+        Scene scene = new Scene("Windmill With Pyramid Blades");
+        Point pivot = new Point(0, 150, 49); // נקודת חיבור הכנפיים
+        double bladeLength = 105;
+        double bladeWidth = 60;
+        double bladeDepth = 40;
+        double angle = 28;
+        Material bladeMaterial = new Material()
+                .setKD(0.3)
+                .setKS(0.3)
+                .setShininess(120)
+                .setKT(0.4);
+        Color bladeColor = new Color(BLUE);
+
+        // תחנת קמח - כמו שהיה במקור (ללא שינוי)
+        scene.geometries.add(
+                new Cylinder(49,
+                        new Ray(rotateAroundY(pivot,new Point(0, -150, 0),angle),
+                                rotateAroundY(new Vector(0, 1, 0),angle)),
+                        300)
+                        .setEmission(new Color(100, 80, 50))
+                        .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100)),
+
+                new Sphere(49,rotateAroundY(pivot, new Point(0, 150, 0),angle))
+                        .setEmission(new Color(89, 72, 38))
+                        .setMaterial(new Material().setKD(0.4).setKS(0.8).setShininess(300)),
+
+                new Sphere(10, rotateAroundY(pivot,pivot, angle))
+                        .setEmission(new Color(80, 40, 100))
+                        .setMaterial(new Material().setKD(0.4).setKS(0.8).setShininess(300)),
+
+                new Pyramid(rotateAroundY(pivot, pivot, angle),
+                        new Polygon(
+                                rotateAroundY(pivot, new Point(-bladeWidth / 2, 150 + bladeLength, 50),angle),
+                                rotateAroundY(pivot, new Point(bladeWidth / 2, 150 + bladeLength, 50),angle),
+                                rotateAroundY(pivot, new Point(bladeWidth / 2, 150 + bladeLength, 50 + bladeDepth),angle),
+                                rotateAroundY(pivot, new Point(-bladeWidth / 2, 150 + bladeLength, 50 + bladeDepth),angle)
+                        ))
+                        .setEmission(bladeColor)
+                        .setMaterial(bladeMaterial),
+
+                new Pyramid(rotateAroundY(pivot, pivot, angle),
+                        new Polygon(
+                                rotateAroundY(pivot,new Point(-bladeWidth / 2, 150 - bladeLength, 50),angle),
+                                rotateAroundY(pivot, new Point(bladeWidth / 2, 150 - bladeLength, 50),angle),
+                                rotateAroundY(pivot, new Point(bladeWidth / 2, 150 - bladeLength, 50 + bladeDepth),angle),
+                                rotateAroundY(pivot, new Point(-bladeWidth / 2, 150 - bladeLength, 50 + bladeDepth),angle)
+                        ))
+                        .setEmission(bladeColor)
+                        .setMaterial(bladeMaterial),
+
+                new Pyramid(rotateAroundY(pivot, pivot, angle),
+                        new Polygon(
+                                rotateAroundY(pivot, new Point(bladeLength, 150 - bladeWidth / 2, 50),angle),
+                                rotateAroundY(pivot, new Point(bladeLength, 150 + bladeWidth / 2, 50),angle),
+                                rotateAroundY(pivot, new Point(bladeLength, 150 + bladeWidth / 2, 50 + bladeDepth),angle),
+                                rotateAroundY(pivot, new Point(bladeLength, 150 - bladeWidth / 2, 50 + bladeDepth),angle)
+                        ))
+                        .setEmission(bladeColor)
+                        .setMaterial(bladeMaterial),
+
+                new Pyramid(rotateAroundY(pivot, pivot, angle),
+                        new Polygon(
+                                rotateAroundY(pivot, new Point(-bladeLength, 150 - bladeWidth / 2, 50),angle),
+                                rotateAroundY(pivot, new Point(-bladeLength, 150 + bladeWidth / 2, 50),angle),
+                                rotateAroundY(pivot, new Point(-bladeLength, 150 + bladeWidth / 2, 50 + bladeDepth),angle),
+                                rotateAroundY(pivot, new Point(-bladeLength, 150 - bladeWidth / 2, 50 + bladeDepth),angle)
+                        ))
+                        .setEmission(bladeColor)
+                        .setMaterial(bladeMaterial),
+
+                new Plane(new Point(0, -20, 0), new Vector(0, 1, 0))
+                        .setEmission(new Color(20, 20, 20))
+                        .setMaterial(new Material().setKD(0.7).setKS(0.1).setShininess(50)),
+
+                new Plane(new Point(0, 0, -500), new Vector(0, 0, 1))
+                        .setEmission(new Color(20, 20, 50))
+                        .setMaterial(new Material().setKD(1))
+        );
+
+        // --- הכדורים בצד ימין של התחנה במשולש עם הכדור הגדול בקדמת התמונה משמאל ---
+        // הכדור הגדול - קדמת משולש, משמאל (קדמת התמונה)
+        scene.geometries.add(
+                new Sphere(45, new Point(170, 15, 90))
+                        .setEmission(new Color(BLUE)) // צבע כנפי הפרמידה
+                        .setMaterial(new Material()
+                                .setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4))
+        );
+
+        // הכדורים הקטנים - מאחוריו, בצד ימין
+        scene.geometries.add(
+                new Sphere(30, new Point(220, 10, 180))
+                        .setEmission(new Color(8, 8, 12))
+                        .setMaterial(new Material()
+                                .setKD(0.1)    // מעט פיזור אור (Diffuse)
+                                .setKS(0.2)    // השתקפות מבריקה נמוכה
+                                .setShininess(500) // מאוד מבריק (עוד יותר מהקודם)
+                                .setKR(0.95)), // השתקפות מאוד גבוהה - מראה כמעט מושלם
+//                        .setEmission(new Color(255, 120, 255))
+//                        .setMaterial(new Material()
+//                                .setKD(0.2).setKS(0.6).setShininess(200)
+//                                .setKT(0.4).setKR(0.1)),
+
+
+                new Sphere(25, new Point(120, 10, 150)) // שמאלי - שמור כפי שהיה
+                        .setEmission(new Color(10, 10, 20))
+                        .setMaterial(new Material()
+                                .setKD(0.1).setKS(0.3).setShininess(400)
+                                .setKT(0.85).setKR(0.15))
+        );
+
+
+        // תאורה
+        scene.setAmbientLight(new AmbientLight(new Color(30, 30, 30)));
+        scene.lights.add(
+                new SpotLight(new Color(600, 219, 255), new Point(200, 200, 200), new Vector(-2, -2, -3))
+                        .setKL(0.0001).setKQ(0.00001)
+        );
+
+        scene.lights.add(
+                new SpotLight(
+                        new Color(800, 300, 100),               // גוון חמים של שקיעה
+                        new Point(-300, 300, 400),              // מיקום רחוק באופק
+                        new Vector(2, -2, -3))                  // כיוון אל הסצנה
+                        .setKL(0.00005).setKQ(0.00001)
+        );
+
+        // מיקום המצלמה - כמו שהיה
+        Camera.getBuilder()
+                .setRayTracer(scene, RayTracerType.SIMPLE)
+                .setLocation(new Point(0, 300, 800))
+                .setDirection(new Point(0, 150, 0), new Vector(0, 1, -1))
+                .setVpDistance(600)
+                .setVpSize(500, 500)
+                .setResolution(800, 800)
+                .build()
+                .renderImage()
+                .writeToImage("windmillPyramid15");
+    }
 
 }
