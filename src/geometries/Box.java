@@ -19,19 +19,21 @@ import java.util.List;
 public class Box extends Geometry{
     private final Double3 min;
     private final Double3 max;
-    private final List<Polygon> faces;
+   private final List<Polygon> sideFaces;
+    private final Geometries components = new Geometries();
 
-    public Box(Double3 p1, Double3 p2) {
+    public Box(Double3 p1, Double3 p2 ) {
+
+
         if (p1.d1()==p2.d1() ||
             p1.d2()==p2.d2() ||
             p1.d3()==p2.d3()) {
             throw new IllegalArgumentException("Points must not be aligned on the same axis");
         }
+
         this.min = new Double3( Math.min(p1.d1(),p2.d1()),Math.min(p1.d2(),p2.d2()),Math.min(p1.d3(),p2.d3()));
         this.max = new Double3( Math.max(p1.d1(),p2.d1()),Math.max(p1.d2(),p2.d2()),Math.max(p1.d3(),p2.d3()));
-        // Create the 6 faces of the box
-        faces = List.of(
-                // Left (x = minX) – counter-clockwise when looking from x < 0
+        this.sideFaces=List.of( // Left (x = minX) – counter-clockwise when looking from x < 0
                 new Polygon(
                         new Point(min.d1(), min.d2(), max.d3()),
                         new Point(min.d1(), max.d2(), max.d3()),
@@ -72,15 +74,14 @@ public class Box extends Geometry{
                         new Point(max.d1(), max.d2(), max.d3()),
                         new Point(min.d1(), max.d2(), max.d3()),
                         new Point(min.d1(), min.d2(), max.d3())
-                )
-        );
-
+                ));
+        // Create the 6 faces of the box
+        components.add( sideFaces.toArray(new Polygon[0]));
     }
-
 
     @Override
     public Vector getNormal(Point point) {
-        for (Polygon face : faces) {
+        for (Polygon face :sideFaces ) {
             if (face.isOn(point)) {
                 return face.getNormal(point);
             }
@@ -90,23 +91,35 @@ public class Box extends Geometry{
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
-        List<Intersection> intersections = null;
-        List<Point> uniquePoints = new LinkedList<>();
-        for (Polygon face : faces) {
-            List<Intersection> faceIntersections = face.calculateIntersectionsHelper(ray);
-            if (faceIntersections != null) {
-                if (intersections == null)
-                    intersections = new LinkedList<>();
-                //if the intersect point is on a corner, and already exists in the list, skip it
-                for (Intersection intersection : faceIntersections) {
-                    Point point = intersection.point;
-                    if (!uniquePoints.contains(point)) {
-                        uniquePoints.add(point);
-                        intersections.add(intersection);
-                    }
-                }
-            }
-        }
+//        List<Intersection> intersections = null;
+//        List<Point> uniquePoints = new LinkedList<>();
+//        for (Polygon face : faces) {
+//            List<Intersection> faceIntersections = face.calculateIntersectionsHelper(ray);
+//            if (faceIntersections != null) {
+//                if (intersections == null)
+//                    intersections = new LinkedList<>();
+//                //if the intersect point is on a corner, and already exists in the list, skip it
+//                for (Intersection intersection : faceIntersections) {
+//                    Point point = intersection.point;
+//                    if (!uniquePoints.contains(point)) {
+//                        uniquePoints.add(point);
+//                        intersections.add(intersection);
+//                    }
+//                }
+//            }
+//        }
+        return components.calculateIntersections(ray);
+    }
 
-        return intersections;    }
+    @Override
+    public Geometry setEmission(Color emission) {
+        for (Polygon p : sideFaces) p.setEmission(emission);
+        return this;
+    }
+
+    @Override
+    public Geometry setMaterial(Material material) {
+        for (Polygon p : sideFaces) p.setMaterial(material);
+        return this;
+    }
 }
