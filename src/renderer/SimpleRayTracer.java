@@ -53,6 +53,7 @@ public class SimpleRayTracer extends RayTracerBase {
         return closestIntersection == null ? scene.background : calcColor(closestIntersection, ray);
     }
 
+    
 
     private Intersection findClosestIntersection(Ray ray) {
         var intersections = scene.geometries.calculateIntersections(ray);

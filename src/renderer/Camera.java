@@ -6,7 +6,10 @@ import primitives.Ray;
 import primitives.Vector;
 import scene.Scene;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.MissingResourceException;
+import java.util.Random;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -67,6 +70,61 @@ public class Camera implements Cloneable {
     /**
      * Default constructor for the Camera class.
      */
+
+    private boolean AA_FLAG = true;
+
+    private int AA_GRID_SIZE = 9;
+
+    public void setAAFlag(boolean flag) {
+        this.AA_FLAG = flag;
+    }
+
+    public boolean isAAFlag() {
+        return this.AA_FLAG;
+    }
+
+
+    public List<Ray> constructRaysJ(int nX, int nY, int j, int i) {
+
+        List<Ray> rays = new ArrayList<>();
+        Random random = new Random();
+        double Ry = height / nY;
+        double Rx = width / nX;
+        double stepY = Ry / AA_GRID_SIZE;
+        double stepX = Rx / AA_GRID_SIZE;
+
+        for (int subI = 0; subI < AA_GRID_SIZE; subI++) {
+            for (int subJ = 0; subJ < AA_GRID_SIZE; subJ++) {
+                double jitterY = random.nextDouble() % AA_GRID_SIZE; // Random offset in Y direction
+                double jitterX = random.nextDouble() % AA_GRID_SIZE; // Random offset in X direction
+
+                double offsetI = (subI + jitterY) * stepY;
+                double offsetJ = (subJ + jitterX) * stepX;
+                double Yi = -(i - (nY - 1) / 2d) * Ry + offsetI;
+                double Xj = (j - (nX - 1) / 2d) * Rx + offsetJ;
+                Point pIJ = p0;
+                if (!isZero(Xj)) pIJ = pIJ.add(vRight.scale(Xj));
+                if (!isZero(Yi)) pIJ = pIJ.add(vUp.scale(Yi));
+                pIJ = pIJ.add(vTo.scale(distance)); // pIJ is the center of the pixel in the view plane
+
+                Ray ray = new Ray(p0, pIJ.subtract(p0).normalize());
+                rays.add(ray);
+            }
+        }
+        return rays;
+
+    }
+    private void castRayJ(int nX, int nY, int j, int i) {
+
+        List<Ray> rays = constructRaysJ(nX, nY, j, i);
+        Color color = Color.BLACK;
+        for (Ray ray : rays) {
+            color = color.add(rayTracer.traceRay(ray));
+        }
+        color = color.scale(1d / rays.size());
+        imageWriter.writePixel(j, i, color);
+
+    }
     private Camera() {
     }
 
@@ -207,18 +265,25 @@ public class Camera implements Cloneable {
      *
      * @return the camera object
      */
+
     public Camera renderImage() {
         if (imageWriter == null || rayTracer == null)
             throw new IllegalArgumentException("Missing imageWriter or rayTracer");
+
         int y = imageWriter.nY();
         int x = imageWriter.nX();
+
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
-                castRay(x, y, i, j);
+                if (AA_FLAG)
+                    castRayJ(x, y, j, i);
+                else
+                    castRay(x, y, i, j);
             }
         }
         return this;
     }
+
 
     /**
      * Prints a grid on the image.
@@ -319,17 +384,7 @@ public class Camera implements Cloneable {
          * @return the Builder instance
          */
         public Builder setDirection(Point target2, Vector vUp) {
-//            //if camera position not set yet, cannot set direction
-//            if (camera.p0 == null)
-//                throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
-//            // Calculate the direction vector from the camera position to the target point
-//            camera.vTo = target2.subtract(camera.p0).normalize();
-//            Vector vRight = camera.vTo.crossProduct(vUp).normalize();
-//            // if(!isZero(camera.vTo.dotProduct(camera.vRight)))
-//            //   throw new IllegalArgumentException("vUp and vTo must be orthogonal");
-//            //fix the up vector because it may not be orthogonal to vTo;
-//            camera.vUp = vRight.crossProduct(camera.vTo).normalize();
-//            return this;
+
             if (camera.p0 == null)
                 throw new IllegalArgumentException("Camera position (p0) must be set before setting direction using a target point.");
 
@@ -414,9 +469,6 @@ public class Camera implements Cloneable {
                 case SIMPLE:
                     camera.rayTracer = new SimpleRayTracer(scene);
                     break;
-//                case GRID:
-//                    camera.rayTracer = new GridRayTracer(scene);
-//                    break;
                 default:
                     camera.rayTracer = new SimpleRayTracer(null);
                     break;
