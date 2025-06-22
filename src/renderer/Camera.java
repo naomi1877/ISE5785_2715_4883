@@ -73,6 +73,7 @@ public class Camera implements Cloneable {
 
     private boolean AA_FLAG = true;
 
+
     private int AA_GRID_SIZE = 9;
 
     public void setAAFlag(boolean flag) {
