@@ -664,6 +664,8 @@ void testTransparentPyramidRender() {
                 .setKT(0.4);
         Color bladeColor = new Color(BLUE);
 
+
+
 //תחנת קמח
         scene.geometries.add(
                 // עמוד
@@ -740,14 +742,34 @@ void testTransparentPyramidRender() {
         );
 
         scene.geometries.add(
+                new Sphere(65, new Point(220, 10, 200))
+                        .setEmission(new Color(8, 8, 12))
+                        .setMaterial(new Material()
+                                .setKD(0.1)    // מעט פיזור אור (Diffuse)
+                                .setKS(0.2)    // השתקפות מבריקה נמוכה
+                                .setShininess(500) // מאוד מבריק (עוד יותר מהקודם)
+                                .setKR(0.95)), // השתקפות מאוד גבוהה - מראה כמעט מושלם
+//                new Cylinder(30,    new Ray(new Point(130, 0, 140), new Vector(0, 1, 0)), 120)
+//                        .setEmission(new Color(8, 8, 12))
+//                        .setMaterial(new Material()
+//                                .setKD(0.1)    // מעט פיזור אור (Diffuse)
+//                                .setKS(0.2)    // השתקפות מבריקה נמוכה
+//                                .setShininess(500) // מאוד מבריק (עוד יותר מהקודם)
+//                                .setKR(0.95)), // השתקפות מאוד גבוהה - מראה כמעט מושלם
 
-                new Sphere(50, new Point(100, 20, 80))
+                new Sphere(50, new Point(120, 20, 80))
                         .setEmission(new Color(blue))
                         .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(150)),
 
                 new Cone(60, new Ray(new Point(-200, 150, 60), new Vector(0, -1, 0)), 170)
                         .setEmission(new Color(blue))
                         .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3))
+                ,
+                new Sphere(30, new Point(-300, 50, 100))
+                        .setEmission(new Color(blue))
+                        .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3))
+        // מישור קרקע
+
         );
 
         scene.setAmbientLight(new AmbientLight(new Color(30, 30, 30)));
@@ -764,7 +786,7 @@ void testTransparentPyramidRender() {
                         .setKL(0.00005).setKQ(0.00001)
         );
 
-        Camera.getBuilder()
+       Camera camera= Camera.getBuilder()
                 .setRayTracer(scene, RayTracerType.SIMPLE)// מיקום גבוה יותר, קצת אחורה וימינה
                 // מיקום המצלמה - קצת יותר גבוה
                 .setLocation(new Point(0, 300, 800))
@@ -774,12 +796,12 @@ void testTransparentPyramidRender() {
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
                 .build()
-                .renderImage()
+  ;
+       camera.setAAFlag(false);
+        camera.renderImage()
                 .writeToImage("windmillPyramid14");
+
     }
-
-
-
 
 
 
@@ -988,12 +1010,6 @@ void testTransparentPyramidRender() {
 
         // --- הכדורים בצד ימין של התחנה במשולש עם הכדור הגדול בקדמת התמונה משמאל ---
         // הכדור הגדול - קדמת משולש, משמאל (קדמת התמונה)
-        scene.geometries.add(
-                new Sphere(45, new Point(170, 15, 90))
-                        .setEmission(new Color(BLUE)) // צבע כנפי הפרמידה
-                        .setMaterial(new Material()
-                                .setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4))
-        );
 
         // הכדורים הקטנים - מאחוריו, בצד ימין
         scene.geometries.add(
@@ -1009,7 +1025,15 @@ void testTransparentPyramidRender() {
                         .setEmission(new Color(10, 10, 20))
                         .setMaterial(new Material()
                                 .setKD(0.1).setKS(0.3).setShininess(400)
-                                .setKT(0.85).setKR(0.15))
+                                .setKT(0.85).setKR(0.15)),
+        new Sphere(45, new Point(170, 15, 90))
+                .setEmission(new Color(BLUE)) // צבע כנפי הפרמידה
+                .setMaterial(new Material()
+                        .setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4)),
+                new Cone(60, new Ray(new Point(-200, 150, 60), new Vector(0, -1, 0)), 170)
+                .setEmission(new Color(blue))
+                .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3))
+
         );
 
 
@@ -1040,6 +1064,8 @@ void testTransparentPyramidRender() {
                 .renderImage()
                 .writeToImage("windmillPyramid15");
     }
+
+    //Test for MP1
     @Test
     void windmillPyramid15_withAA() {
         Scene scene = new Scene("Windmill With Pyramid Blades");
