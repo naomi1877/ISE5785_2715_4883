@@ -1,15 +1,11 @@
 package renderer;
 
-import primitives.Color;
-import primitives.Point;
-import primitives.Ray;
+import primitives.*;
 import primitives.Vector;
 import scene.Scene;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -72,9 +68,10 @@ public class Camera implements Cloneable {
      */
 
     private boolean AA_FLAG = true;
-
+    private boolean ASS_FLAG = false;
 
     private int AA_GRID_SIZE = 9;
+    private int ASS_MAX_LEVEL = 2;
 
     public void setAAFlag(boolean flag) {
         this.AA_FLAG = flag;
@@ -84,50 +81,31 @@ public class Camera implements Cloneable {
         return this.AA_FLAG;
     }
 
+    public void setASSFlag(boolean flag) { this.ASS_FLAG = flag; }
+    public boolean isASSFlag() { return this.ASS_FLAG; }
 
-    public List<Ray> constructRaysJ(int nX, int nY, int j, int i) {
+    /** Amount of threads to use fore rendering image by the camera */
+    private int threadsCount = 0;
+    /**
+     * Amount of threads to spare for Java VM threads:<br>
+     * Spare threads if trying to use all the cores
+     */
+    private static final int SPARE_THREADS = 2;
+    /**
+     * Debug print interval in seconds (for progress percentage)<br>
+     * if it is zero - there is no progress output
+     */
+    private double printInterval = 0;
+    /**
+     * Pixel manager for supporting:
+     * <ul>
+     * <li>multi-threading</li>
+     * <li>debug print of progress percentage in Console window/tab</li>
+     * </ul>
+     */
+    private PixelManager pixelManager;
 
-        List<Ray> rays = new ArrayList<>();
-        Random random = new Random();
-        double Ry = height / nY;
-        double Rx = width / nX;
-        double stepY = Ry / AA_GRID_SIZE;
-        double stepX = Rx / AA_GRID_SIZE;
-
-        for (int subI = 0; subI < AA_GRID_SIZE; subI++) {
-            for (int subJ = 0; subJ < AA_GRID_SIZE; subJ++) {
-                double jitterY = random.nextDouble() % AA_GRID_SIZE; // Random offset in Y direction
-                double jitterX = random.nextDouble() % AA_GRID_SIZE; // Random offset in X direction
-
-                double offsetI = (subI + jitterY) * stepY;
-                double offsetJ = (subJ + jitterX) * stepX;
-                double Yi = -(i - (nY - 1) / 2d) * Ry + offsetI;
-                double Xj = (j - (nX - 1) / 2d) * Rx + offsetJ;
-                Point pIJ = p0;
-                if (!isZero(Xj)) pIJ = pIJ.add(vRight.scale(Xj));
-                if (!isZero(Yi)) pIJ = pIJ.add(vUp.scale(Yi));
-                pIJ = pIJ.add(vTo.scale(distance)); // pIJ is the center of the pixel in the view plane
-
-                Ray ray = new Ray(p0, pIJ.subtract(p0).normalize());
-                rays.add(ray);
-            }
-        }
-        return rays;
-
-    }
-    private void castRayJ(int nX, int nY, int j, int i) {
-
-        List<Ray> rays = constructRaysJ(nX, nY, j, i);
-        Color color = Color.BLACK;
-        for (Ray ray : rays) {
-            color = color.add(rayTracer.traceRay(ray));
-        }
-        color = color.scale(1d / rays.size());
-        imageWriter.writePixel(j, i, color);
-
-    }
-    private Camera() {
-    }
+    private Camera() {}
 
     /**
      * Returns a new instance of the {@code Builder} for constructing a {@code Camera} object.
@@ -255,7 +233,72 @@ public class Camera implements Cloneable {
         Ray ray = constructRay(nx, ny, j, i);
         Color color = rayTracer.traceRay(ray);
         imageWriter.writePixel(j, i, color);
+        // If multithreading is enabled, notify the pixel manager that the pixel is done
+        if (pixelManager != null)
+            pixelManager.pixelDone();
     }
+
+    public List<Ray> constructRaysJ(int nX, int nY, int j, int i) {
+
+        List<Ray> rays = new ArrayList<>();
+        Random random = new Random();
+        double Ry = height / nY;
+        double Rx = width / nX;
+        double stepY = Ry / AA_GRID_SIZE;
+        double stepX = Rx / AA_GRID_SIZE;
+
+        for (int subI = 0; subI < AA_GRID_SIZE; subI++) {
+            for (int subJ = 0; subJ < AA_GRID_SIZE; subJ++) {
+                double jitterY = random.nextDouble() % AA_GRID_SIZE; // Random offset in Y direction
+                double jitterX = random.nextDouble() % AA_GRID_SIZE; // Random offset in X direction
+
+                double offsetI = (subI + jitterY) * stepY;
+                double offsetJ = (subJ + jitterX) * stepX;
+                double Yi = -(i - (nY - 1) / 2d) * Ry + offsetI;
+                double Xj = (j - (nX - 1) / 2d) * Rx + offsetJ;
+                Point pIJ = p0;
+                if (!isZero(Xj)) pIJ = pIJ.add(vRight.scale(Xj));
+                if (!isZero(Yi)) pIJ = pIJ.add(vUp.scale(Yi));
+                pIJ = pIJ.add(vTo.scale(distance)); // pIJ is the center of the pixel in the view plane
+
+                Ray ray = new Ray(p0, pIJ.subtract(p0).normalize());
+                rays.add(ray);
+            }
+        }
+        return rays;
+
+    }
+    private void castRayJ(int nX, int nY, int j, int i) {
+
+        List<Ray> rays = constructRaysJ(nX, nY, j, i);
+        Color color = Color.BLACK;
+        for (Ray ray : rays) {
+            color = color.add(rayTracer.traceRay(ray));
+        }
+        color = color.scale(1d / rays.size());
+        imageWriter.writePixel(j, i, color);
+
+    }
+
+    private void castRayASS(int nX, int nY, int j, int i) {
+        double pixelWidth = width / nX;
+        double pixelHeight = height / nY;
+
+        // חישוב מרכז הפיקסל
+        double xJ = (j - (nX - 1) / 2.0) * pixelWidth;
+        double yI = -1 * (i - (nY - 1) / 2.0) * pixelHeight;
+
+        Point pCenter = this.p0.add(vTo.scale(distance));
+        if (!isZero(xJ)) pCenter = pCenter.add(vRight.scale(xJ));
+        if (!isZero(yI)) pCenter = pCenter.add(vUp.scale(yI));
+
+        Color color = adaptiveSuperSampling(pCenter, pixelWidth, pixelHeight, 2); // רמת עומק התחלתית
+        imageWriter.writePixel(j, i, color);
+
+        if (pixelManager != null)
+            pixelManager.pixelDone();
+    }
+
 
     /**
      * Renders the image by tracing rays through each pixel in the viewport.
@@ -271,18 +314,21 @@ public class Camera implements Cloneable {
         if (imageWriter == null || rayTracer == null)
             throw new IllegalArgumentException("Missing imageWriter or rayTracer");
 
-        int y = imageWriter.nY();
-        int x = imageWriter.nX();
+        System.out.println("Multithreading mode: " +
+                (threadsCount == 0 ? "Single thread" :
+                        threadsCount == -1 ? "Parallel stream" :
+                                threadsCount + " raw threads"));
 
-        for (int i = 0; i < y; i++) {
-            for (int j = 0; j < x; j++) {
-                if (AA_FLAG)
-                    castRayJ(x, y, j, i);
-                else
-                    castRay(x, y, i, j);
-            }
-        }
-        return this;
+        // Initialize the pixel manager if multithreading is enabled
+        if (threadsCount != 0)
+            pixelManager = new PixelManager(nY, nX, printInterval);
+
+        // Calculate the center point of the viewport
+        return switch (threadsCount) {
+            case 0 -> renderImageNoThreads();   // no multithreading
+            case -1 -> renderImageStream();     // parallel stream
+            default -> renderImageRawThreads(); // raw threads
+        };
     }
 
 
@@ -312,6 +358,69 @@ public class Camera implements Cloneable {
     public void writeToImage(String name) {
         imageWriter.writeToImage(name);
     }
+    /**
+     * Render image using multi-threading by parallel streaming
+     * @return the camera object itself
+     */
+    private Camera renderImageStream() {
+        IntStream.range(0, nY).parallel()
+                .forEach(i -> IntStream.range(0, nX).parallel()
+                        .forEach(j -> {
+                            if (ASS_FLAG)
+                                castRayASS(nX, nY, j, i);
+                            else if (AA_FLAG)
+                                castRayJ(nX, nY, j, i);
+                            else
+                                castRay(nX, nY, j, i);
+
+                        }));
+        return this;
+    }
+
+    /**
+     * Render image without multi-threading
+     * @return the camera object itself
+     */
+    private Camera renderImageNoThreads() {
+        for (int i = 0; i < nY; ++i)
+            for (int j = 0; j < nX; ++j)
+                if (ASS_FLAG)
+                    castRayASS(nX, nY, j, i);
+                else if (AA_FLAG)
+                    castRayJ(nX, nY, j, i);
+                else
+                    castRay(nX, nY, j, i);
+
+        return this;
+    }
+
+    /**
+     * Render image using multi-threading by creating and running raw threads
+     * @return the camera object itself
+     */
+    private Camera renderImageRawThreads() {
+        var threads = new LinkedList<Thread>();
+        for (int i = 0; i < threadsCount; i++) {
+            threads.add(new Thread(() -> {
+                PixelManager.Pixel pixel;
+                while ((pixel = pixelManager.nextPixel()) != null) {
+                    if (ASS_FLAG)
+                        castRayASS(nX, nY, pixel.col(), pixel.row());
+                    else if (AA_FLAG)
+                        castRayJ(nX, nY, pixel.col(), pixel.row());
+                    else
+                        castRay(nX, nY, pixel.col(), pixel.row());
+
+                }
+            }));
+        }
+        for (var thread : threads) thread.start();
+        try {
+            for (var thread : threads) thread.join();
+        } catch (InterruptedException ignored) {}
+        return this;
+    }
+
 
     /**
      * Builder class for constructing a Camera object.
@@ -487,6 +596,34 @@ public class Camera implements Cloneable {
             camera.imageWriter = imageWriter;
             return this;
         }
+        /**
+         * Sets the pixel manager for the camera.
+         *
+         * @return the Builder instance
+         */
+        public Builder setMultithreading(int threads) {
+            if (threads < -3)
+                throw new IllegalArgumentException("Multithreading parameter must be -2 or higher");
+            if (threads == -2) {
+                int cores = Runtime.getRuntime().availableProcessors() - SPARE_THREADS;
+                camera.threadsCount = cores <= 2 ? 1 : cores;
+            } else {
+                camera.threadsCount = threads;
+            }
+            return this;
+        }
+
+        /**
+         * Sets the pixel manager for the camera.
+         *
+         * @return the Builder instance
+         */
+        public Builder setDebugPrint(double interval) {
+            if (interval < 0)
+                throw new IllegalArgumentException("interval parameter must be non-negative");
+            camera.printInterval = interval;
+            return this;
+        }
 
         /**
          * Builds the Camera object after validating all necessary fields.
@@ -543,4 +680,66 @@ public class Camera implements Cloneable {
         }
 
     }
+
+    /**
+     * This function implements Adaptive Anti-Aliasing using recursive subdivision.
+     * It samples the center and 4 corners of a pixel and compares their colors.
+     * If the colors differ significantly, the pixel is divided into 4 subpixels and processed recursively.
+     * Otherwise, the average color is returned.
+     */
+    private Color adaptiveSuperSampling(Point center, double pixelWidth, double pixelHeight, int level) {
+        if (level == 0) {
+            // בסיס הרקורסיה – רמת העומק הסתיימה
+            Ray ray = new Ray(p0, center.subtract(p0).normalize());
+            return rayTracer.traceRay(ray);
+        }
+
+        // חישוב 5 נקודות לבדיקה: מרכז + 4 פינות של הפיקסל
+        double halfWidth = pixelWidth / 2.0;
+        double halfHeight = pixelHeight / 2.0;
+
+        Point topLeft     = center.add(vRight.scale(-halfWidth)).add(vUp.scale(halfHeight));
+        Point topRight    = center.add(vRight.scale(halfWidth)).add(vUp.scale(halfHeight));
+        Point bottomLeft  = center.add(vRight.scale(-halfWidth)).add(vUp.scale(-halfHeight));
+        Point bottomRight = center.add(vRight.scale(halfWidth)).add(vUp.scale(-halfHeight));
+
+        Color cCenter     = rayTracer.traceRay(new Ray(p0, center.subtract(p0).normalize()));
+        Color cTopLeft    = rayTracer.traceRay(new Ray(p0, topLeft.subtract(p0).normalize()));
+        Color cTopRight   = rayTracer.traceRay(new Ray(p0, topRight.subtract(p0).normalize()));
+        Color cBottomLeft = rayTracer.traceRay(new Ray(p0, bottomLeft.subtract(p0).normalize()));
+        Color cBottomRight= rayTracer.traceRay(new Ray(p0, bottomRight.subtract(p0).normalize()));
+
+        // בדיקת אחידות הצבעים – אם כולם "קרובים מספיק" זהים
+        if (isColorCloseEnough(cCenter, cTopLeft) &&
+                isColorCloseEnough(cCenter, cTopRight) &&
+                isColorCloseEnough(cCenter, cBottomLeft) &&
+                isColorCloseEnough(cCenter, cBottomRight)) {
+
+            return cCenter.add(cTopLeft, cTopRight, cBottomLeft, cBottomRight).scale(0.2);
+        }
+
+        // אחרת – מחלקים ל־4 תתי־פיקסלים
+        Color avg = Color.BLACK;
+
+        avg = avg.add(adaptiveSuperSampling(topLeft,     halfWidth, halfHeight, level - 1));
+        avg = avg.add(adaptiveSuperSampling(topRight,    halfWidth, halfHeight, level - 1));
+        avg = avg.add(adaptiveSuperSampling(bottomLeft,  halfWidth, halfHeight, level - 1));
+        avg = avg.add(adaptiveSuperSampling(bottomRight, halfWidth, halfHeight, level - 1));
+
+        return avg.scale(0.25);
+    }
+
+    /**
+     * בודק אם 2 צבעים קרובים מספיק זה לזה (הפרש קטן בערכים)
+     */
+    private boolean isColorCloseEnough(Color c1, Color c2) {
+        final double THRESHOLD = 0.1;
+
+        Double3 diff = c1.getRgb().subtract(c2.getRgb());
+        return Math.abs(diff.d1()) < THRESHOLD &&
+                Math.abs(diff.d2()) < THRESHOLD &&
+                Math.abs(diff.d3()) < THRESHOLD;
+    }
+
+
 }

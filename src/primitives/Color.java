@@ -74,6 +74,9 @@ public class Color {
         int ib = (int) rgb.d3();
         return new java.awt.Color(ir > 255 ? 255 : ir, ig > 255 ? 255 : ig, ib > 255 ? 255 : ib);
     }
+    public Double3 getRgb() {
+        return rgb;
+    }
 
     /**
      * Operation of adding this and one or more other colors (by component)
