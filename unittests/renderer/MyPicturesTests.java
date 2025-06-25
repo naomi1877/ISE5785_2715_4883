@@ -1030,17 +1030,24 @@ public class MyPicturesTests {
                         .setEmission(new Color(BLUE)) // צבע כנפי הפרמידה
                         .setMaterial(new Material()
                                 .setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4)),
-                new Cone(60, new Ray(new Point(-200, 150, 60), new Vector(0, -1, 0)), 170)
+                new Cone(50, new Ray(new Point(-200, 150, 160), new Vector(0, -1, 0)), 170)
                         .setEmission(new Color(blue))
-                        .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3))
-
-        );
-        /// //////////////////////////////
-
-        scene.geometries.add(
-                new Box(
+                        .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3)),
+        // יצירת פירמידה
+       new Pyramid(new Point(-100, 100, 220),
+                new Polygon(
+                new Point(-120, -20, 190),
+                new Point(-50, -20, 190),
+                new Point(-60, -20, 260),
+                new Point(-140, -20, 260))).setEmission(new Color(red)) // צבע כחול בהיר
+                .setMaterial(new Material()
+                        .setKD(0.2)
+                        .setKS(0.6)
+                        .setShininess(200)
+                        .setKT(0.6)) // שקיפות
+                , new Box(
                         new Double3(250, 0, 0),   // פינה תחתונה קדמית
-                        new Double3(300, 50,40)   // פינה עליונה אחורית
+                        new Double3(320, 70,60)   // פינה עליונה אחורית
                 )
                         .setEmission(new Color(60, 100, 180))
                         .setMaterial(new Material()
@@ -1048,6 +1055,18 @@ public class MyPicturesTests {
                                 .setKS(0.3)
                                 .setKT(0.5)
                                 .setShininess(300))
+        );
+        /// //////////////////////////////
+//3 Asryeli Tours
+        scene.geometries.add(
+                new Cylinder(38,
+                        new Ray(new Point(-260, -150, 0),new Vector(0, 1, 0)),
+                        360)
+                        .setEmission(new Color(63, 63, 63))
+                        .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100)),
+                new Box(new Double3(-220,-150,-10),//
+                        new Double3(-144,220,-86)).setEmission(new Color(63, 63, 63))
+                        .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100))
         );
 
 
