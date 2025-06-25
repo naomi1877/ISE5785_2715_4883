@@ -253,9 +253,9 @@ public class MyPicturesTests {
 //                        .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100))
 //        );
         scene.geometries.add(new Cone( 100, // רדיוס וגובה
-                     new Ray(new Point(0, 150, 0), new Vector(0, -1, 0)) // ממרכז כלפי מעלה
-                        , 300).setEmission(new Color(150, 20, 20)) // אדום בוהק
-                       .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100)));
+                new Ray(new Point(0, 150, 0), new Vector(0, -1, 0)) // ממרכז כלפי מעלה
+                , 300).setEmission(new Color(150, 20, 20)) // אדום בוהק
+                .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100)));
 
         // מישור רקע אחורי
         scene.geometries.add(
@@ -312,11 +312,11 @@ public class MyPicturesTests {
 
         scene.geometries.add(
                 new Pyramid(new Point(0,0,0),new Polygon(
-                new Point(-50,200,-50),
-                new Point(50,200,-50),
-                new Point(100,200,50),
-                new Point(-50,200,50)
-        )).setEmission(new Color(BLUE))
+                        new Point(-50,200,-50),
+                        new Point(50,200,-50),
+                        new Point(100,200,50),
+                        new Point(-50,200,50)
+                )).setEmission(new Color(BLUE))
                         .setMaterial(new Material().setKD(0.2).setKS(0.2).setShininess(30).setKT(0.6)));
         // רקע
         scene.geometries.add(
@@ -349,62 +349,62 @@ public class MyPicturesTests {
                 .writeToImage("Pyramid1");
     }
 
-@Test
-void testTransparentPyramidRender() {
-    Scene scene = new Scene("Transparent Pyramid Test");
+    @Test
+    void testTransparentPyramidRender() {
+        Scene scene = new Scene("Transparent Pyramid Test");
 
-    // בסיס הפירמידה – מלבן בגובה 200
-    Polygon base = new Polygon(
-            new Point(-50, 200, -50),
-            new Point(50, 200, -50),
-            new Point(50, 200, 50),
-            new Point(-50, 200, 50)
-    );
+        // בסיס הפירמידה – מלבן בגובה 200
+        Polygon base = new Polygon(
+                new Point(-50, 200, -50),
+                new Point(50, 200, -50),
+                new Point(50, 200, 50),
+                new Point(-50, 200, 50)
+        );
 
-    // קודקוד הפירמידה בגובה 0
-    Point apex = new Point(0, 0, 0);
+        // קודקוד הפירמידה בגובה 0
+        Point apex = new Point(0, 0, 0);
 
-    // יצירת פירמידה
-    Pyramid pyramid =new Pyramid(apex, base);
-    pyramid .setEmission(new Color(red)) // צבע כחול בהיר
-            .setMaterial(new Material()
-                    .setKD(0.2)
-                    .setKS(0.6)
-                    .setShininess(200)
-                    .setKT(0.6)); // שקיפות
+        // יצירת פירמידה
+        Pyramid pyramid =new Pyramid(apex, base);
+        pyramid .setEmission(new Color(red)) // צבע כחול בהיר
+                .setMaterial(new Material()
+                        .setKD(0.2)
+                        .setKS(0.6)
+                        .setShininess(200)
+                        .setKT(0.6)); // שקיפות
 
-    // הוספה לסצנה
-    scene.geometries.add(pyramid);
+        // הוספה לסצנה
+        scene.geometries.add(pyramid);
 
-    // מישור רקע
-    scene.geometries.add(
-            new Plane(new Point(0, 0, -200), new Vector(0, 0, 1))
-                    .setEmission(new Color(150, 180, 255))
-                    .setMaterial(new Material().setKD(1))
-    );
+        // מישור רקע
+        scene.geometries.add(
+                new Plane(new Point(0, 0, -200), new Vector(0, 0, 1))
+                        .setEmission(new Color(150, 180, 255))
+                        .setMaterial(new Material().setKD(1))
+        );
 
-    // תאורה
-    scene.setAmbientLight(new AmbientLight(new Color(40, 40, 40)));
-    scene.lights.add(
-            new SpotLight(new Color(800, 500, 300),
-                    new Point(100, 300, 300),
-                    new Vector(-1, -2, -2))
-                    .setKL(0.0001)
-                    .setKQ(0.00001)
-    );
+        // תאורה
+        scene.setAmbientLight(new AmbientLight(new Color(40, 40, 40)));
+        scene.lights.add(
+                new SpotLight(new Color(800, 500, 300),
+                        new Point(100, 300, 300),
+                        new Vector(-1, -2, -2))
+                        .setKL(0.0001)
+                        .setKQ(0.00001)
+        );
 
-    // מצלמה - מבט מקדימה בזווית אלכסונית
-    Camera camera = Camera.getBuilder()
-            .setRayTracer(scene, RayTracerType.SIMPLE)
-            .setLocation(new Point(0, 300, 400))
-            .setDirection(new Point(0, 100, 0), new Vector(0, -1, -1))
-            .setVpDistance(400)
-            .setVpSize(500, 500)
-            .setResolution(800, 800)
-            .build();
-    // רינדור
-    camera.renderImage().writeToImage("Pyramid2");
-}
+        // מצלמה - מבט מקדימה בזווית אלכסונית
+        Camera camera = Camera.getBuilder()
+                .setRayTracer(scene, RayTracerType.SIMPLE)
+                .setLocation(new Point(0, 300, 400))
+                .setDirection(new Point(0, 100, 0), new Vector(0, -1, -1))
+                .setVpDistance(400)
+                .setVpSize(500, 500)
+                .setResolution(800, 800)
+                .build();
+        // רינדור
+        camera.renderImage().writeToImage("Pyramid2");
+    }
 
 
     @Test
@@ -768,7 +768,7 @@ void testTransparentPyramidRender() {
                 new Sphere(30, new Point(-300, 50, 100))
                         .setEmission(new Color(blue))
                         .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3))
-        // מישור קרקע
+                // מישור קרקע
 
         );
 
@@ -786,7 +786,7 @@ void testTransparentPyramidRender() {
                         .setKL(0.00005).setKQ(0.00001)
         );
 
-       Camera camera= Camera.getBuilder()
+        Camera camera= Camera.getBuilder()
                 .setRayTracer(scene, RayTracerType.SIMPLE)// מיקום גבוה יותר, קצת אחורה וימינה
                 // מיקום המצלמה - קצת יותר גבוה
                 .setLocation(new Point(0, 300, 800))
@@ -796,8 +796,8 @@ void testTransparentPyramidRender() {
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
                 .build()
-  ;
-       camera.setAAFlag(false);
+                ;
+        camera.setAAFlag(false);
         camera.renderImage()
                 .writeToImage("windmillPyramid14");
 
@@ -1026,14 +1026,28 @@ void testTransparentPyramidRender() {
                         .setMaterial(new Material()
                                 .setKD(0.1).setKS(0.3).setShininess(400)
                                 .setKT(0.85).setKR(0.15)),
-        new Sphere(45, new Point(170, 15, 90))
-                .setEmission(new Color(BLUE)) // צבע כנפי הפרמידה
-                .setMaterial(new Material()
-                        .setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4)),
+                new Sphere(45, new Point(170, 15, 90))
+                        .setEmission(new Color(BLUE)) // צבע כנפי הפרמידה
+                        .setMaterial(new Material()
+                                .setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4)),
                 new Cone(60, new Ray(new Point(-200, 150, 60), new Vector(0, -1, 0)), 170)
-                .setEmission(new Color(blue))
-                .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3))
+                        .setEmission(new Color(blue))
+                        .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3))
 
+        );
+        /// //////////////////////////////
+
+        scene.geometries.add(
+                new Box(
+                        new Double3(250, 0, 0),   // פינה תחתונה קדמית
+                        new Double3(300, 50,40)   // פינה עליונה אחורית
+                )
+                        .setEmission(new Color(60, 100, 180))
+                        .setMaterial(new Material()
+                                .setKD(0.1)
+                                .setKS(0.3)
+                                .setKT(0.5)
+                                .setShininess(300))
         );
 
 

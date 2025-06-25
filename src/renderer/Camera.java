@@ -67,7 +67,7 @@ public class Camera implements Cloneable {
      * Default constructor for the Camera class.
      */
 
-    private boolean AA_FLAG = true;
+    private boolean AA_FLAG = false;
     private boolean ASS_FLAG = false;
 
     private int AA_GRID_SIZE = 9;
