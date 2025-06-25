@@ -795,9 +795,9 @@ public class MyPicturesTests {
                 .setVpDistance(600)
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
+                .setAAFlag(false)
                 .build()
                 ;
-        camera.setAAFlag(false);
         camera.renderImage()
                 .writeToImage("windmillPyramid14");
 
@@ -1013,7 +1013,7 @@ public class MyPicturesTests {
 
         // הכדורים הקטנים - מאחוריו, בצד ימין
         scene.geometries.add(
-                new Sphere(30, new Point(220, 10, 180))
+                new Sphere(60, new Point(220, 10, 180))
                         .setEmission(new Color(8, 8, 12))
                         .setMaterial(new Material()
                                 .setKD(0.1)    // מעט פיזור אור (Diffuse)
@@ -1030,7 +1030,8 @@ public class MyPicturesTests {
                         .setEmission(new Color(BLUE)) // צבע כנפי הפרמידה
                         .setMaterial(new Material()
                                 .setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4)),
-                new Cone(50, new Ray(new Point(-200, 150, 160), new Vector(0, -1, 0)), 170)
+               // new Cone(50, new Ray(new Point(-200, 150, 160), new Vector(0, -1, 0)), 170)
+                new Cone(50, new Ray(new Point(300, 150, 0), new Vector(0, -1, 0)), 170)
                         .setEmission(new Color(blue))
                         .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3)),
         // יצירת פירמידה
@@ -1045,28 +1046,45 @@ public class MyPicturesTests {
                         .setKS(0.6)
                         .setShininess(200)
                         .setKT(0.6)) // שקיפות
-                , new Box(
-                        new Double3(250, 0, 0),   // פינה תחתונה קדמית
-                        new Double3(320, 70,60)   // פינה עליונה אחורית
-                )
-                        .setEmission(new Color(60, 100, 180))
-                        .setMaterial(new Material()
-                                .setKD(0.1)
-                                .setKS(0.3)
-                                .setKT(0.5)
-                                .setShininess(300))
+//                , new Box(
+//                        new Double3(250, 0, 0),   // פינה תחתונה קדמית
+//                        new Double3(320, 70,60)   // פינה עליונה אחורית
+//                )
+//                        .setEmission(new Color(60, 100, 180))
+//                        .setMaterial(new Material()
+//                                .setKD(0.1)
+//                                .setKS(0.3)
+//                                .setKT(0.5)
+//                                .setShininess(300))
         );
         /// //////////////////////////////
 //3 Asryeli Tours
        scene.geometries.add(
                 new Cylinder(38,
-                        new Ray(new Point(-260, -150, 0),new Vector(0, 1, 0)),
+                        new Ray(new Point(-290, -150, 0),new Vector(0, 1, 0)),
                         360)
-                        .setEmission(new Color(63, 63, 63))
+                        .setEmission(new Color(black))
                         .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100)),
-                 new Box(new Double3(-210,-150,-10),//
-                        new Double3(-134,220,-86)).setEmission(new Color(63, 63, 63))
-                        .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100))
+                 new Box(new Double3(-200,-150,-10),//
+                        new Double3(-124,210,-86))
+                         .setEmission(new Color(black))
+                         .setMaterial(new Material().setKD(0.5).setKS(0.6).setShininess(100).setKT(0.4)),
+               new Pyramid(new Point(-250, -50, -70),
+                       new Polygon(
+                               new Point(-298, 210, -98),
+                               new Point(-220, 210, -130),
+                               new Point(-222, 210, -22)))
+                       .setEmission(new Color(black))
+                       .setMaterial(new Material().setKD(0.5).setKS(0.6).setShininess(100).setKT(0.4)),
+               new Pyramid(new Point(-250, 200, -70),
+                       new Polygon(
+                               new Point(-298, -50, -98),
+                               new Point(-220, -50, -130),
+                               new Point(-222, -50, -22)))
+                       .setEmission(new Color(black))
+                       .setMaterial(new Material().setKD(0.5).setKS(0.6).setShininess(100).setKT(0.4))
+
+
         );
 
 
@@ -1088,7 +1106,7 @@ public class MyPicturesTests {
         // מיקום המצלמה - כמו שהיה
         Camera.getBuilder()
                 .setRayTracer(scene, RayTracerType.SIMPLE)
-                .setLocation(new Point(0, 300, 800))
+                .setLocation(new Point(0, 500, 800))
                 .setDirection(new Point(0, 150, 0), new Vector(0, 1, -1))
                 .setVpDistance(600)
                 .setVpSize(500, 500)
@@ -1229,9 +1247,9 @@ public class MyPicturesTests {
                 .setVpDistance(600)
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
+                .setAAFlag(true)
                 .build();
 
-        camera.setAAFlag(true);
 
         // ביצוע הרינדור והכתיבה לקובץ
         camera.renderImage();

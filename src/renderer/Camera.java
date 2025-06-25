@@ -73,16 +73,7 @@ public class Camera implements Cloneable {
     private int AA_GRID_SIZE = 9;
     private int ASS_MAX_LEVEL = 2;
 
-    public void setAAFlag(boolean flag) {
-        this.AA_FLAG = flag;
-    }
 
-    public boolean isAAFlag() {
-        return this.AA_FLAG;
-    }
-
-    public void setASSFlag(boolean flag) { this.ASS_FLAG = flag; }
-    public boolean isASSFlag() { return this.ASS_FLAG; }
 
     /** Amount of threads to use fore rendering image by the camera */
     private int threadsCount = 0;
@@ -622,6 +613,15 @@ public class Camera implements Cloneable {
             if (interval < 0)
                 throw new IllegalArgumentException("interval parameter must be non-negative");
             camera.printInterval = interval;
+            return this;
+        }
+        public Builder setAAFlag(boolean flag) {
+            camera.AA_FLAG = flag;
+            return this;
+        }
+
+        public Builder setASSFlag(boolean flag) {
+            camera.ASS_FLAG = flag;
             return this;
         }
 
