@@ -1058,14 +1058,14 @@ public class MyPicturesTests {
         );
         /// //////////////////////////////
 //3 Asryeli Tours
-        scene.geometries.add(
+       scene.geometries.add(
                 new Cylinder(38,
                         new Ray(new Point(-260, -150, 0),new Vector(0, 1, 0)),
                         360)
                         .setEmission(new Color(63, 63, 63))
                         .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100)),
-                new Box(new Double3(-220,-150,-10),//
-                        new Double3(-144,220,-86)).setEmission(new Color(63, 63, 63))
+                 new Box(new Double3(-210,-150,-10),//
+                        new Double3(-134,220,-86)).setEmission(new Color(63, 63, 63))
                         .setMaterial(new Material().setKD(0.5).setKS(0.4).setShininess(100))
         );
 
