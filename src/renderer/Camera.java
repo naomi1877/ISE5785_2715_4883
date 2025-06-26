@@ -229,6 +229,14 @@ public class Camera implements Cloneable {
             pixelManager.pixelDone();
     }
 
+    /**
+     *
+     * @param nX
+     * @param nY
+     * @param j
+     * @param i
+     * @return
+     */
     public List<Ray> constructRaysJ(int nX, int nY, int j, int i) {
 
         List<Ray> rays = new ArrayList<>();
@@ -259,6 +267,18 @@ public class Camera implements Cloneable {
         return rays;
 
     }
+
+    /**
+     * Casts multiple rays through a single pixel using jittered or super-sampling,
+     * averages their colors, and writes the final color to the image.
+     * through slightly different sub-pixel locations (e.g., using jittering or grid sampling).
+     * It collects the color for each ray, averages the result, and sets the pixel color accordingly.</p>
+     *
+     * @param nX total number of pixels in the image width (columns)
+     * @param nY total number of pixels in the image height (rows)
+     * @param j the pixel's horizontal index (column number, X-axis)
+     * @param i the pixel's vertical index (row number, Y-axis)
+     */
     private void castRayJ(int nX, int nY, int j, int i) {
 
         List<Ray> rays = constructRaysJ(nX, nY, j, i);
@@ -268,8 +288,8 @@ public class Camera implements Cloneable {
         }
         color = color.scale(1d / rays.size());
         imageWriter.writePixel(j, i, color);
-
     }
+
 
     private void castRayASS(int nX, int nY, int j, int i) {
         double pixelWidth = width / nX;
@@ -689,12 +709,10 @@ public class Camera implements Cloneable {
      */
     private Color adaptiveSuperSampling(Point center, double pixelWidth, double pixelHeight, int level) {
         if (level == 0) {
-            // בסיס הרקורסיה – רמת העומק הסתיימה
             Ray ray = new Ray(p0, center.subtract(p0).normalize());
             return rayTracer.traceRay(ray);
         }
 
-        // חישוב 5 נקודות לבדיקה: מרכז + 4 פינות של הפיקסל
         double halfWidth = pixelWidth / 2.0;
         double halfHeight = pixelHeight / 2.0;
 
@@ -709,7 +727,6 @@ public class Camera implements Cloneable {
         Color cBottomLeft = rayTracer.traceRay(new Ray(p0, bottomLeft.subtract(p0).normalize()));
         Color cBottomRight= rayTracer.traceRay(new Ray(p0, bottomRight.subtract(p0).normalize()));
 
-        // בדיקת אחידות הצבעים – אם כולם "קרובים מספיק" זהים
         if (isColorCloseEnough(cCenter, cTopLeft) &&
                 isColorCloseEnough(cCenter, cTopRight) &&
                 isColorCloseEnough(cCenter, cBottomLeft) &&
@@ -718,7 +735,6 @@ public class Camera implements Cloneable {
             return cCenter.add(cTopLeft, cTopRight, cBottomLeft, cBottomRight).scale(0.2);
         }
 
-        // אחרת – מחלקים ל־4 תתי־פיקסלים
         Color avg = Color.BLACK;
 
         avg = avg.add(adaptiveSuperSampling(topLeft,     halfWidth, halfHeight, level - 1));
@@ -729,9 +745,6 @@ public class Camera implements Cloneable {
         return avg.scale(0.25);
     }
 
-    /**
-     * בודק אם 2 צבעים קרובים מספיק זה לזה (הפרש קטן בערכים)
-     */
     private boolean isColorCloseEnough(Color c1, Color c2) {
         final double THRESHOLD = 0.1;
 

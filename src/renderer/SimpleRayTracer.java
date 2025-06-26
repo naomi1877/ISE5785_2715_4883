@@ -54,7 +54,14 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     
-
+    /**
+     * Find the closest intersection point for the given ray.
+     * This method calculates all intersections with the scene geometries
+     * and returns the closest one.
+     *
+     * @param ray the ray to trace
+     * @return the closest intersection point, or null if no intersection is found
+     */
     private Intersection findClosestIntersection(Ray ray) {
         var intersections = scene.geometries.calculateIntersections(ray);
         return ray.findClosestIntersection(intersections);
@@ -78,6 +85,16 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
 
+    /**
+     * Calculate the color at the intersection point recursively.
+     * This method calculates the local effects and global effects (reflection and refraction)
+     * at the intersection point, up to a maximum recursion level.
+     *
+     * @param intersection the intersection point
+     * @param level        the current recursion level
+     * @param k            the scaling factor for the color
+     * @return the color at the intersection point
+     */
     private Color calcColor(Intersection intersection, int level, double k) {
         Color color = calcColorLocalEffects(intersection);
         if (level == 1)

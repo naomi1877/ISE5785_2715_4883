@@ -20,7 +20,6 @@ public class Cone extends Cylinder{
      */
     public Cone(double radius, Ray axis, double height) { //double radius2,
         super(radius, axis, height);
-        //this.radius2 = radius2;
     }
 
     @Override

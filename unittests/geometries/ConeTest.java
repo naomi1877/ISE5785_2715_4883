@@ -14,13 +14,11 @@ class ConeTest {
 
     @Test
     void testConeRayHitsBothBases() {
-        // קרן שעוברת בציר z מלמעלה למטה (אורך 10)
+
         Ray axis = new Ray(new Point(0, 0, 0), new Vector(0, 0, 1));
 
-        // יוצרים קונוס עם רדיוס תחתון 5, רדיוס עליון 3, גובה 10
         Cone cone = new Cone(3, axis, 10);
 
-        // קרן שיורדת דרך ציר הקונוס – אמורה לפגוע בשני הבסיסים
         Ray ray = new Ray(new Point(0, 0, 15), new Vector(0, 0, -1));
 
         List<Intersectable.Intersection> intersections = cone.calculateIntersectionsHelper(ray);

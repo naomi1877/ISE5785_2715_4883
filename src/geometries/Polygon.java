@@ -107,6 +107,12 @@ public class Polygon extends Geometry {
 
     }
 
+    /**
+     * Checks if a given point is on the polygon.
+     *
+     * @param point the point to check
+     * @return true if the point is on the polygon, false otherwise
+     */
     public boolean isOn(Point point) {
         // Step 1: Check if point is on the same plane
         Vector n = this.getNormal(point);

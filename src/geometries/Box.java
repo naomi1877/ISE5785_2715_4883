@@ -14,7 +14,7 @@ import java.util.List;
  * in 3D space, defined by two opposite corner points.
  * The box is composed of 6 rectangular faces (Polygons).
  *
- * @author Naomie Gronstein
+ * @author Naomie Gronstein and Efrat Brinkman
  */
 public class Box extends Geometry{
     private final Double3 min;

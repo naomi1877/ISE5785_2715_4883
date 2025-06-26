@@ -108,6 +108,7 @@ public class Point {
         return xyz.d2();
     }
 
+
     public double getZ() {
         return xyz.d3();
     }

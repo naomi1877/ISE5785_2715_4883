@@ -489,7 +489,17 @@ public class MyPicturesTests {
         camera.renderImage().writeToImage("windmillRotated30");
     }
 
-
+    /**
+     * Rotates a point around the Y-axis by a given angle, relative to a center point.
+     *
+     * The rotation is performed in the XZ-plane, while the Y-coordinate remains unchanged.
+     * Positive angles represent counter-clockwise rotation when looking from above.</p>
+     *
+     * @param center the center of rotation (pivot point)
+     * @param p the point to rotate
+     * @param angleDegrees the rotation angle in degrees (positive = counter-clockwise)
+     * @return the new point after rotation
+     */
     public static Point rotateAroundY(Point center, Point p, double angleDegrees) {
         double angleRadians = Math.toRadians(angleDegrees);
         double cos = Math.cos(angleRadians);
@@ -633,18 +643,7 @@ public class MyPicturesTests {
                 .setResolution(800, 800)
                 .build()
                 .renderImage()
-                .writeToImage("windmillPyramid12");
-    }
-
-
-
-
-
-
-
-
-
-
+                .writeToImage("windmillPyramid12")
 
 
     @Test

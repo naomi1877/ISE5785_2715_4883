@@ -155,7 +155,6 @@ class CameraTestMP2 {
     }
     @Test
     void testWindmillWithASS() {
-        // יצירת הסצנה הכבדה בדיוק כמו בפונקציה שלך
         Scene scene = new Scene("Windmill With Pyramid Blades");
         Point pivot = new Point(0, 150, 49);
         double bladeLength = 105;
@@ -165,9 +164,9 @@ class CameraTestMP2 {
         Material bladeMaterial = new Material().setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4);
         Color bladeColor = new Color(BLUE);
 
-        // הוספת כל הגופים והתאורות בדיוק כמו בתיאור שלך
+
         scene.geometries.add(
-                // גוף התחנה
+
                 new Cylinder(49, new Ray(rotateAroundY(pivot, new Point(0, -150, 0), angle),
                         rotateAroundY(new Vector(0, 1, 0), angle)), 300)
                         .setEmission(new Color(100, 80, 50))
@@ -181,7 +180,7 @@ class CameraTestMP2 {
                         .setEmission(new Color(80, 40, 100))
                         .setMaterial(new Material().setKD(0.4).setKS(0.8).setShininess(300)),
 
-                // כנפי פירמידות
+
                 new Pyramid(rotateAroundY(pivot, pivot, angle),
                         new Polygon(
                                 rotateAroundY(pivot, new Point(-bladeWidth / 2, 150 + bladeLength, 50), angle),
@@ -219,7 +218,7 @@ class CameraTestMP2 {
                         .setEmission(new Color(20, 20, 50))
                         .setMaterial(new Material().setKD(1)),
 
-                // הכדורים בצד
+
                 new Sphere(45, new Point(170, 15, 90))
                         .setEmission(new Color(BLUE))
                         .setMaterial(new Material().setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4)),
@@ -244,9 +243,9 @@ class CameraTestMP2 {
                 .setVpDistance(600)
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
-                .setMultithreading(-2) // ריבוי תהליכונים
-                .setAAFlag(false)       // כיבוי AA רגיל
-                .setASSFlag(true)      // הפעלת ASS
+                .setMultithreading(-2)
+                .setAAFlag(false)
+                .setASSFlag(true)
                 .setDebugPrint(1)
                 .build();
 
@@ -272,7 +271,7 @@ class CameraTestMP2 {
                 .setKT(0.4);
         Color bladeColor = new Color(BLUE);
 
-        // תחנת קמח - כמו שהיה במקור (ללא שינוי)
+
         scene.geometries.add(
                 new Cylinder(49,
                         new Ray(rotateAroundY(pivot,new Point(0, -150, 0),angle),
@@ -338,26 +337,23 @@ class CameraTestMP2 {
                         .setMaterial(new Material().setKD(1))
         );
 
-        // --- הכדורים בצד ימין של התחנה במשולש עם הכדור הגדול בקדמת התמונה משמאל ---
-        // הכדור הגדול - קדמת משולש, משמאל (קדמת התמונה)
 
-        // הכדורים הקטנים - מאחוריו, בצד ימין
         scene.geometries.add(
                 new Sphere(30, new Point(220, 10, 180))
                         .setEmission(new Color(8, 8, 12))
                         .setMaterial(new Material()
-                                .setKD(0.1)    // מעט פיזור אור (Diffuse)
-                                .setKS(0.2)    // השתקפות מבריקה נמוכה
-                                .setShininess(500) // מאוד מבריק (עוד יותר מהקודם)
-                                .setKR(0.95)), // השתקפות מאוד גבוהה - מראה כמעט מושלם
+                                .setKD(0.1)
+                                .setKS(0.2)
+                                .setShininess(500)
+                                .setKR(0.95)),
 
-                new Sphere(25, new Point(120, 10, 150)) // שמאלי - שמור כפי שהיה
+                new Sphere(25, new Point(120, 10, 150))
                         .setEmission(new Color(10, 10, 20))
                         .setMaterial(new Material()
                                 .setKD(0.1).setKS(0.3).setShininess(400)
                                 .setKT(0.85).setKR(0.15)),
                 new Sphere(45, new Point(170, 15, 90))
-                        .setEmission(new Color(BLUE)) // צבע כנפי הפרמידה
+                        .setEmission(new Color(BLUE))
                         .setMaterial(new Material()
                                 .setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4)),
                 // new Cone(50, new Ray(new Point(-200, 150, 160), new Vector(0, -1, 0)), 170)
@@ -407,8 +403,6 @@ class CameraTestMP2 {
 
         );
 
-
-        // תאורה
         scene.setAmbientLight(new AmbientLight(new Color(30, 30, 30)));
         scene.lights.add(
                 new SpotLight(new Color(600, 219, 255), new Point(200, 200, 200), new Vector(-2, -2, -3))
@@ -417,9 +411,9 @@ class CameraTestMP2 {
 
         scene.lights.add(
                 new SpotLight(
-                        new Color(800, 300, 100),               // גוון חמים של שקיעה
-                        new Point(-300, 300, 400),              // מיקום רחוק באופק
-                        new Vector(2, -2, -3))                  // כיוון אל הסצנה
+                        new Color(800, 300, 100),               
+                        new Point(-300, 300, 400),
+                        new Vector(2, -2, -3))
                         .setKL(0.00005).setKQ(0.00001)
         );
 
