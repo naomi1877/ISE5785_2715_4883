@@ -37,7 +37,6 @@ public class SimpleRayTracer extends RayTracerBase {
 
     /**
      * Constructor
-     *
      * @param scene the scene to trace rays through
      */
     public SimpleRayTracer(Scene scene) {
@@ -58,7 +57,6 @@ public class SimpleRayTracer extends RayTracerBase {
      * Find the closest intersection point for the given ray.
      * This method calculates all intersections with the scene geometries
      * and returns the closest one.
-     *
      * @param ray the ray to trace
      * @return the closest intersection point, or null if no intersection is found
      */

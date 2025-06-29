@@ -15,10 +15,12 @@ import static primitives.Util.isZero;
  * It includes properties such as position, direction vectors, and viewport size.
  */
 public class Camera implements Cloneable {
+
     /**
      * The image writer used to create the image.
      */
     private static ImageWriter imageWriter;
+
     /**
      * The "to" direction vector of the camera.
      */
@@ -63,34 +65,48 @@ public class Camera implements Cloneable {
      * The ray tracer used to trace rays in the scene.
      */
     private RayTracerBase rayTracer;
-    /**
-     * Default constructor for the Camera class.
-     */
 
+    /**
+     * Flag for enabling anti-aliasing (AA).
+     * If true, the camera will use anti-aliasing techniques.
+     */
     private boolean AA_FLAG = false;
 
+    /**
+     * Flag for enabling adaptive super-sampling
+     *  If true, the camera will use adaptive super-sampling techniques.
+     */
     private boolean ASS_FLAG = false;
 
+    /**
+     * num of minis pixels at width and height
+     */
     private int AA_GRID_SIZE = 9;
+
+    /**
+     * LEVEL is the recursion level for adaptive super-sampling
+     */
+    private int LEVEL = 3;
 
     /** Amount of threads to use fore rendering image by the camera */
     private int threadsCount = 0;
+
     /**
      * Amount of threads to spare for Java VM threads:<br>
      * Spare threads if trying to use all the cores
      */
     private static final int SPARE_THREADS = 2;
+
     /**
      * Debug print interval in seconds (for progress percentage)<br>
      * if it is zero - there is no progress output
      */
     private double printInterval = 0;
+
     /**
      * Pixel manager for supporting:
-     * <ul>
      * <li>multi-threading</li>
      * <li>debug print of progress percentage in Console window/tab</li>
-     * </ul>
      */
     private PixelManager pixelManager;
 
@@ -98,7 +114,6 @@ public class Camera implements Cloneable {
 
     /**
      * Returns a new instance of the {@code Builder} for constructing a {@code Camera} object.
-     *
      * @return a new Builder instance
      */
     public static Builder getBuilder() {
@@ -106,82 +121,7 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * Returns the forward direction vector of the camera (vTo).
-     *
-     * @return the vector pointing in the direction the camera is facing
-     */
-    public Vector getVTo() {
-        return vTo;
-    }
-
-    /**
-     * Returns the upward direction vector of the camera (vUp).
-     *
-     * @return the vector pointing upward relative to the camera
-     */
-    public Vector getVUp() {
-        return vUp;
-    }
-
-    /**
-     * Returns the rightward direction vector of the camera (vRight),
-     * which is orthogonal to both vTo and vUp.
-     *
-     * @return the vector pointing to the right side of the camera
-     */
-    public Vector getVRight() {
-        return vRight;
-    }
-
-    /**
-     * Returns the position of the camera in 3D space (p0).
-     *
-     * @return the origin point of the camera
-     */
-    public Point getP0() {
-        return p0;
-    }
-
-    /**
-     * Returns the center point of the view plane (pCenter),
-     * which is located at a fixed distance from the camera in the direction of vTo.
-     *
-     * @return the center point of the view plane
-     */
-    public Point getPCenter() {
-        return pCenter;
-    }
-
-    /**
-     * Returns the width of the view plane.
-     *
-     * @return the width of the view plane
-     */
-    public double getWidth() {
-        return width;
-    }
-
-    /**
-     * Returns the height of the view plane.
-     *
-     * @return the height of the view plane
-     */
-    public double getHeight() {
-        return height;
-    }
-
-    /**
-     * Returns the distance from the camera to the view plane.
-     *
-     * @return the distance from the camera to the view plane
-     */
-    public double getDistance() {
-        return distance;
-    }
-
-    /**
      * Constructs a ray through a specific pixel in the viewport
-     *
      * @param nX the number of pixels in the X direction
      * @param nY the number of pixels in the Y direction
      * @param j  the column index of the pixel
@@ -193,10 +133,6 @@ public class Camera implements Cloneable {
         double pixelWidth = width / nX;
         double pixelHeight = height / nY;
 
-        //calculate the center of the view plane
-        Point pCenter = p0.add(vTo.scale(distance));
-
-
         //calculate the center of the pixel
         double xJ = (j - (nX - 1) / 2.0) * pixelWidth;
         double yI = -1 * (i - (nY - 1) / 2.0) * pixelHeight;
@@ -207,12 +143,11 @@ public class Camera implements Cloneable {
         if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
 
         //return the ray from the camera position to the pixel center
-        return new Ray(p0, pIJ.subtract(p0).normalize());//normalize or not?
+        return new Ray(p0, pIJ.subtract(p0));
     }
 
     /**
      * Casts a ray through a specific pixel in the viewport and writes the color to the image.
-     *
      * @param nx the number of pixels in the X direction
      * @param ny the number of pixels in the Y direction
      * @param i  the row index of the pixel
@@ -228,42 +163,47 @@ public class Camera implements Cloneable {
     }
 
     /**
-     *
-     * @param nX
-     * @param nY
-     * @param j
-     * @param i
-     * @return
+     * This method constructs multiple rays for anti-aliasing (AA)
+     * It creates a grid of rays within each pixel, applying a random jitter to each sub-pixel location.
+     * @param nX the number of pixels in the X direction
+     * @param nY the number of pixels in the Y direction
+     * @param j  the column index of the pixel
+     * @param i  the row index of the pixel
+     * @return a list of rays for the pixel (j, i)
      */
     public List<Ray> constructRaysJ(int nX, int nY, int j, int i) {
-
+        //list of rays for the pixel (j, i)
         List<Ray> rays = new ArrayList<>();
         Random random = new Random();
+
         double Ry = height / nY;
         double Rx = width / nX;
+        //calculate the new width and height of the mini pixel
         double stepY = Ry / AA_GRID_SIZE;
         double stepX = Rx / AA_GRID_SIZE;
 
+        // Calculate the rays for the pixel (j, i)
         for (int subI = 0; subI < AA_GRID_SIZE; subI++) {
-            for (int subJ = 0; subJ < AA_GRID_SIZE; subJ++) {
-                double jitterY = random.nextDouble() % AA_GRID_SIZE; // Random offset in Y direction
-                double jitterX = random.nextDouble() % AA_GRID_SIZE; // Random offset in X direction
-
+            for (int subJ = 0; subJ < AA_GRID_SIZE; subJ++) {//in mini pixel
+                //random offset between 0 and 1
+                double jitterY = random.nextDouble(); // Random offset in Y direction
+                double jitterX = random.nextDouble(); // Random offset in X direction
+                // Calculate the offsets for the sub-pixel location
                 double offsetI = (subI + jitterY) * stepY;
                 double offsetJ = (subJ + jitterX) * stepX;
+                // Calculate the coordinates of the pixel center
                 double Yi = -(i - (nY - 1) / 2d) * Ry + offsetI;
                 double Xj = (j - (nX - 1) / 2d) * Rx + offsetJ;
-                Point pIJ = p0;
+                Point pIJ = pCenter;
                 if (!isZero(Xj)) pIJ = pIJ.add(vRight.scale(Xj));
                 if (!isZero(Yi)) pIJ = pIJ.add(vUp.scale(Yi));
-                pIJ = pIJ.add(vTo.scale(distance)); // pIJ is the center of the pixel in the view plane
-
-                Ray ray = new Ray(p0, pIJ.subtract(p0).normalize());
+                // Create a ray from the camera position to the sub-pixel location
+                Ray ray = new Ray(p0, pIJ.subtract(p0));
+                // Add the ray to the list of rays
                 rays.add(ray);
             }
         }
         return rays;
-
     }
 
     /**
@@ -271,21 +211,24 @@ public class Camera implements Cloneable {
      * averages their colors, and writes the final color to the image.
      * through slightly different sub-pixel locations (e.g., using jittering or grid sampling).
      * It collects the color for each ray, averages the result, and sets the pixel color accordingly.</p>
-     *
      * @param nX total number of pixels in the image width (columns)
      * @param nY total number of pixels in the image height (rows)
      * @param j the pixel's horizontal index (column number, X-axis)
      * @param i the pixel's vertical index (row number, Y-axis)
      */
     private void castRayJ(int nX, int nY, int j, int i) {
-
+        //list of rays for the pixel (j, i)
         List<Ray> rays = constructRaysJ(nX, nY, j, i);
+
         Color color = Color.BLACK;
         for (Ray ray : rays) {
             color = color.add(rayTracer.traceRay(ray));
         }
-        color = color.scale(1d / rays.size());
+        color = color.scale(1.0 / rays.size());
         imageWriter.writePixel(j, i, color);
+        // If multithreading is enabled, notify the pixel manager that the pixel is done
+        if (pixelManager != null)
+            pixelManager.pixelDone();
     }
 
 
@@ -293,32 +236,98 @@ public class Camera implements Cloneable {
         double pixelWidth = width / nX;
         double pixelHeight = height / nY;
 
-        // חישוב מרכז הפיקסל
+        // Calculate the center of the pixel
         double xJ = (j - (nX - 1) / 2.0) * pixelWidth;
         double yI = -1 * (i - (nY - 1) / 2.0) * pixelHeight;
 
-        Point pCenter = this.p0.add(vTo.scale(distance));
-        if (!isZero(xJ)) pCenter = pCenter.add(vRight.scale(xJ));
-        if (!isZero(yI)) pCenter = pCenter.add(vUp.scale(yI));
+        Point pIJ = pCenter;
+        if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
+        if (!isZero(yI)) pIJ = pIJ.add(vUp.scale(yI));
 
-        Color color = adaptiveSuperSampling(pCenter, pixelWidth, pixelHeight, 4); // רמת עומק התחלתית
+        Color color = adaptiveSuperSampling(pIJ, pixelWidth, pixelHeight, LEVEL); // level is the recursion level for adaptive super-sampling
         imageWriter.writePixel(j, i, color);
 
         if (pixelManager != null)
             pixelManager.pixelDone();
     }
 
+    /**
+     * Performs adaptive super-sampling for anti-aliasing.
+     * It recursively samples the pixel and averages the colors based on a threshold.
+     * @param center      the center point of the pixel
+     * @param pixelWidth  the width of the pixel
+     * @param pixelHeight the height of the pixel
+     * @param level       the recursion level (depth)
+     * @return the averaged color for the pixel
+     */
+    private Color adaptiveSuperSampling(Point center, double pixelWidth, double pixelHeight, int level) {
+        if (level == 0) {
+            return rayTracer.traceRay(new Ray(p0, center.subtract(p0)));
+        }
+
+        double halfWidth = pixelWidth / 2.0;
+        double halfHeight = pixelHeight / 2.0;
+        Random random = new Random();
+
+        // Calculate the color of center point of the pixel
+        Color totalColor = rayTracer.traceRay(new Ray(p0, center.subtract(p0)));
+        int count = 1; //
+
+        //the four corners of the pixel
+        double[] xSigns = {-1, 1, -1, 1};
+        double[] ySigns = {1, 1, -1, -1};
+        // Create sample points in the four corners of the pixel
+        for (int k = 0; k < 4; k++) {
+            double xSign = xSigns[k];
+            double ySign = ySigns[k];
+
+            double randX = random.nextDouble() * halfWidth / 2;
+            double randY = random.nextDouble() * halfHeight / 2;
+
+            Point samplePoint = center
+                    .add(vRight.scale(xSign * (halfWidth / 2 + randX)))
+                    .add(vUp.scale(ySign * (halfHeight / 2 + randY)));
+
+            Color sampleColor = rayTracer.traceRay(new Ray(p0, samplePoint.subtract(p0)));
+
+            if (isColorCloseEnough(totalColor, sampleColor)) {
+                totalColor = totalColor.add(sampleColor);
+                count++;
+            } else {
+                // recursively sample the quarter
+                Point quarterCenter = center//Calculate the center of the quarter
+                        .add(vRight.scale(xSign * halfWidth / 2))
+                        .add(vUp.scale(ySign * halfHeight / 2));
+
+                Color recursiveColor = adaptiveSuperSampling(quarterCenter, halfWidth, halfHeight, level - 1);
+                totalColor = totalColor.add(recursiveColor);
+                count++;
+            }
+        }
+
+        return totalColor.scale(1.0 / count);
+    }
 
     /**
-     * Renders the image by tracing rays through each pixel in the viewport.
-     * @return the Camera object for method chaining
+     * Checks if two colors are close enough to be considered equal.
+     * This is used for adaptive super-sampling to avoid unnecessary recursion.
+     * @param c1 the first color
+     * @param c2 the second color
+     * @return true if the colors are close enough, false otherwise
      */
-    /**
-     * Render the image
-     *
-     * @return the camera object
-     */
+    private boolean isColorCloseEnough(Color c1, Color c2) {
+        final double THRESHOLD = 0.1;
 
+        Double3 diff = c1.getRgb().subtract(c2.getRgb());
+        return Math.abs(diff.d1()) < THRESHOLD &&
+                Math.abs(diff.d2()) < THRESHOLD &&
+                Math.abs(diff.d3()) < THRESHOLD;
+    }
+
+    /**
+     * Renders the image using the specified ray tracer and image writer.
+     * @return the Camera object itself for method chaining
+     */
     public Camera renderImage() {
         if (imageWriter == null || rayTracer == null)
             throw new IllegalArgumentException("Missing imageWriter or rayTracer");
@@ -343,7 +352,6 @@ public class Camera implements Cloneable {
 
     /**
      * Prints a grid on the image.
-     *
      * @param interval the interval between grid lines
      * @param color    the color of the grid lines
      * @return the Camera object for method chaining
@@ -360,13 +368,12 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * Writes the image to a file.
-     *
      * @param name the name of the image file
      */
     public void writeToImage(String name) {
         imageWriter.writeToImage(name);
     }
+
     /**
      * Render image using multi-threading by parallel streaming
      * @return the camera object itself
@@ -554,6 +561,8 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("Distance must be positive");
             // Set the distance
             camera.distance = distance;
+            // Calculate the center point of the viewport
+            camera.pCenter = camera.p0.add(camera.vTo.scale(distance));
             return this;
         }
 
@@ -645,7 +654,6 @@ public class Camera implements Cloneable {
 
         /**
          * Builds the Camera object after validating all necessary fields.
-         *
          * @return a cloned Camera object with computed right vector
          * @throws MissingResourceException if any required field is missing
          * @throws IllegalArgumentException if any value is invalid
@@ -698,105 +706,5 @@ public class Camera implements Cloneable {
         }
 
     }
-
-    /**
-     * This function implements Adaptive Anti-Aliasing using recursive subdivision.
-     * It samples the center and 4 corners of a pixel and compares their colors.
-     * If the colors differ significantly, the pixel is divided into 4 subpixels and processed recursively.
-     * Otherwise, the average color is returned.
-     */
-//    private Color adaptiveSuperSampling(Point center, double pixelWidth, double pixelHeight, int level) {
-//        if (level == 0) {
-//            Ray ray = new Ray(p0, center.subtract(p0).normalize());
-//            return rayTracer.traceRay(ray);
-//        }
-//
-//        double halfWidth = pixelWidth / 2.0;
-//        double halfHeight = pixelHeight / 2.0;
-//
-//        Point topLeft     = center.add(vRight.scale(-halfWidth)).add(vUp.scale(halfHeight));
-//        Point topRight    = center.add(vRight.scale(halfWidth)).add(vUp.scale(halfHeight));
-//        Point bottomLeft  = center.add(vRight.scale(-halfWidth)).add(vUp.scale(-halfHeight));
-//        Point bottomRight = center.add(vRight.scale(halfWidth)).add(vUp.scale(-halfHeight));
-//
-//        Color cCenter     = rayTracer.traceRay(new Ray(p0, center.subtract(p0).normalize()));
-//        Color cTopLeft    = rayTracer.traceRay(new Ray(p0, topLeft.subtract(p0).normalize()));
-//        Color cTopRight   = rayTracer.traceRay(new Ray(p0, topRight.subtract(p0).normalize()));
-//        Color cBottomLeft = rayTracer.traceRay(new Ray(p0, bottomLeft.subtract(p0).normalize()));
-//        Color cBottomRight= rayTracer.traceRay(new Ray(p0, bottomRight.subtract(p0).normalize()));
-//
-//        if (isColorCloseEnough(cCenter, cTopLeft) &&
-//                isColorCloseEnough(cCenter, cTopRight) &&
-//                isColorCloseEnough(cCenter, cBottomLeft) &&
-//                isColorCloseEnough(cCenter, cBottomRight)) {
-//
-//            return cCenter.add(cTopLeft, cTopRight, cBottomLeft, cBottomRight).scale(0.2);
-//        }
-//
-//        Color avg = Color.BLACK;
-//
-//        avg = avg.add(adaptiveSuperSampling(topLeft,     halfWidth, halfHeight, level - 1));
-//        avg = avg.add(adaptiveSuperSampling(topRight,    halfWidth, halfHeight, level - 1));
-//        avg = avg.add(adaptiveSuperSampling(bottomLeft,  halfWidth, halfHeight, level - 1));
-//        avg = avg.add(adaptiveSuperSampling(bottomRight, halfWidth, halfHeight, level - 1));
-//
-//        return avg.scale(0.25);
-//    }
-    private Color adaptiveSuperSampling(Point center, double pixelWidth, double pixelHeight, int level) {
-        if (level == 0) {
-            return rayTracer.traceRay(new Ray(p0, center.subtract(p0).normalize()));
-        }
-
-        double halfWidth = pixelWidth / 2.0;
-        double halfHeight = pixelHeight / 2.0;
-        Random random = new Random();
-
-        Color totalColor = rayTracer.traceRay(new Ray(p0, center.subtract(p0).normalize()));
-        int count = 1; // התחל מ־1 עבור המרכז
-
-        // מיקומי הרבעים
-        double[] xSigns = {-1, 1, -1, 1};
-        double[] ySigns = {1, 1, -1, -1};
-
-        for (int k = 0; k < 4; k++) {
-            double xSign = xSigns[k];
-            double ySign = ySigns[k];
-
-            double randX = random.nextDouble() * halfWidth / 2;
-            double randY = random.nextDouble() * halfHeight / 2;
-
-            Point samplePoint = center
-                    .add(vRight.scale(xSign * (halfWidth / 2 + randX)))
-                    .add(vUp.scale(ySign * (halfHeight / 2 + randY)));
-
-            Color sampleColor = rayTracer.traceRay(new Ray(p0, samplePoint.subtract(p0).normalize()));
-
-            if (isColorCloseEnough(totalColor, sampleColor)) {
-                totalColor = totalColor.add(sampleColor);
-                count++;
-            } else {
-                // קריאה רקורסיבית באותו רבע פיקסל
-                Point quarterCenter = center
-                        .add(vRight.scale(xSign * halfWidth / 2))
-                        .add(vUp.scale(ySign * halfHeight / 2));
-
-                Color recursiveColor = adaptiveSuperSampling(quarterCenter, halfWidth, halfHeight, level - 1);
-                totalColor = totalColor.add(recursiveColor);
-                count++;
-            }
-        }
-
-        return totalColor.scale(1.0 / count);
-    }
-
-    private boolean isColorCloseEnough(Color c1, Color c2) {
-        final double THRESHOLD = 0.1;
-
-        Double3 diff = c1.getRgb().subtract(c2.getRgb());
-        return Math.abs(diff.d1()) < THRESHOLD &&
-                Math.abs(diff.d2()) < THRESHOLD &&
-                Math.abs(diff.d3()) < THRESHOLD;
-    }
-
 
 }

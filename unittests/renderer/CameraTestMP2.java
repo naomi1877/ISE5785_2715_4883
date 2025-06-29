@@ -9,6 +9,8 @@ import lighting.*;
 import primitives.*;
 import scene.Scene;
 
+import java.util.List;
+
 class CameraTestMP2 {
 
 
@@ -257,9 +259,9 @@ class CameraTestMP2 {
         System.out.println("Windmill_ASS_Only done in " + (end - start) + " ms");
     }
     @Test
-    void testWindmillWithASS_newPhoto() {
-        Scene scene = new Scene("Windmill With Pyramid Blades");
-        Point pivot = new Point(0, 150, 49); // נקודת חיבור הכנפיים
+    void final_test_scene() {
+        Scene scene = new Scene("Windmill With othe geometries");
+        Point pivot = new Point(0, 150, 49);
         double bladeLength = 105;
         double bladeWidth = 60;
         double bladeDepth = 40;
@@ -271,7 +273,7 @@ class CameraTestMP2 {
                 .setKT(0.4);
         Color bladeColor = new Color(BLUE);
 
-
+        //build the Windmill:
         scene.geometries.add(
                 new Cylinder(49,
                         new Ray(rotateAroundY(pivot,new Point(0, -150, 0),angle),
@@ -328,6 +330,7 @@ class CameraTestMP2 {
                         .setEmission(bladeColor)
                         .setMaterial(bladeMaterial),
 
+                //Add the ground and the sky
                 new Plane(new Point(0, -20, 0), new Vector(0, 1, 0))
                         .setEmission(new Color(20, 20, 20))
                         .setMaterial(new Material().setKD(0.7).setKS(0.1).setShininess(50)),
@@ -337,7 +340,7 @@ class CameraTestMP2 {
                         .setMaterial(new Material().setKD(1))
         );
 
-
+        //Add other geometries
         scene.geometries.add(
                 new Sphere(30, new Point(220, 10, 180))
                         .setEmission(new Color(8, 8, 12))
@@ -360,21 +363,21 @@ class CameraTestMP2 {
                 new Cone(50, new Ray(new Point(300, 150, 0), new Vector(0, -1, 0)), 170)
                         .setEmission(new Color(blue))
                         .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3)),
-                // יצירת פירמידה
+
                 new Pyramid(new Point(-100, 100, 220),
                         new Polygon(
                                 new Point(-120, -20, 190),
                                 new Point(-50, -20, 190),
                                 new Point(-60, -20, 260),
-                                new Point(-140, -20, 260))).setEmission(new Color(red)) // צבע כחול בהיר
+                                new Point(-140, -20, 260))).setEmission(new Color(red))
                         .setMaterial(new Material()
                                 .setKD(0.2)
                                 .setKS(0.6)
                                 .setShininess(200)
-                                .setKT(0.6)) // שקיפות
+                                .setKT(0.6))
 
         );
-//3 Asryeli Tours
+        //3 Asryeli Tours
         scene.geometries.add(
                 new Cylinder(38,
                         new Ray(new Point(-290, -150, 0),new Vector(0, 1, 0)),
@@ -407,13 +410,19 @@ class CameraTestMP2 {
                         .setKL(0.0001).setKQ(0.00001)
         );
 
-        scene.lights.add(
+        scene.lights.addAll(List.of(
                 new SpotLight(
-                        new Color(800, 300, 100),               
+                        new Color(800, 300, 100),
                         new Point(-300, 300, 400),
                         new Vector(2, -2, -3))
                         .setKL(0.00005).setKQ(0.00001)
-        );
+                ,
+                new SpotLight(
+                        new Color(100, 100, 100),
+                        new Point(0, 500, 300),
+                        new Vector(0, -1, 0))
+                        .setKL(0.00005).setKQ(0.00001)
+        ));
 
         Camera camera = Camera.getBuilder()
                 .setRayTracer(scene, RayTracerType.SIMPLE)
@@ -422,9 +431,9 @@ class CameraTestMP2 {
                 .setVpDistance(500)
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
-                .setMultithreading(10) // ריבוי תהליכונים
-                .setAAFlag(false)     //with  AA + .setMultithreading(-2)== 3 min 54 sec
-                .setASSFlag(true)     //with  AAS + .setMultithreading(4)== 42 sec
+                .setMultithreading(10)
+                .setAAFlag(false)
+                .setASSFlag(false)
                 .setDebugPrint(1)
                 .build();
 
@@ -434,14 +443,16 @@ class CameraTestMP2 {
         camera.renderImage();
         long end = System.currentTimeMillis();
 
-        //camera.writeToImage("Windmill_ASS_New6");
-        camera.writeToImage("Windmill_ASS_level4");
+       // camera.writeToImage("Windmill_ASS_New6");
+        camera.writeToImage("Windmill_ASS_level2");
         System.out.println("Windmill_ASS_Only done in " + (end - start) + " ms");
         //Windmill_ASS_Only3 setVpDistance(1000)
         //Windmill_ASS_Only4 setVpDistance(189)
         //Windmill_ASS_Only5 setVpDistance(302)
         //Windmill_ASS_Only5 setVpDistance(302),setLocation(new Point(0, 400, 500))
         //Windmill_ASS_Only6 improve ASS
+        //with  AAS + .setMultithreading(4)== 42 sec
+        //with  AA + .setMultithreading(-2)== 3 min 54 sec
     }
 
 }
