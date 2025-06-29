@@ -9,6 +9,7 @@ import lighting.*;
 import primitives.*;
 import scene.Scene;
 
+
 public class MyPicturesTests {
 
     private final Scene scene = new Scene("My tests");
