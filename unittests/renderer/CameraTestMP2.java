@@ -399,8 +399,6 @@ class CameraTestMP2 {
                                 new Point(-222, -50, -22)))
                         .setEmission(new Color(black))
                         .setMaterial(new Material().setKD(0.5).setKS(0.6).setShininess(100).setKT(0.4))
-
-
         );
 
         scene.setAmbientLight(new AmbientLight(new Color(30, 30, 30)));
@@ -419,14 +417,14 @@ class CameraTestMP2 {
 
         Camera camera = Camera.getBuilder()
                 .setRayTracer(scene, RayTracerType.SIMPLE)
-                .setLocation(new Point(0, 500, 800))
+                .setLocation(new Point(0, 500, 300))
                 .setDirection(new Point(0, 150, 0), new Vector(0, 1, -1))
-                .setVpDistance(600)
+                .setVpDistance(500)
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
                 .setMultithreading(10) // ריבוי תהליכונים
-                .setAAFlag(true)     //with  AA + .setMultithreading(-2)== 3 min 54 sec
-                 .setASSFlag(true)     //with  AAS + .setMultithreading(4)== 42 sec
+                .setAAFlag(false)     //with  AA + .setMultithreading(-2)== 3 min 54 sec
+                .setASSFlag(true)     //with  AAS + .setMultithreading(4)== 42 sec
                 .setDebugPrint(1)
                 .build();
 
@@ -436,8 +434,14 @@ class CameraTestMP2 {
         camera.renderImage();
         long end = System.currentTimeMillis();
 
-        camera.writeToImage("Windmill_ASS_Only2");
+        //camera.writeToImage("Windmill_ASS_New6");
+        camera.writeToImage("Windmill_ASS_level4");
         System.out.println("Windmill_ASS_Only done in " + (end - start) + " ms");
+        //Windmill_ASS_Only3 setVpDistance(1000)
+        //Windmill_ASS_Only4 setVpDistance(189)
+        //Windmill_ASS_Only5 setVpDistance(302)
+        //Windmill_ASS_Only5 setVpDistance(302),setLocation(new Point(0, 400, 500))
+        //Windmill_ASS_Only6 improve ASS
     }
 
 }

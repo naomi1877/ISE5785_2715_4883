@@ -68,12 +68,10 @@ public class Camera implements Cloneable {
      */
 
     private boolean AA_FLAG = false;
+
     private boolean ASS_FLAG = false;
 
     private int AA_GRID_SIZE = 9;
-    private int ASS_MAX_LEVEL = 2;
-
-
 
     /** Amount of threads to use fore rendering image by the camera */
     private int threadsCount = 0;
@@ -303,7 +301,7 @@ public class Camera implements Cloneable {
         if (!isZero(xJ)) pCenter = pCenter.add(vRight.scale(xJ));
         if (!isZero(yI)) pCenter = pCenter.add(vUp.scale(yI));
 
-        Color color = adaptiveSuperSampling(pCenter, pixelWidth, pixelHeight, 2); // רמת עומק התחלתית
+        Color color = adaptiveSuperSampling(pCenter, pixelWidth, pixelHeight, 4); // רמת עומק התחלתית
         imageWriter.writePixel(j, i, color);
 
         if (pixelManager != null)
@@ -707,42 +705,88 @@ public class Camera implements Cloneable {
      * If the colors differ significantly, the pixel is divided into 4 subpixels and processed recursively.
      * Otherwise, the average color is returned.
      */
+//    private Color adaptiveSuperSampling(Point center, double pixelWidth, double pixelHeight, int level) {
+//        if (level == 0) {
+//            Ray ray = new Ray(p0, center.subtract(p0).normalize());
+//            return rayTracer.traceRay(ray);
+//        }
+//
+//        double halfWidth = pixelWidth / 2.0;
+//        double halfHeight = pixelHeight / 2.0;
+//
+//        Point topLeft     = center.add(vRight.scale(-halfWidth)).add(vUp.scale(halfHeight));
+//        Point topRight    = center.add(vRight.scale(halfWidth)).add(vUp.scale(halfHeight));
+//        Point bottomLeft  = center.add(vRight.scale(-halfWidth)).add(vUp.scale(-halfHeight));
+//        Point bottomRight = center.add(vRight.scale(halfWidth)).add(vUp.scale(-halfHeight));
+//
+//        Color cCenter     = rayTracer.traceRay(new Ray(p0, center.subtract(p0).normalize()));
+//        Color cTopLeft    = rayTracer.traceRay(new Ray(p0, topLeft.subtract(p0).normalize()));
+//        Color cTopRight   = rayTracer.traceRay(new Ray(p0, topRight.subtract(p0).normalize()));
+//        Color cBottomLeft = rayTracer.traceRay(new Ray(p0, bottomLeft.subtract(p0).normalize()));
+//        Color cBottomRight= rayTracer.traceRay(new Ray(p0, bottomRight.subtract(p0).normalize()));
+//
+//        if (isColorCloseEnough(cCenter, cTopLeft) &&
+//                isColorCloseEnough(cCenter, cTopRight) &&
+//                isColorCloseEnough(cCenter, cBottomLeft) &&
+//                isColorCloseEnough(cCenter, cBottomRight)) {
+//
+//            return cCenter.add(cTopLeft, cTopRight, cBottomLeft, cBottomRight).scale(0.2);
+//        }
+//
+//        Color avg = Color.BLACK;
+//
+//        avg = avg.add(adaptiveSuperSampling(topLeft,     halfWidth, halfHeight, level - 1));
+//        avg = avg.add(adaptiveSuperSampling(topRight,    halfWidth, halfHeight, level - 1));
+//        avg = avg.add(adaptiveSuperSampling(bottomLeft,  halfWidth, halfHeight, level - 1));
+//        avg = avg.add(adaptiveSuperSampling(bottomRight, halfWidth, halfHeight, level - 1));
+//
+//        return avg.scale(0.25);
+//    }
     private Color adaptiveSuperSampling(Point center, double pixelWidth, double pixelHeight, int level) {
         if (level == 0) {
-            Ray ray = new Ray(p0, center.subtract(p0).normalize());
-            return rayTracer.traceRay(ray);
+            return rayTracer.traceRay(new Ray(p0, center.subtract(p0).normalize()));
         }
 
         double halfWidth = pixelWidth / 2.0;
         double halfHeight = pixelHeight / 2.0;
+        Random random = new Random();
 
-        Point topLeft     = center.add(vRight.scale(-halfWidth)).add(vUp.scale(halfHeight));
-        Point topRight    = center.add(vRight.scale(halfWidth)).add(vUp.scale(halfHeight));
-        Point bottomLeft  = center.add(vRight.scale(-halfWidth)).add(vUp.scale(-halfHeight));
-        Point bottomRight = center.add(vRight.scale(halfWidth)).add(vUp.scale(-halfHeight));
+        Color totalColor = rayTracer.traceRay(new Ray(p0, center.subtract(p0).normalize()));
+        int count = 1; // התחל מ־1 עבור המרכז
 
-        Color cCenter     = rayTracer.traceRay(new Ray(p0, center.subtract(p0).normalize()));
-        Color cTopLeft    = rayTracer.traceRay(new Ray(p0, topLeft.subtract(p0).normalize()));
-        Color cTopRight   = rayTracer.traceRay(new Ray(p0, topRight.subtract(p0).normalize()));
-        Color cBottomLeft = rayTracer.traceRay(new Ray(p0, bottomLeft.subtract(p0).normalize()));
-        Color cBottomRight= rayTracer.traceRay(new Ray(p0, bottomRight.subtract(p0).normalize()));
+        // מיקומי הרבעים
+        double[] xSigns = {-1, 1, -1, 1};
+        double[] ySigns = {1, 1, -1, -1};
 
-        if (isColorCloseEnough(cCenter, cTopLeft) &&
-                isColorCloseEnough(cCenter, cTopRight) &&
-                isColorCloseEnough(cCenter, cBottomLeft) &&
-                isColorCloseEnough(cCenter, cBottomRight)) {
+        for (int k = 0; k < 4; k++) {
+            double xSign = xSigns[k];
+            double ySign = ySigns[k];
 
-            return cCenter.add(cTopLeft, cTopRight, cBottomLeft, cBottomRight).scale(0.2);
+            double randX = random.nextDouble() * halfWidth / 2;
+            double randY = random.nextDouble() * halfHeight / 2;
+
+            Point samplePoint = center
+                    .add(vRight.scale(xSign * (halfWidth / 2 + randX)))
+                    .add(vUp.scale(ySign * (halfHeight / 2 + randY)));
+
+            Color sampleColor = rayTracer.traceRay(new Ray(p0, samplePoint.subtract(p0).normalize()));
+
+            if (isColorCloseEnough(totalColor, sampleColor)) {
+                totalColor = totalColor.add(sampleColor);
+                count++;
+            } else {
+                // קריאה רקורסיבית באותו רבע פיקסל
+                Point quarterCenter = center
+                        .add(vRight.scale(xSign * halfWidth / 2))
+                        .add(vUp.scale(ySign * halfHeight / 2));
+
+                Color recursiveColor = adaptiveSuperSampling(quarterCenter, halfWidth, halfHeight, level - 1);
+                totalColor = totalColor.add(recursiveColor);
+                count++;
+            }
         }
 
-        Color avg = Color.BLACK;
-
-        avg = avg.add(adaptiveSuperSampling(topLeft,     halfWidth, halfHeight, level - 1));
-        avg = avg.add(adaptiveSuperSampling(topRight,    halfWidth, halfHeight, level - 1));
-        avg = avg.add(adaptiveSuperSampling(bottomLeft,  halfWidth, halfHeight, level - 1));
-        avg = avg.add(adaptiveSuperSampling(bottomRight, halfWidth, halfHeight, level - 1));
-
-        return avg.scale(0.25);
+        return totalColor.scale(1.0 / count);
     }
 
     private boolean isColorCloseEnough(Color c1, Color c2) {
