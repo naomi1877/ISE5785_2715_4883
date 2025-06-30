@@ -66,17 +66,18 @@ public class Camera implements Cloneable {
      */
     private RayTracerBase rayTracer;
 
-    /**
-     * Flag for enabling anti-aliasing (AA).
-     * If true, the camera will use anti-aliasing techniques.
-     */
-    private boolean AA_FLAG = false;
 
     /**
      * Flag for enabling adaptive super-sampling
      *  If true, the camera will use adaptive super-sampling techniques.
      */
     private boolean ASS_FLAG = false;
+
+    /**
+     * Flag for enabling anti-aliasing (AA).
+     * If true, the camera will use anti-aliasing techniques.
+     */
+    private boolean AA_FLAG = false;
 
     /**
      * num of minis pixels at width and height
@@ -86,7 +87,7 @@ public class Camera implements Cloneable {
     /**
      * LEVEL is the recursion level for adaptive super-sampling
      */
-    private int LEVEL = 3;
+    private int LEVEL = 2;
 
     /** Amount of threads to use fore rendering image by the camera */
     private int threadsCount = 0;
@@ -642,6 +643,7 @@ public class Camera implements Cloneable {
             camera.printInterval = interval;
             return this;
         }
+
         public Builder setAAFlag(boolean flag) {
             camera.AA_FLAG = flag;
             return this;
@@ -706,5 +708,7 @@ public class Camera implements Cloneable {
         }
 
     }
+
+
 
 }
