@@ -8,7 +8,6 @@ import primitives.Vector;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static primitives.Util.isZero;
 
 class ConeTest {
 

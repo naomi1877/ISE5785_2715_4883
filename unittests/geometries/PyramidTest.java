@@ -1,13 +1,11 @@
 package geometries;
 
-import geometries.*;
 import org.junit.jupiter.api.Test;
 import primitives.*;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static primitives.Util.isZero;
 
 public class PyramidTest {
 

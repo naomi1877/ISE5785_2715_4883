@@ -16,7 +16,6 @@ class CameraTestMP2 {
 
     @Test
     void testWindmillPyramid15_MS_MP2() {
-        // יצירת הסצנה הכבדה בדיוק כמו בפונקציה שלך
         Scene scene = new Scene("Windmill With Pyramid Blades");
         Point pivot = new Point(0, 150, 49);
         double bladeLength = 105;
@@ -26,9 +25,7 @@ class CameraTestMP2 {
         Material bladeMaterial = new Material().setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4);
         Color bladeColor = new Color(BLUE);
 
-        // הוספת כל הגופים והתאורות בדיוק כמו בתיאור שלך
         scene.geometries.add(
-                // גוף התחנה
                 new Cylinder(49, new Ray(rotateAroundY(pivot, new Point(0, -150, 0), angle),
                         rotateAroundY(new Vector(0, 1, 0), angle)), 300)
                         .setEmission(new Color(100, 80, 50))
@@ -42,7 +39,6 @@ class CameraTestMP2 {
                         .setEmission(new Color(80, 40, 100))
                         .setMaterial(new Material().setKD(0.4).setKS(0.8).setShininess(300)),
 
-                // כנפי פירמידות
                 new Pyramid(rotateAroundY(pivot, pivot, angle),
                         new Polygon(
                                 rotateAroundY(pivot, new Point(-bladeWidth / 2, 150 + bladeLength, 50), angle),
@@ -80,7 +76,6 @@ class CameraTestMP2 {
                         .setEmission(new Color(20, 20, 50))
                         .setMaterial(new Material().setKD(1)),
 
-                // הכדורים בצד
                 new Sphere(45, new Point(170, 15, 90))
                         .setEmission(new Color(BLUE))
                         .setMaterial(new Material().setKD(0.3).setKS(0.3).setShininess(120).setKT(0.4)),
@@ -98,7 +93,7 @@ class CameraTestMP2 {
         scene.lights.add(new SpotLight(new Color(600, 219, 255), new Point(200, 200, 200), new Vector(-2, -2, -3)).setKL(0.0001).setKQ(0.00001));
         scene.lights.add(new SpotLight(new Color(800, 300, 100), new Point(-300, 300, 400), new Vector(2, -2, -3)).setKL(0.00005).setKQ(0.00001));
 
-        // ביצוע כל 4 המצבים
+        // Render the scene with different configurations
 //        renderWindmill(scene, false, false, "A_NoMT_NoFeature");
 //        renderWindmill(scene, true, false, "B_MT_NoFeature");
 //        renderWindmill(scene, false, true, "C_NoMT_WithFeature");

@@ -1,6 +1,5 @@
 package geometries;
 
-import geometries.*;
 import org.junit.jupiter.api.Test;
 import primitives.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,7 +93,7 @@ public class BoxTest {
         List<Intersectable.Intersection> intersections = box.calculateIntersectionsHelper(ray);
         assertNotNull(intersections, "Expected intersection when ray originates inside the box");
         assertEquals(1, intersections.size(), "Expected one intersection point");
-        assertEquals(new Point(2, 1, 1), intersections.get(0).point, "Wrong intersection point");
+        assertEquals(new Point(2, 1, 1), intersections.getFirst().point, "Wrong intersection point");
     }
 
     @Test
@@ -111,7 +110,6 @@ public class BoxTest {
         assertNotNull(intersections, "Expected intersections when ray passes through box");
         assertEquals(2, intersections.size(), "Expected two intersection points");
 
-        // עצירה לפי קרבה לקרן
         assertTrue(intersections.get(0).point.equals(new Point(0, 1, 1)) ||
                 intersections.get(1).point.equals(new Point(0, 1, 1)), "Missing entry point");
         assertTrue(intersections.get(0).point.equals(new Point(2, 1, 1)) ||

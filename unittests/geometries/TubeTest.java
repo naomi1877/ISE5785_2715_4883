@@ -85,7 +85,6 @@ class TubeTest {
         assertEquals(List.of(new Point (0.2928932188134525, 0.2928932188134525, 1.2928932188134525), new Point(1.7071067811865475, 1.7071067811865475, 2.7071067811865475)), result1, "Ray crosses tube");
         // TC03: Ray starts inside the tube (1 point)
        // assertEquals(List.of(new Point(), tube2.findIntersections(new  Ray(new Point(1.5, 1, 2), new Vector(1, 0.5, 0)), "Ray starts inside the tube");
-
     }
 
 }

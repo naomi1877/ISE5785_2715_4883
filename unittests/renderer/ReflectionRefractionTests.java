@@ -109,12 +109,12 @@ class ReflectionRefractionTests {
                       .setKL(4E-5).setKQ(2E-7));
 
       cameraBuilder
-              .setLocation(new Point(0, 0, 1000)) //
-              .setDirection(Point.ZERO, Vector.AXIS_Y) //
-              .setVpDistance(1000).setVpSize(200, 200) //
-              .setResolution(600, 600) //
-              .build() //
-              .renderImage() //
+              .setLocation(new Point(0, 0, 1000))
+              .setDirection(Point.ZERO, Vector.AXIS_Y)
+              .setVpDistance(1000).setVpSize(200, 200)
+              .setResolution(600, 600)
+              .build()
+              .renderImage()
               .writeToImage("refractionShadow");
    }
 

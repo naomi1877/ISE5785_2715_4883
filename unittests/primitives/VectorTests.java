@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static primitives.Util.isZero;
 
-import primitives.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

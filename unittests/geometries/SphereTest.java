@@ -32,11 +32,7 @@ class SphereTest {
      */
     Point p2 = new Point(1, 0, 0);
     /** A point used in some tests */
-    private final Point  p001 = new Point(0, 0, 1);
-    /** A point used in some tests */
     private final Point  p100 = new Point(1, 0, 0);
-    /** A vector used in some tests */
-    private final Vector v001 = new Vector(0, 0, 1);
 
     /**
      * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
