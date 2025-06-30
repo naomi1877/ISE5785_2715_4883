@@ -15,7 +15,6 @@ import static primitives.Util.isZero;
  * It includes properties such as position, direction vectors, and viewport size.
  */
 public class Camera implements Cloneable {
-
     /**
      * The image writer used to create the image.
      */
@@ -439,6 +438,15 @@ public class Camera implements Cloneable {
     }
 
 
+    @Override
+    public Camera clone() {
+        try {
+            return (Camera) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
     /**
      * Builder class for constructing a Camera object.
      */
@@ -700,11 +708,7 @@ public class Camera implements Cloneable {
             camera.vRight = camera.vTo.crossProduct(camera.vUp);
 
             // Return a cloned camera
-            try {
-                return (Camera) camera.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException("Failed to clone Camera object", e);
-            }
+            return (Camera) camera.clone();
         }
 
     }
