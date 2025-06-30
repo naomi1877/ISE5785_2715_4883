@@ -235,8 +235,8 @@ class CameraTestMP2 {
         );
 
         scene.setAmbientLight(new AmbientLight(new Color(30, 30, 30)));
-        scene.lights.add(new SpotLight(new Color(600, 219, 255), new Point(200, 200, 200), new Vector(-2, -2, -3)).setKL(0.0001).setKQ(0.00001));
-        scene.lights.add(new SpotLight(new Color(800, 300, 100), new Point(-300, 300, 400), new Vector(2, -2, -3)).setKL(0.00005).setKQ(0.00001));
+        scene.addLight(new SpotLight(new Color(600, 219, 255), new Point(200, 200, 200), new Vector(-2, -2, -3)).setKL(0.0001).setKQ(0.00001));
+        scene.addLight(new SpotLight(new Color(800, 300, 100), new Point(-300, 300, 400), new Vector(2, -2, -3)).setKL(0.00005).setKQ(0.00001));
 
         Camera camera = Camera.getBuilder()
                 .setRayTracer(scene, RayTracerType.SIMPLE)
@@ -364,17 +364,23 @@ class CameraTestMP2 {
                         .setEmission(new Color(blue))
                         .setMaterial(new Material().setKD(0.4).setKS(0.4).setShininess(180).setKT(0.3)),
 
-                new Pyramid(new Point(-100, 100, 220),
-                        new Polygon(
-                                new Point(-120, -20, 190),
-                                new Point(-50, -20, 190),
-                                new Point(-60, -20, 260),
-                                new Point(-140, -20, 260))).setEmission(new Color(red))
+                new Pyramid(new Point(210, 150, -10),
+//                        new Polygon(
+//                                new Point(-120, -20, 190),
+//                                new Point(-50, -20, 190),
+//                                new Point(-60, -20, 260),
+//                                new Point(-140, -20, 260))).setEmission(new Color(red))
+                                                new Polygon(
+                                new Point(220, 40, 20),
+                                new Point(180, 40, 20),
+                                new Point(160, 40, -40),
+                                new Point(230, 40, -40)))
+                        .setEmission(new Color(red))
                         .setMaterial(new Material()
                                 .setKD(0.2)
                                 .setKS(0.6)
                                 .setShininess(200)
-                                .setKT(0.6))
+                                .setKT(0.8))
 
         );
         //3 Asryeli Tours
@@ -426,17 +432,16 @@ class CameraTestMP2 {
 
         Camera camera = Camera.getBuilder()
                 .setRayTracer(scene, RayTracerType.SIMPLE)
-                .setLocation(new Point(0, 500, 300))
+                .setLocation(new Point(-10, 460, 480))
                 .setDirection(new Point(0, 150, 0), new Vector(0, 1, -1))
-                .setVpDistance(500)
+                .setVpDistance(302)
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
-                .setMultithreading(10)
+               .setMultithreading(-1)
                 .setAAFlag(false)
-                .setASSFlag(false)
-                .setDebugPrint(1)
+               .setASSFlag(true)
+               .setDebugPrint(1)
                 .build();
-
 
 
         long start = System.currentTimeMillis();
@@ -444,7 +449,7 @@ class CameraTestMP2 {
         long end = System.currentTimeMillis();
 
        // camera.writeToImage("Windmill_ASS_New6");
-        camera.writeToImage("Windmill_ASS_level2");
+        camera.writeToImage("Windmill_ASS2");
         System.out.println("Windmill_ASS_Only done in " + (end - start) + " ms");
         //Windmill_ASS_Only3 setVpDistance(1000)
         //Windmill_ASS_Only4 setVpDistance(189)
@@ -453,6 +458,9 @@ class CameraTestMP2 {
         //Windmill_ASS_Only6 improve ASS
         //with  AAS + .setMultithreading(4)== 42 sec
         //with  AA + .setMultithreading(-2)== 3 min 54 sec
+        //.setLocation(new Point(-10, 460, 480))
+        //                .setDirection(new Point(0, 150, 0), new Vector(0, 1, -1))
+        //                .setVpDistance(302)
     }
 
 }

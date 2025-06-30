@@ -22,7 +22,6 @@ public abstract class Intersectable {
 
     /**
      * This method finds the intersections of a ray with the geometry.
-     *
      * @param ray the ray to check for intersections
      * @return a list of intersection points
      */
@@ -34,7 +33,6 @@ public abstract class Intersectable {
     /**
      * This method calculates the intersections of a ray with the geometry.
      * It is a public method that calls the protected abstract method to perform the actual calculation.
-     *
      * @param ray the ray to check for intersections
      * @return a list of Intersection objects representing the intersection points
      */
@@ -45,7 +43,6 @@ public abstract class Intersectable {
     /**
      * This is a protected abstract method that must be implemented by subclasses to calculate intersections.
      * It is called by the public method calculateIntersections.
-     *
      * @param ray the ray to check for intersections
      * @return a list of Intersection objects representing the intersection points
      */
@@ -86,7 +83,6 @@ public abstract class Intersectable {
         /**
          * Constructor for the Intersection class.
          * Initializes the intersection with a geometry, point, and material.
-         *
          * @param geometry the geometry of the intersection
          * @param point    the point of intersection
          */

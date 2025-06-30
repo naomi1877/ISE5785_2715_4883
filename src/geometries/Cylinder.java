@@ -5,7 +5,6 @@ import primitives.Ray;
 import primitives.Vector;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static primitives.Util.alignZero;
@@ -58,10 +57,10 @@ public class Cylinder extends Tube {
 protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
     List<Intersection> intersections = super.calculateIntersectionsHelper(ray);
     if (intersections != null) {
-        // נוודא שנוכל להסיר מתוך הרשימה
+
         intersections = new ArrayList<>(intersections);
 
-        // סינון לפי גובה הגליל
+        //filter intersections based on the height of the cylinder
         intersections.removeIf(intersection -> {
             double projection = axis.getDirection()
                     .dotProduct(intersection.point.subtract(axis.getHead()));
@@ -77,7 +76,7 @@ protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
     Vector rayDir = ray.getDirection();
     Point rayStart = ray.getHead();
 
-    // חישוב חיתוך עם בסיס תחתון
+    // Calculate intersection with the curved surface of the cylinder
     double nv1 = v.dotProduct(rayDir);
     if (!isZero(nv1)) {
         double t1 = alignZero(v.dotProduct(base1.subtract(rayStart)) / nv1);
@@ -89,7 +88,7 @@ protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         }
     }
 
-    // חישוב חיתוך עם בסיס עליון
+    // Calculate intersection with the other base of the cylinder
     double nv2 = v.dotProduct(rayDir);
     if (!isZero(nv2)) {
         double t2 = alignZero(v.dotProduct(base2.subtract(rayStart)) / nv2);

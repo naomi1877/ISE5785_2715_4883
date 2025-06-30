@@ -2,12 +2,6 @@ package geometries;
 
 import primitives.*;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import static primitives.Util.alignZero;
-import static primitives.Util.isZero;
-
 import java.util.List;
 /**
  * Class Box represents an axis-aligned rectangular box (cuboid)
@@ -91,23 +85,6 @@ public class Box extends Geometry{
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
-//        List<Intersection> intersections = null;
-//        List<Point> uniquePoints = new LinkedList<>();
-//        for (Polygon face : faces) {
-//            List<Intersection> faceIntersections = face.calculateIntersectionsHelper(ray);
-//            if (faceIntersections != null) {
-//                if (intersections == null)
-//                    intersections = new LinkedList<>();
-//                //if the intersect point is on a corner, and already exists in the list, skip it
-//                for (Intersection intersection : faceIntersections) {
-//                    Point point = intersection.point;
-//                    if (!uniquePoints.contains(point)) {
-//                        uniquePoints.add(point);
-//                        intersections.add(intersection);
-//                    }
-//                }
-//            }
-//        }
         return components.calculateIntersections(ray);
     }
 

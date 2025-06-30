@@ -14,29 +14,30 @@ import java.io.IOException;
  * size and resolution
  */
 final class ImageWriter {
+
     /**
      * Directory path for the image file generation - relative to the user
      * directory
      */
     private static final String FOLDER_PATH = System.getProperty("user.dir") + "/images";
+
     /**
      * Horizontal resolution of the image - number of pixels in row
      */
     private final int nX;
+
     /**
      * Vertical resolution of the image - number of pixels in column
      */
     private final int nY;
+
     /**
      * Image generation buffer (the matrix of the pixels)
      */
     private final BufferedImage image;
 
-    // ***************** Constructors ********************** //
-
     /**
      * Image Writer constructor accepting image name and View Plane parameters,
-     *
      * @param nX amount of pixels by Width
      * @param nY amount of pixels by height
      */
@@ -47,11 +48,8 @@ final class ImageWriter {
         image = new BufferedImage(nX, nY, BufferedImage.TYPE_INT_RGB);
     }
 
-    // ***************** Getters ********************** //
-
     /**
      * View Plane Y axis resolution
-     *
      * @return the amount of vertical pixels
      */
     int nY() {
@@ -60,19 +58,15 @@ final class ImageWriter {
 
     /**
      * View Plane X axis resolution
-     *
      * @return the amount of horizontal pixels
      */
     int nX() {
         return nX;
     }
 
-    // ***************** Operations ******************** //
-
     /**
      * Function writeToImage produces unoptimized png file of the image according
      * to pixel color matrix in the directory of the project
-     *
      * @param imageName the name of png file
      */
     void writeToImage(String imageName) {
@@ -87,7 +81,6 @@ final class ImageWriter {
     /**
      * The function writePixel writes a color of a specific pixel into pixel color
      * matrix
-     *
      * @param xIndex X axis index of the pixel
      * @param yIndex Y axis index of the pixel
      * @param color  final color of the pixel

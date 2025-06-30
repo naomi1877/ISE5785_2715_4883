@@ -14,7 +14,6 @@ import primitives.Point;
 
     /**
      * Constructor for a Light object receiving a Color.
-     *
      * @param intensity the intensity of the light
      */
     protected Light(Color intensity) {
@@ -23,7 +22,6 @@ import primitives.Point;
 
     /**
      * Returns the base intensity of the color.
-     *
      * @return the color intensity
      */
     public Color getIntensity() {
@@ -32,7 +30,6 @@ import primitives.Point;
 
     /**
      * Abstract method to get the color intensity at a specific point.
-     *
      * @param p the point to calculate intensity at
      * @return the color intensity at point p
      */

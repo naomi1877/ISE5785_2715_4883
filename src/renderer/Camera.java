@@ -381,7 +381,7 @@ public class Camera implements Cloneable {
      */
     private Camera renderImageStream() {
         IntStream.range(0, nY).parallel()
-                .forEach(i -> IntStream.range(0, nX).parallel()
+                .forEach(i -> IntStream.range(0, nX)//.parallel()
                         .forEach(j -> {
                             if (ASS_FLAG)
                                 castRayASS(nX, nY, j, i);

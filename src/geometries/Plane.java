@@ -63,10 +63,12 @@ public class Plane extends Geometry {
         double denominator = alignZero(normal.dotProduct(ray.getDirection()));
 
         if (denominator == 0) {
-            return null; // The ray is parallel to the plane
+            // The ray is parallel to the plane
+            return null;
         }
         if (q.equals(ray.getHead())) {
-            return null; // The ray starts on the plane
+            // The ray starts on the plane
+            return null;
         }
         // Calculate the numerator for the intersection point
         Vector q0 = q.subtract(ray.getHead());
@@ -74,41 +76,14 @@ public class Plane extends Geometry {
         // Calculate the t parameter for the intersection point
         double t = alignZero(numerator / denominator);
         if (t <= 0) {
-            return null; // The intersection point is behind the ray's head
+            // The intersection point is behind the ray's head
+            return null;
         }
 
         // Calculate the intersection point
         Point intersectionPoint = ray.getPoint(t);
         return List.of(new Intersection(this, intersectionPoint));
     }
-//
-//    @Override
-//    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight) {
-//        double denominator = alignZero(normal.dotProduct(ray.getDirection()));
-//
-//        if (denominator == 0) {
-//            return null; // The ray is parallel to the plane
-//        }
-//        if (q.equals(ray.getHead())) {
-//            return null; // The ray starts on the plane
-//        }
-//
-//        Vector q0 = q.subtract(ray.getHead());
-//        double numerator = alignZero(normal.dotProduct(q0));
-//        double t = alignZero(numerator / denominator);
-//
-//        if (t <= 0) {
-//            return null; // The intersection point is behind the ray's head
-//        }
-//
-//
-//        if (t > distanceToLight) {
-//            return null;
-//        }
-//
-//        Point intersectionPoint = ray.getPoint(t);
-//        return List.of(new Intersection(this, intersectionPoint));
-//    }
 
 }
 

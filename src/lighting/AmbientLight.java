@@ -17,7 +17,6 @@ public class AmbientLight extends Light {
 
     /**
      * Constructor for AmbientLight
-     *
      * @param intensity the intensity of the ambient light
      */
     public AmbientLight(Color intensity) {
@@ -27,7 +26,7 @@ public class AmbientLight extends Light {
 
     @Override
     public Color getIntensity(Point p) {
-        return intensity; // זהה לשימוש ב-getIntensity()
+        return intensity;
     }
 
 }

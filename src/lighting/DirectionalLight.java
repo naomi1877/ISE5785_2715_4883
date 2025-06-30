@@ -17,7 +17,6 @@ public class DirectionalLight  extends Light implements LightSource{
 
     /**
      * Constructor for DirectionalLight
-     *
      * @param intensity the intensity of the light
      * @param direction the direction of the light
      */

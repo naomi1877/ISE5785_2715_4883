@@ -16,10 +16,6 @@ import static primitives.Util.isZero;
  * or background color if there's no intersection.
  */
 public class SimpleRayTracer extends RayTracerBase {
-    /**
-     * Delta value for shadow rays
-     */
-    private static final double DELTA = 0.1;
 
     /**
      * Maximum number of color levels for the ray tracer
@@ -119,34 +115,6 @@ public class SimpleRayTracer extends RayTracerBase {
                 : Color.BLACK;
     }
 
-    /**
-     * Check if the intersection point is unshaded by any geometry.
-     * This method casts a shadow ray towards the light source and checks for intersections.
-     * If there are no intersections before reaching the light source, the point is considered unshaded.
-     *
-     * @param intersection the intersection point
-     * @return true if the point is unshaded, false otherwise
-     */
-    private boolean unshaded(Intersection intersection) {
-        Vector lightDirection = intersection.toLight.scale(-1);
-        Vector delta = intersection.normalAtPoint.scale(intersection.nDotV < 0 ? DELTA : -DELTA);
-        Ray lightRay = new Ray(intersection.point.add(delta), lightDirection);
-        double lightDistance = intersection.lightSource.getDistance(intersection.point);
-        List<Intersection> intersections = scene.geometries.calculateIntersections(lightRay);
-        if (intersections == null) return true;
-        for (Intersection hit : intersections) {
-            if (hit.geometry == intersection.geometry) {
-                continue;
-            }
-            double hitDistance = hit.point.distance(intersection.point);
-            if (hitDistance < lightDistance - DELTA) {
-                if (hit.geometry.getMaterial().kT.lowerThan(MIN_CALC_COLOR_K)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     /**
      * Preprocess the intersection point by setting the ray direction and normal at the intersection point.
@@ -199,10 +167,8 @@ public class SimpleRayTracer extends RayTracerBase {
 
     /**
      * Calculate the diffuse component of the lighting at the given intersection point.
-     *
      * This is computed as the material's diffuse coefficient (kD) scaled by the
      * absolute value of the dot product between the surface normal and the light direction.
-     *
      * @param intersection the intersection data containing material properties and lighting info
      * @return the diffuse light intensity as a {@code Double3} representing RGB color components
      */

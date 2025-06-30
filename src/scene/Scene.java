@@ -79,7 +79,6 @@ public class Scene {
 
     /**
      * Adds a light source to the scene.
-     *
      * @param light the light source to be added to the scene
      * @return the current {@code Scene} object, to allow method chaining
      */

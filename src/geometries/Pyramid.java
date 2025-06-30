@@ -1,8 +1,6 @@
 package geometries;
 
 import primitives.*;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,14 +18,14 @@ public class Pyramid extends Geometry {
             if (vertices.size() < 3)
                 throw new IllegalArgumentException("Base must have at least 3 vertices");
 
-            // שמירת משולשים
+            // saving the contour of the piramid base
             for (int i = 0; i < vertices.size(); i++) {
                 Point p1 = vertices.get(i);
                 Point p2 = vertices.get((i + 1) % vertices.size());
                 sideFaces.add(new Triangle(top, p1, p2));
             }
 
-            // הוספת כולם לאוסף הפנימי
+            // adding the triangles and base to the components
             components.add(base);
             components.add(sideFaces.toArray(new Triangle[0]));
         }

@@ -1,6 +1,5 @@
 package primitives;
 
-import geometries.Intersectable;
 import geometries.Intersectable.Intersection;
 
 import java.util.List;
@@ -68,15 +67,6 @@ public class Ray {
      */
     public Vector getDirection() {
         return direction;
-    }
-
-    /**
-     * Returns the normalized direction vector of the ray.
-     *
-     * @return the normalized direction vector of the ray
-     */
-    public Vector getNormalVector() {
-        return direction.normalize();
     }
 
 

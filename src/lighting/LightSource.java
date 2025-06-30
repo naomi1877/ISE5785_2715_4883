@@ -25,7 +25,6 @@ public interface LightSource {
 
     /**
      * Returns the distance from the origin to the given point.
-     *
      * @param point the target point
      * @return the distance as a double value
      */

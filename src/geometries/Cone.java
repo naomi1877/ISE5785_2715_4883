@@ -37,18 +37,23 @@ public class Cone extends Cylinder{
 protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
     List<Intersection> intersections = new LinkedList<>();
 
-    Point apex = axis.getHead();         // קודקוד הקונוס
-    Vector axisDir = axis.getDirection(); // כיוון הקונוס
-    Point rayOrigin = ray.getHead();      // ראש הקרן
-    Vector rayDir = ray.getDirection();   // כיוון הקרן
+    //calculate intersections with the cone's surface
+    // apex of the cone
+    Point apex = axis.getHead();
+    // direction of the cone's axis
+    Vector axisDir = axis.getDirection();
 
+    Point rayOrigin = ray.getHead();
+    Vector rayDir = ray.getDirection();
+
+    //Vector from apex to ray origin
     Vector deltaP = rayOrigin.subtract(apex);
 
-    // חישוב יחס: tan^2(theta) = (r/h)^2
+    //tan^2(theta) = (r/h)^2
     double k = radius / height;
     double k2 = k * k;
 
-    // הצבה למשוואה הריבועית At^2 + Bt + C = 0
+    // At^2 + Bt + C = 0
     double dv = rayDir.dotProduct(axisDir);
     double deltaPv = deltaP.dotProduct(axisDir);
 
@@ -78,8 +83,10 @@ protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         }
     }
 
-    // חישוב חיתוך עם בסיס הקונוס (עיגול בגובה height)
-    Point baseCenter = apex.add(axisDir.scale(height));
+//Calculate intersections with the base of the cone
+    // The base is a circle at the height of the cone's apex
+    // The center of the base is at apex + axisDir * height
+  Point baseCenter = apex.add(axisDir.scale(height));
     double nv = axisDir.dotProduct(rayDir);
     if (!isZero(nv)) {
         double tBase = alignZero(axisDir.dotProduct(baseCenter.subtract(rayOrigin)) / nv);

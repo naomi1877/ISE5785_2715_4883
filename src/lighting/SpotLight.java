@@ -24,11 +24,8 @@ public class SpotLight extends PointLight{
      */
     private double narrowBeam = 1;
 
-
-
     /**
      * Constructs a SpotLight instance with the specified intensity, position, and direction.
-     *
      * @param intensity the color intensity of the spotlight
      * @param position  the position point of the spotlight in 3D space
      * @param direction the direction vector of the spotlight; will be normalized automatically
@@ -56,15 +53,14 @@ public class SpotLight extends PointLight{
 
     /**
      * Sets the narrow beam factor of the spotlight.
-     *
      * @param nb the narrow beam value to set; typically a double representing the beam's concentration
      * @return this SpotLight instance, to allow method chaining
      */
-
     public SpotLight setNarrowBeam(double nb) {
         this.narrowBeam = nb;
         return this;
     }
+
     @Override
     public Color getIntensity(Point p) {
         Vector l = getL(p);

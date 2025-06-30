@@ -33,7 +33,6 @@ public class Polygon extends Geometry {
     /**
      * Constructor to initialize a Polygon object with a list of vertices.
      * The list must be ordered by edge path and the polygon must be convex.
-     *
      * @param vertices list of vertices ordered by edge path
      * @throws IllegalArgumentException if the vertices are invalid
      */
@@ -47,7 +46,7 @@ public class Polygon extends Geometry {
         plane = new Plane(vertices[0], vertices[1], vertices[2]);
         if (size == 3) return;
 
-        Vector n = plane.getNormal(null);//
+        Vector n = plane.getNormal(null);
         Vector edge1 = vertices[size - 1].subtract(vertices[size - 2]);
         Vector edge2 = vertices[0].subtract(vertices[size - 1]);
 
@@ -64,7 +63,7 @@ public class Polygon extends Geometry {
 
     @Override
     public Vector getNormal(Point point) {
-        return plane.getNormal(null);//
+        return plane.getNormal(null);
     }
 
 
@@ -73,10 +72,11 @@ public class Polygon extends Geometry {
         // Check if the ray intersects the plane
         List<Intersection> planeIntersections = plane.calculateIntersections(ray);
         if (planeIntersections == null) {
-            return null; // No intersection with the plane
+            // No intersection with the plane
+            return null;
         }
 
-        Point intersectionPoint = planeIntersections.get(0).point;
+        Point intersectionPoint = planeIntersections.getFirst().point;
 
         // Check if the intersection point is inside the polygon
         Vector v1, v2;
@@ -94,11 +94,13 @@ public class Polygon extends Geometry {
             try{
                 cross = v1.crossProduct(v2);
             } catch (IllegalArgumentException e) {
-                continue; // Points are collinear, skip this edge
+                // Points are collinear, skip this edge
+                continue;
             }
 
             if (alignZero(cross.dotProduct(plane.getNormal(null)) )<= 0) {
-                return null; // Intersection point is outside the polygon
+                // Intersection point is outside the polygon
+                return null;
             }
         }
 
@@ -109,17 +111,18 @@ public class Polygon extends Geometry {
 
     /**
      * Checks if a given point is on the polygon.
-     *
      * @param point the point to check
      * @return true if the point is on the polygon, false otherwise
      */
     public boolean isOn(Point point) {
         // Step 1: Check if point is on the same plane
         Vector n = this.getNormal(point);
-        Vector qToP = point.subtract(this.vertices.get(0)); // using one of the polygon's base points
+        // using one of the polygon's base points
+        Vector qToP = point.subtract(this.vertices.getFirst());
         double distance = alignZero(n.dotProduct(qToP));
         if (!isZero(distance)) {
-            return false; // point is not on the plane
+            // point is not on the plane
+            return false;
         }
         // Step 2: Check if the point is inside the polygon
         int size = this.vertices.size();
@@ -130,7 +133,8 @@ public class Polygon extends Geometry {
                 v2 = this.vertices.get((i + 1) % size).subtract(point);
             }
             catch (IllegalArgumentException e) {
-                continue; // in case the point is on a vertex – skip
+                // in case the point is on a vertex – skip
+                continue;
             }
             try {
                 Vector cross = v1.crossProduct(v2);
@@ -139,10 +143,12 @@ public class Polygon extends Geometry {
                 }
             }
             catch (IllegalArgumentException e) {
-                continue; // in case of zero vector in cross product
+                // points are collinear, skip this edge
+                return false;
             }
         }
-        return true; // point is on the plane and inside the polygon
+        // point is on the plane and inside the polygon
+        return true;
     }
 
 

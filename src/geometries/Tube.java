@@ -22,7 +22,6 @@ public class Tube extends RadialGeometry {
 
     /**
      * Constructor to initialize a Tube object with a radius and an axis.
-     *
      * @param radius the radius of the tube
      * @param axis   the axis of the tube (Ray)
      */
@@ -31,19 +30,16 @@ public class Tube extends RadialGeometry {
         this.axis = axis;
     }
 
-
     @Override
     public Vector getNormal(Point point) {
         //Calculate the projection of the point onto the cylinder axis.
         //Obtain the angle between the cylinder vector and the vector generated from the head point in the direction of the given point.
         double angleValue = (axis.getDirection()).dotProduct(point.subtract(axis.getHead()));
         //Calculating the center point of the Tube closest to the given point.
-        //Point centerTubePoint=(axis.getHead()).add(axis.getDirection().scale(angleValue));
         Point centerTubePoint = axis.getPoint(angleValue);
         //return the normal - calculated like the Sphere's normal.
         return (point.subtract(centerTubePoint)).normalize();
     }
-
 
     @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
@@ -100,51 +96,4 @@ public class Tube extends RadialGeometry {
         }
         return null; // No intersection
     }
-//
-//    @Override
-//    protected List<Intersection> calculateIntersectionsHelper(Ray ray, double distanceToLight) {
-//        Point p0 = axis.getHead();
-//        Vector v = axis.getDirection();
-//        Vector u = ray.getHead().subtract(p0);
-//
-//        double impoU = v.dotProduct(u);
-//        double impoRay = v.dotProduct(ray.getDirection());
-//
-//
-//        if (isZero(ray.getDirection().crossProduct(v).lengthSquared())) {
-//            return null;
-//        }
-//
-//        Vector vPerpendicular = isZero(impoU) ? u : u.subtract(v.scale(impoU));
-//        Vector rayPerpendicular = isZero(impoRay) ? ray.getDirection() : ray.getDirection().subtract(v.scale(impoRay));
-//
-//        double a = rayPerpendicular.lengthSquared();
-//        double b = alignZero(2 * rayPerpendicular.dotProduct(vPerpendicular));
-//        double c = alignZero(vPerpendicular.lengthSquared() - radius * radius);
-//
-//        double delta = alignZero(b * b - 4 * a * c);
-//        if (delta < 0) {
-//            return null;
-//        }
-//
-//        double sqrtDelta = Math.sqrt(delta);
-//        double t1 = alignZero((-b - sqrtDelta) / (2 * a));
-//        double t2 = alignZero((-b + sqrtDelta) / (2 * a));
-//
-//        List<Intersection> intersections = new java.util.ArrayList<>();
-//
-//        if (t1 > 0 && t1 <= distanceToLight) {
-//            intersections.add(new Intersection(this, ray.getPoint(t1)));
-//        }
-//        if (t2 > 0 && t2 <= distanceToLight) {
-//            intersections.add(new Intersection(this, ray.getPoint(t2)));
-//        }
-//
-//        if (intersections.isEmpty()) {
-//            return null;
-//        }
-//
-//        return intersections;
-//    }
-
 }
