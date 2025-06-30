@@ -82,12 +82,12 @@ public class Camera implements Cloneable {
     /**
      * num of minis pixels at width and height
      */
-    private int AA_GRID_SIZE = 9;
+    private  int AA_GRID_SIZE = 9;
 
     /**
      * LEVEL is the recursion level for adaptive super-sampling
      */
-    private int LEVEL = 2;
+    private  int LEVEL = 2;
 
     /** Amount of threads to use fore rendering image by the camera */
     private int threadsCount = 0;
@@ -172,7 +172,7 @@ public class Camera implements Cloneable {
      * @param i  the row index of the pixel
      * @return a list of rays for the pixel (j, i)
      */
-    public List<Ray> constructRaysJ(int nX, int nY, int j, int i) {
+    public List<Ray> constructRays(int nX, int nY, int j, int i) {
         //list of rays for the pixel (j, i)
         List<Ray> rays = new ArrayList<>();
         Random random = new Random();
@@ -217,9 +217,9 @@ public class Camera implements Cloneable {
      * @param j the pixel's horizontal index (column number, X-axis)
      * @param i the pixel's vertical index (row number, Y-axis)
      */
-    private void castRayJ(int nX, int nY, int j, int i) {
+    private void castRaysAA(int nX, int nY, int j, int i) {
         //list of rays for the pixel (j, i)
-        List<Ray> rays = constructRaysJ(nX, nY, j, i);
+        List<Ray> rays = constructRays(nX, nY, j, i);
 
         Color color = Color.BLACK;
         for (Ray ray : rays) {
@@ -386,7 +386,7 @@ public class Camera implements Cloneable {
                             if (ASS_FLAG)
                                 castRayASS(nX, nY, j, i);
                             else if (AA_FLAG)
-                                castRayJ(nX, nY, j, i);
+                                castRaysAA(nX, nY, j, i);
                             else
                                 castRay(nX, nY, j, i);
 
@@ -404,7 +404,7 @@ public class Camera implements Cloneable {
                 if (ASS_FLAG)
                     castRayASS(nX, nY, j, i);
                 else if (AA_FLAG)
-                    castRayJ(nX, nY, j, i);
+                    castRaysAA(nX, nY, j, i);
                 else
                     castRay(nX, nY, j, i);
 
@@ -424,7 +424,7 @@ public class Camera implements Cloneable {
                     if (ASS_FLAG)
                         castRayASS(nX, nY, pixel.col(), pixel.row());
                     else if (AA_FLAG)
-                        castRayJ(nX, nY, pixel.col(), pixel.row());
+                        castRaysAA(nX, nY, pixel.col(), pixel.row());
                     else
                         castRay(nX, nY, pixel.col(), pixel.row());
 
