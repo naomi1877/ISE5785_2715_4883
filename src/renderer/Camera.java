@@ -68,7 +68,7 @@ public class Camera implements Cloneable {
 
     /**
      * Flag for enabling adaptive super-sampling
-     *  If true, the camera will use adaptive super-sampling techniques.
+     * If true, the camera will use adaptive super-sampling techniques.
      */
     private boolean ASS_FLAG = false;
 
@@ -81,14 +81,16 @@ public class Camera implements Cloneable {
     /**
      * num of minis pixels at width and height
      */
-    private  int AA_GRID_SIZE = 9;
+    private int AA_GRID_SIZE = 9;
 
     /**
      * LEVEL is the recursion level for adaptive super-sampling
      */
-    private  int LEVEL = 2;
+    private int LEVEL = 2;
 
-    /** Amount of threads to use fore rendering image by the camera */
+    /**
+     * Amount of threads to use fore rendering image by the camera
+     */
     private int threadsCount = 0;
 
     /**
@@ -110,10 +112,12 @@ public class Camera implements Cloneable {
      */
     private PixelManager pixelManager;
 
-    private Camera() {}
+    private Camera() {
+    }
 
     /**
      * Returns a new instance of the {@code Builder} for constructing a {@code Camera} object.
+     *
      * @return a new Builder instance
      */
     public static Builder getBuilder() {
@@ -122,6 +126,7 @@ public class Camera implements Cloneable {
 
     /**
      * Constructs a ray through a specific pixel in the viewport
+     *
      * @param nX the number of pixels in the X direction
      * @param nY the number of pixels in the Y direction
      * @param j  the column index of the pixel
@@ -148,6 +153,7 @@ public class Camera implements Cloneable {
 
     /**
      * Casts a ray through a specific pixel in the viewport and writes the color to the image.
+     *
      * @param nx the number of pixels in the X direction
      * @param ny the number of pixels in the Y direction
      * @param i  the row index of the pixel
@@ -165,6 +171,7 @@ public class Camera implements Cloneable {
     /**
      * This method constructs multiple rays for anti-aliasing (AA)
      * It creates a grid of rays within each pixel, applying a random jitter to each sub-pixel location.
+     *
      * @param nX the number of pixels in the X direction
      * @param nY the number of pixels in the Y direction
      * @param j  the column index of the pixel
@@ -211,10 +218,11 @@ public class Camera implements Cloneable {
      * averages their colors, and writes the final color to the image.
      * through slightly different sub-pixel locations (e.g., using jittering or grid sampling).
      * It collects the color for each ray, averages the result, and sets the pixel color accordingly.</p>
+     *
      * @param nX total number of pixels in the image width (columns)
      * @param nY total number of pixels in the image height (rows)
-     * @param j the pixel's horizontal index (column number, X-axis)
-     * @param i the pixel's vertical index (row number, Y-axis)
+     * @param j  the pixel's horizontal index (column number, X-axis)
+     * @param i  the pixel's vertical index (row number, Y-axis)
      */
     private void castRaysAA(int nX, int nY, int j, int i) {
         //list of rays for the pixel (j, i)
@@ -254,6 +262,7 @@ public class Camera implements Cloneable {
     /**
      * Performs adaptive super-sampling for anti-aliasing.
      * It recursively samples the pixel and averages the colors based on a threshold.
+     *
      * @param center      the center point of the pixel
      * @param pixelWidth  the width of the pixel
      * @param pixelHeight the height of the pixel
@@ -311,6 +320,7 @@ public class Camera implements Cloneable {
     /**
      * Checks if two colors are close enough to be considered equal.
      * This is used for adaptive super-sampling to avoid unnecessary recursion.
+     *
      * @param c1 the first color
      * @param c2 the second color
      * @return true if the colors are close enough, false otherwise
@@ -326,6 +336,7 @@ public class Camera implements Cloneable {
 
     /**
      * Renders the image using the specified ray tracer and image writer.
+     *
      * @return the Camera object itself for method chaining
      */
     public Camera renderImage() {
@@ -352,6 +363,7 @@ public class Camera implements Cloneable {
 
     /**
      * Prints a grid on the image.
+     *
      * @param interval the interval between grid lines
      * @param color    the color of the grid lines
      * @return the Camera object for method chaining
@@ -376,6 +388,7 @@ public class Camera implements Cloneable {
 
     /**
      * Render image using multi-threading by parallel streaming
+     *
      * @return the camera object itself
      */
     private Camera renderImageStream() {
@@ -395,6 +408,7 @@ public class Camera implements Cloneable {
 
     /**
      * Render image without multi-threading
+     *
      * @return the camera object itself
      */
     private Camera renderImageNoThreads() {
@@ -412,6 +426,7 @@ public class Camera implements Cloneable {
 
     /**
      * Render image using multi-threading by creating and running raw threads
+     *
      * @return the camera object itself
      */
     private Camera renderImageRawThreads() {
@@ -433,7 +448,8 @@ public class Camera implements Cloneable {
         for (var thread : threads) thread.start();
         try {
             for (var thread : threads) thread.join();
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
         return this;
     }
 
@@ -623,6 +639,7 @@ public class Camera implements Cloneable {
             camera.imageWriter = imageWriter;
             return this;
         }
+
         /**
          * Sets the pixel manager for the camera.
          *
@@ -664,6 +681,7 @@ public class Camera implements Cloneable {
 
         /**
          * Builds the Camera object after validating all necessary fields.
+         *
          * @return a cloned Camera object with computed right vector
          * @throws MissingResourceException if any required field is missing
          * @throws IllegalArgumentException if any value is invalid
@@ -689,10 +707,10 @@ public class Camera implements Cloneable {
 
             if (camera.height == 0)
                 throw new MissingResourceException(MISSING, CLASS_NAME, "view plane height must be positive");
-            //??
+
             if (camera.nX <= 0)
                 throw new MissingResourceException(MISSING, CLASS_NAME, "nX (horizontal resolution) must be positive");
-            //??
+
             if (camera.nY <= 0)
                 throw new MissingResourceException(MISSING, CLASS_NAME, "nY (vertical resolution) must be positive");
 
@@ -712,7 +730,6 @@ public class Camera implements Cloneable {
         }
 
     }
-
 
 
 }

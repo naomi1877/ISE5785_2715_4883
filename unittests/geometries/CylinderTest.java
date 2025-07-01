@@ -9,7 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link geometries.Cylinder} class.
- *@author uthor Naomie Gronstein and Efrat Brinkman.
+ *
+ * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class CylinderTest {
     /**
@@ -32,6 +33,7 @@ class CylinderTest {
      * Cylinder created with a ray starting at "Point.ZERO" and direction v2 with radius 1 and height 1.
      */
     private final Cylinder cylinder = new Cylinder(1, new Ray(Point.ZERO, v2), 1);
+
     /**
      * Test method for {@link geometries.Cylinder} constructor.
      */

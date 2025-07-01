@@ -22,6 +22,7 @@ public class Tube extends RadialGeometry {
 
     /**
      * Constructor to initialize a Tube object with a radius and an axis.
+     *
      * @param radius the radius of the tube
      * @param axis   the axis of the tube (Ray)
      */

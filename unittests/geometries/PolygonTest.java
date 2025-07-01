@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing Polygons
+ *
  * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class PolygonTest {
@@ -24,7 +25,9 @@ class PolygonTest {
     private static final double DELTA = 0.000001;
 
 
-    /** Test method for {@link geometries.Polygon#Polygon(primitives.Point...)}. */
+    /**
+     * Test method for {@link geometries.Polygon#Polygon(primitives.Point...)}.
+     */
     @Test
     void testConstructor() {
         // ============ Equivalence Partitions Tests ==============
@@ -72,13 +75,15 @@ class PolygonTest {
 
     }
 
-    /** Test method for {@link geometries.Polygon#getNormal(primitives.Point)}. */
+    /**
+     * Test method for {@link geometries.Polygon#getNormal(primitives.Point)}.
+     */
     @Test
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: There is a simple single test here - using a quad
         Point[] pts =
-                { new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1) };
+                {new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1)};
         Polygon pol = new Polygon(pts);
         // ensure there are no exceptions
         assertDoesNotThrow(() -> pol.getNormal(new Point(0, 0, 1)), "");

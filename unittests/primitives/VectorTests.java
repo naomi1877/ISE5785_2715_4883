@@ -2,9 +2,8 @@ package primitives;
 
 import org.junit.jupiter.api.Test;
 
-import static primitives.Util.isZero;
-
 import static org.junit.jupiter.api.Assertions.*;
+import static primitives.Util.isZero;
 
 /**
  * Unit tests for the {@link primitives.Vector} class.
@@ -80,11 +79,12 @@ class VectorTests {
 
         // =============== Boundary Values Tests ==================
         // TC03: Zero vector initialization (should throw IllegalArgumentException).
-        assertThrows(IllegalArgumentException.class, () -> new Vector(0,0,0), "Zero vector initialization should throw IllegalArgumentException.");
+        assertThrows(IllegalArgumentException.class, () -> new Vector(0, 0, 0), "Zero vector initialization should throw IllegalArgumentException.");
 
         // TC04: Zero vector initialization using a Double3 object (should throw IllegalArgumentException).
-        assertThrows(IllegalArgumentException.class, () -> new Vector(new Double3(0,0,0)), "Zero vector initialization with Double3 should throw IllegalArgumentException.");
+        assertThrows(IllegalArgumentException.class, () -> new Vector(new Double3(0, 0, 0)), "Zero vector initialization with Double3 should throw IllegalArgumentException.");
     }
+
     /**
      * Test method for {@link primitives.Vector#lengthSquared()}.
      */

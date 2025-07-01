@@ -31,10 +31,11 @@ public class Scene {
      * The geometries in the scene.
      */
     public Geometries geometries = new Geometries();
-     /**
+    /**
      * The list of light sources in the scene.
      */
-    public List<LightSource> lights=new LinkedList<>();
+    public List<LightSource> lights = new LinkedList<>();
+
     /**
      * Constructor for Scene
      *
@@ -79,6 +80,7 @@ public class Scene {
 
     /**
      * Adds a light source to the scene.
+     *
      * @param light the light source to be added to the scene
      * @return the current {@code Scene} object, to allow method chaining
      */

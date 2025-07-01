@@ -1,9 +1,14 @@
 package geometries;
 
 import org.junit.jupiter.api.Test;
-import primitives.*;
-import static org.junit.jupiter.api.Assertions.*;
+import primitives.Double3;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
+
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BoxTest {
 
@@ -11,6 +16,7 @@ public class BoxTest {
             new Double3(0, 0, 0),
             new Double3(2, 2, 2)
     );
+
     @Test
     void testBoxIntersectionsAndNormals() {
         // === Normal tests on face centers ===

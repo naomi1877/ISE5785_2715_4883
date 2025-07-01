@@ -2,15 +2,17 @@ package primitives;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for the {@link primitives.Point} class.
  */
-class PointTests {/**
- * The point p0 with coordinates (1, 2, 3).
- */
-private final Point p0 = new Point(1, 2, 3);
+class PointTests {
+    /**
+     * The point p0 with coordinates (1, 2, 3).
+     */
+    private final Point p0 = new Point(1, 2, 3);
 
     /**
      * The vector v0 with components (1, 2, 3).
@@ -21,6 +23,7 @@ private final Point p0 = new Point(1, 2, 3);
      * A small delta value used for comparison in floating-point operations.
      */
     private final double DELTA = 0.00001;
+
     /**
      * Default constructor for the PointTests class.
      * Initializes the test class for testing the Point class functionality.
@@ -28,6 +31,7 @@ private final Point p0 = new Point(1, 2, 3);
     public PointTests() {
         // Default constructor
     }
+
     /**
      * Test method for {@link primitives.Point#subtract(primitives.Point)}.
      */
@@ -63,7 +67,7 @@ private final Point p0 = new Point(1, 2, 3);
     void testDistanceSquared() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Calculate the squared distance between two points
-        assertEquals(11, p0.distanceSquared(new Point( 2,3 , 6)), DELTA, "Calculate the squared distance between two points does not work correctly");
+        assertEquals(11, p0.distanceSquared(new Point(2, 3, 6)), DELTA, "Calculate the squared distance between two points does not work correctly");
 
         // ============ Boundary Values Tests ==================
         // TC02: Calculate the squared distance between two points

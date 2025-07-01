@@ -56,7 +56,7 @@ public class Plane extends Geometry {
     }
 
 
-@Override
+    @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
 
         // Check if the ray is parallel to the plane

@@ -15,7 +15,7 @@ public class Ray {
      * A small constant used to adjust the head position of the ray
      * to avoid precision issues such as self-intersection.
      */
-    private static final double DELTA = 0.1 ;
+    private static final double DELTA = 0.1;
     /**
      * The starting point of the ray.
      */
@@ -23,7 +23,7 @@ public class Ray {
     /**
      * The direction of the ray.
      */
-    private  final Vector direction;
+    private final Vector direction;
 
     /**
      * Constructs a ray with a given starting point and direction.
@@ -35,22 +35,24 @@ public class Ray {
         this.head = head;
         this.direction = direction.normalize();
     }
+
     /**
      * Constructs a Ray with a given starting point (head), direction, and a normal vector.
      * If the direction is perpendicular (or nearly perpendicular) to the normal,
      * the starting point is slightly adjusted along the normal by a small constant {@code DELTA}
      * to avoid precision issues such as self-intersection.
      *
-     * @param head the starting point of the ray
+     * @param head      the starting point of the ray
      * @param direction the direction vector of the ray (will be normalized)
-     * @param normal the normal vector used to adjust the starting point if needed
+     * @param normal    the normal vector used to adjust the starting point if needed
      */
-    public Ray(Point head, Vector direction, Vector normal){
+    public Ray(Point head, Vector direction, Vector normal) {
         // If the direction is perpendicular to the normal, adjust the head position slightly
         double t = direction.dotProduct(normal);
         this.direction = direction.normalize();
         this.head = head.add(normal.scale(t < 0 ? -DELTA : DELTA));
     }
+
     /**
      * Getter for head
      *
@@ -75,8 +77,9 @@ public class Ray {
      *
      * @return the normalized direction vector of the ray
      */
-    public Vector getNormalVec() {return direction.normalize();}
-
+    public Vector getNormalVec() {
+        return direction.normalize();
+    }
 
 
     @Override

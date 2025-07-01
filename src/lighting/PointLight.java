@@ -11,19 +11,19 @@ import primitives.Vector;
  * It extends the Light class and implements the LightSource interface.
  * The light has a position in space and its intensity decreases with distance.
  */
-public class PointLight extends Light implements LightSource{
+public class PointLight extends Light implements LightSource {
     /**
      * The position of the point light in 3D space.
      */
     private final Point position;
 
-   /**
+    /**
      * Attenuation factors for the point light.
      * kC - constant attenuation
      */
     private Double3 kC = Double3.ONE;
     /**
-     *  kL - linear attenuation
+     * kL - linear attenuation
      */
     private Double3 kL = Double3.ZERO;
     /**
@@ -33,6 +33,7 @@ public class PointLight extends Light implements LightSource{
 
     /**
      * Constructor for PointLight
+     *
      * @param intensity the intensity of the point light
      * @param position  the position of the point light in 3D space
      */
@@ -43,6 +44,7 @@ public class PointLight extends Light implements LightSource{
 
     /**
      * Sets the position of the point light.
+     *
      * @param kC the constant attenuation factor
      * @return the current PointLight object (for method chaining)
      */
@@ -50,8 +52,10 @@ public class PointLight extends Light implements LightSource{
         this.kC = kC;
         return this;
     }
+
     /**
      * Sets the constant attenuation factor of the point light.
+     *
      * @param kC the constant attenuation factor as a double
      * @return the current PointLight object (for method chaining)
      */
@@ -62,6 +66,7 @@ public class PointLight extends Light implements LightSource{
 
     /**
      * Sets the linear attenuation factor of the point light.
+     *
      * @param kL the linear attenuation factor
      * @return the current PointLight object (for method chaining)
      */
@@ -69,8 +74,10 @@ public class PointLight extends Light implements LightSource{
         this.kL = kL;
         return this;
     }
+
     /**
      * Sets the linear attenuation factor of the point light.
+     *
      * @param kL the linear attenuation factor as a double
      * @return the current PointLight object (for method chaining)
      */
@@ -81,6 +88,7 @@ public class PointLight extends Light implements LightSource{
 
     /**
      * Sets the quadratic attenuation factor of the point light.
+     *
      * @param kQ the quadratic attenuation factor
      * @return the current PointLight object (for method chaining)
      */
@@ -88,8 +96,10 @@ public class PointLight extends Light implements LightSource{
         this.kQ = new Double3(kQ);
         return this;
     }
+
     /**
      * Sets the quadratic attenuation factor of the point light.
+     *
      * @param kQ the quadratic attenuation factor as a Double3 object
      * @return the current PointLight object (for method chaining)
      */
@@ -103,7 +113,7 @@ public class PointLight extends Light implements LightSource{
     public Color getIntensity(Point p) {
         double d = position.distance(p);
         // Calculate the attenuation factor
-        Double3 attenuation = ( kC.add(kL.scale(d)).add(kQ.scale(d * d)));
+        Double3 attenuation = (kC.add(kL.scale(d)).add(kQ.scale(d * d)));
         // If the attenuation factor is zero, return the intensity directly
         if (attenuation.equals(Double3.ZERO)) {
             return intensity;

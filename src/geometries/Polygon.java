@@ -33,6 +33,7 @@ public class Polygon extends Geometry {
     /**
      * Constructor to initialize a Polygon object with a list of vertices.
      * The list must be ordered by edge path and the polygon must be convex.
+     *
      * @param vertices list of vertices ordered by edge path
      * @throws IllegalArgumentException if the vertices are invalid
      */
@@ -67,7 +68,7 @@ public class Polygon extends Geometry {
     }
 
 
-//    @Override
+    //    @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // Check if the ray intersects the plane
         List<Intersection> planeIntersections = plane.calculateIntersections(ray);
@@ -91,14 +92,14 @@ public class Polygon extends Geometry {
                 continue;
             }
             Vector cross;
-            try{
+            try {
                 cross = v1.crossProduct(v2);
             } catch (IllegalArgumentException e) {
                 // Points are collinear, skip this edge
                 continue;
             }
 
-            if (alignZero(cross.dotProduct(plane.getNormal(null)) )<= 0) {
+            if (alignZero(cross.dotProduct(plane.getNormal(null))) <= 0) {
                 // Intersection point is outside the polygon
                 return null;
             }
@@ -111,6 +112,7 @@ public class Polygon extends Geometry {
 
     /**
      * Checks if a given point is on the polygon.
+     *
      * @param point the point to check
      * @return true if the point is on the polygon, false otherwise
      */
@@ -131,8 +133,7 @@ public class Polygon extends Geometry {
             try {
                 v1 = this.vertices.get(i).subtract(point);
                 v2 = this.vertices.get((i + 1) % size).subtract(point);
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 // in case the point is on a vertex – skip
                 continue;
             }
@@ -141,8 +142,7 @@ public class Polygon extends Geometry {
                 if (alignZero(cross.dotProduct(n)) < 0) {
                     return false; // point is outside
                 }
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 // points are collinear, skip this edge
                 return false;
             }

@@ -3,6 +3,7 @@ package geometries;
 import primitives.*;
 
 import java.util.List;
+
 /**
  * Class Box represents an axis-aligned rectangular box (cuboid)
  * in 3D space, defined by two opposite corner points.
@@ -10,24 +11,21 @@ import java.util.List;
  *
  * @author Naomie Gronstein and Efrat Brinkman
  */
-public class Box extends Geometry{
+public class Box extends Geometry {
     private final Double3 min;
     private final Double3 max;
-   private final List<Polygon> sideFaces;
+    private final List<Polygon> sideFaces;
     private final Geometries components = new Geometries();
 
-    public Box(Double3 p1, Double3 p2 ) {
-
-
-        if (p1.d1()==p2.d1() ||
-            p1.d2()==p2.d2() ||
-            p1.d3()==p2.d3()) {
+    public Box(Double3 p1, Double3 p2) {
+        if (p1.d1() == p2.d1() ||
+                p1.d2() == p2.d2() ||
+                p1.d3() == p2.d3()) {
             throw new IllegalArgumentException("Points must not be aligned on the same axis");
         }
-
-        this.min = new Double3( Math.min(p1.d1(),p2.d1()),Math.min(p1.d2(),p2.d2()),Math.min(p1.d3(),p2.d3()));
-        this.max = new Double3( Math.max(p1.d1(),p2.d1()),Math.max(p1.d2(),p2.d2()),Math.max(p1.d3(),p2.d3()));
-        this.sideFaces=List.of( // Left (x = minX) – counter-clockwise when looking from x < 0
+        this.min = new Double3(Math.min(p1.d1(), p2.d1()), Math.min(p1.d2(), p2.d2()), Math.min(p1.d3(), p2.d3()));
+        this.max = new Double3(Math.max(p1.d1(), p2.d1()), Math.max(p1.d2(), p2.d2()), Math.max(p1.d3(), p2.d3()));
+        this.sideFaces = List.of( // Left (x = minX) – counter-clockwise when looking from x < 0
                 new Polygon(
                         new Point(min.d1(), min.d2(), max.d3()),
                         new Point(min.d1(), max.d2(), max.d3()),
@@ -70,12 +68,12 @@ public class Box extends Geometry{
                         new Point(min.d1(), min.d2(), max.d3())
                 ));
         // Create the 6 faces of the box
-        components.add( sideFaces.toArray(new Polygon[0]));
+        components.add(sideFaces.toArray(new Polygon[0]));
     }
 
     @Override
     public Vector getNormal(Point point) {
-        for (Polygon face :sideFaces ) {
+        for (Polygon face : sideFaces) {
             if (face.isOn(point)) {
                 return face.getNormal(point);
             }

@@ -8,13 +8,19 @@ package primitives;
  */
 public class Material {
 
-    /** Ambient reflection coefficient */
+    /**
+     * Ambient reflection coefficient
+     */
     public Double3 kA = Double3.ONE;
 
-    /** Diffuse reflection coefficient */
+    /**
+     * Diffuse reflection coefficient
+     */
     public Double3 kD = Double3.ZERO;
 
-    /** Specular reflection coefficient */
+    /**
+     * Specular reflection coefficient
+     */
     public Double3 kS = Double3.ZERO;
 
     /**
@@ -31,7 +37,6 @@ public class Material {
      * The shininess coefficient for specular reflection.
      */
     public int nShininess = 0;
-
 
 
     /**
@@ -56,6 +61,7 @@ public class Material {
         this.kA = new Double3(kA);
         return this;
     }
+
     /**
      * Sets the ambient coefficient of the material.
      *
@@ -67,6 +73,7 @@ public class Material {
         this.kD = kD;
         return this;
     }
+
     /**
      * Sets the diffuse coefficient of the material.
      *
@@ -78,6 +85,7 @@ public class Material {
         this.kD = new Double3(kD);
         return this;
     }
+
     /**
      * Sets the specular coefficient of the material.
      *
@@ -88,6 +96,7 @@ public class Material {
         this.kS = kS;
         return this;
     }
+
     /**
      * Sets the specular coefficient of the material.
      *
@@ -99,6 +108,7 @@ public class Material {
         this.kS = new Double3(kS);
         return this;
     }
+
     /**
      * Sets the shininess coefficient of the material.
      *
@@ -113,6 +123,7 @@ public class Material {
         this.nShininess = nSh;
         return this;
     }
+
     /**
      * Sets the transparency coefficient of the material.
      *
@@ -121,7 +132,7 @@ public class Material {
      */
 
     public Material setKT(double kt) {
-        this.kT=new Double3(kt);
+        this.kT = new Double3(kt);
         return this;
     }
 

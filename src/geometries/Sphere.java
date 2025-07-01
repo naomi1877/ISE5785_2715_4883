@@ -21,6 +21,7 @@ public class Sphere extends RadialGeometry {
 
     /**
      * Constructor to initialize a Sphere object with a radius and a center.
+     *
      * @param radius the radius of the sphere
      * @param center the center of the sphere (Point)
      */
@@ -36,7 +37,7 @@ public class Sphere extends RadialGeometry {
     }
 
 
-@Override
+    @Override
     protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         Vector v = ray.getDirection();
         Point p = ray.getHead();

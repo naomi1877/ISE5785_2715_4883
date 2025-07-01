@@ -1,13 +1,17 @@
 package geometries;
 
 import org.junit.jupiter.api.Test;
-import primitives.*;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link geometries.Sphere} class.
+ *
  * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class SphereTest {
@@ -31,8 +35,10 @@ class SphereTest {
      * Point p2 with coordinates (1, 0, 0).
      */
     Point p2 = new Point(1, 0, 0);
-    /** A point used in some tests */
-    private final Point  p100 = new Point(1, 0, 0);
+    /**
+     * A point used in some tests
+     */
+    private final Point p100 = new Point(1, 0, 0);
 
     /**
      * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
@@ -44,14 +50,13 @@ class SphereTest {
         assertEquals(v1.normalize(), new Sphere(1, p1).getNormal(p2), "getNormal() wrong result");
         // =============== Boundary Values Tests =================
         // TC02: Test for a point on the sphere
-            Sphere sphere = new Sphere(1, new Point(0, 0, 0));
-            Point p = new Point(0, 0, 1);
-            Vector expectedNormal = new Vector(0, 0, 1);
-            Vector normal = sphere.getNormal(p);
-            assertEquals(expectedNormal, normal, "Bad normal to sphere");
+        Sphere sphere = new Sphere(1, new Point(0, 0, 0));
+        Point p = new Point(0, 0, 1);
+        Vector expectedNormal = new Vector(0, 0, 1);
+        Vector normal = sphere.getNormal(p);
+        assertEquals(expectedNormal, normal, "Bad normal to sphere");
 
     }
-
 
 
     /**
@@ -59,16 +64,16 @@ class SphereTest {
      */
     @Test
     public void testFindIntersections() {
-        Sphere      sphere = new Sphere(1d, p100);
+        Sphere sphere = new Sphere(1d, p100);
 
-        final Point  gp1    = new Point(0.0651530771650466, 0.355051025721682, 0);
-        final Point  gp2    = new Point(1.53484692283495, 0.844948974278318, 0);
-        final var    exp    = List.of(gp1, gp2);
+        final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
+        final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
+        final var exp = List.of(gp1, gp2);
 
-        final Vector v310   = new Vector(3, 1, 0);
-        final Vector v110   = new Vector(1, 1, 0);
+        final Vector v310 = new Vector(3, 1, 0);
+        final Vector v110 = new Vector(1, 1, 0);
 
-        final Point  p01    = new Point(-1, 0, 0);
+        final Point p01 = new Point(-1, 0, 0);
 
         // ============ Equivalence Partitions Tests ==============
         // TC01: Ray's line is outside the sphere (0 points)

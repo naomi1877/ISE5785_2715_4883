@@ -11,12 +11,15 @@ import primitives.Vector;
 public interface LightSource {
     /**
      * Get the intensity of the light source at a specific point.
+     *
      * @param p the point in space where the intensity is needed
      * @return the color representing the intensity of the light at that point
      */
     Color getIntensity(Point p);
+
     /**
      * Get the direction of the light source at a specific point.
+     *
      * @param p the point in space where the direction is needed
      * @return the direction vector of the light source at that point
      */
@@ -25,6 +28,7 @@ public interface LightSource {
 
     /**
      * Returns the distance from the origin to the given point.
+     *
      * @param point the target point
      * @return the distance as a double value
      */

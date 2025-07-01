@@ -1,10 +1,12 @@
 package renderer;
 
-import lighting.LightSource;
-import primitives.*;
-import scene.Scene;
-
 import geometries.Intersectable.Intersection;
+import lighting.LightSource;
+import primitives.Color;
+import primitives.Double3;
+import primitives.Ray;
+import primitives.Vector;
+import scene.Scene;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class SimpleRayTracer extends RayTracerBase {
 
     /**
      * Constructor
+     *
      * @param scene the scene to trace rays through
      */
     public SimpleRayTracer(Scene scene) {
@@ -48,11 +51,12 @@ public class SimpleRayTracer extends RayTracerBase {
         return closestIntersection == null ? scene.background : calcColor(closestIntersection, ray);
     }
 
-    
+
     /**
      * Find the closest intersection point for the given ray.
      * This method calculates all intersections with the scene geometries
      * and returns the closest one.
+     *
      * @param ray the ray to trace
      * @return the closest intersection point, or null if no intersection is found
      */
@@ -67,7 +71,7 @@ public class SimpleRayTracer extends RayTracerBase {
      * Otherwise, calculate the local and global effects at the intersection point.
      *
      * @param intersection the intersection point
-     * @param ray  the ray that intersects with the geometry
+     * @param ray          the ray that intersects with the geometry
      * @return the color at the intersection point
      */
     private Color calcColor(Intersection intersection, Ray ray) {
@@ -119,6 +123,7 @@ public class SimpleRayTracer extends RayTracerBase {
     /**
      * Preprocess the intersection point by setting the ray direction and normal at the intersection point.
      * If the dot product of the normal and ray direction is zero, it means the ray is perpendicular to the surface.
+     *
      * @param intersection the intersection point
      * @param rayDirection the direction of the ray
      * @return true if the intersection is valid, false otherwise
@@ -134,8 +139,9 @@ public class SimpleRayTracer extends RayTracerBase {
     /**
      * Set the light source for the intersection point and calculate the direction to the light source.
      * If the dot product of the normal and light direction is zero, it means the light source is perpendicular to the surface.
+     *
      * @param intersection the intersection point
-     * @param lightSource the light source
+     * @param lightSource  the light source
      * @return true if the light source is valid, false otherwise
      */
     public boolean setLightSource(Intersection intersection, LightSource lightSource) {
@@ -169,6 +175,7 @@ public class SimpleRayTracer extends RayTracerBase {
      * Calculate the diffuse component of the lighting at the given intersection point.
      * This is computed as the material's diffuse coefficient (kD) scaled by the
      * absolute value of the dot product between the surface normal and the light direction.
+     *
      * @param intersection the intersection data containing material properties and lighting info
      * @return the diffuse light intensity as a {@code Double3} representing RGB color components
      */

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link geometries.Triangle} class.
+ *
  * @author uthor Naomie Gronstein and Efrat Brinkman.
  */
 class TriangleTest {
@@ -20,7 +21,7 @@ class TriangleTest {
 
     /**
      * A point at the origin (0,0,0).
-            */
+     */
     Point p1 = new Point(0, 0, 0);
 
     /**
@@ -90,6 +91,7 @@ class TriangleTest {
         assertTrue(normal.equals(v1) || normal.equals(v2), "getNormal() wrong result");
 
     }
+
     /**
      * Test method for {@link geometries.Triangle#findIntersections(primitives.Ray)}.
      */
