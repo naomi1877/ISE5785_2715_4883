@@ -78,7 +78,7 @@ public class Box extends Geometry {
                 return face.getNormal(point);
             }
         }
-        throw new IllegalArgumentException("Point is not on the surface of the box");
+    return null;
     }
 
     @Override

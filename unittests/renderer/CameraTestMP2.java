@@ -464,30 +464,19 @@ class CameraTestMP2 {
                 .setVpDistance(302)
                 .setVpSize(500, 500)
                 .setResolution(800, 800)
-                // .setMultithreading(-1)
-                .setAAFlag(false)
-                .setASSFlag(false)
-                // .setDebugPrint(1)
+                .setMultithreading(-2)
+                .setAAFlag(true)
+                .setASSFlag(true)
+                .setDebugPrint(1)
                 .build();
-
 
         long start = System.currentTimeMillis();
         camera.renderImage();
         long end = System.currentTimeMillis();
 
-        // camera.writeToImage("Windmill_ASS_New6");
-        camera.writeToImage("Windmill_lights7");
+        camera.writeToImage("Windmill_lights+ASS");
         System.out.println("Windmill_ASS_Only done in " + (end - start) + " ms");
-        //Windmill_ASS_Only3 setVpDistance(1000)
-        //Windmill_ASS_Only4 setVpDistance(189)
-        //Windmill_ASS_Only5 setVpDistance(302)
-        //Windmill_ASS_Only5 setVpDistance(302),setLocation(new Point(0, 400, 500))
-        //Windmill_ASS_Only6 improve ASS
-        //with  AAS + .setMultithreading(4)== 42 sec
-        //with  AA + .setMultithreading(-2)== 3 min 54 sec
-        //.setLocation(new Point(-10, 460, 480))
-        //                .setDirection(new Point(0, 150, 0), new Vector(0, 1, -1))
-        //                .setVpDistance(302)
+
     }
 
 }

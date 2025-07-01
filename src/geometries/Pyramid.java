@@ -41,7 +41,7 @@ public class Pyramid extends Geometry {
         if (base.isOn(point)) return base.getNormal(point);
         for (Triangle t : sideFaces)
             if (t.isOn(point)) return t.getNormal(point);
-        throw new IllegalArgumentException("Point not on pyramid surface");
+        return null;
     }
 
     @Override

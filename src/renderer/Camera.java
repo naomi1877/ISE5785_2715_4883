@@ -67,12 +67,6 @@ public class Camera implements Cloneable {
 
 
     /**
-     * Flag for enabling adaptive super-sampling
-     * If true, the camera will use adaptive super-sampling techniques.
-     */
-    private boolean ASS_FLAG = false;
-
-    /**
      * Flag for enabling anti-aliasing (AA).
      * If true, the camera will use anti-aliasing techniques.
      */
@@ -82,6 +76,12 @@ public class Camera implements Cloneable {
      * num of minis pixels at width and height
      */
     private int AA_GRID_SIZE = 9;
+
+    /**
+     * Flag for enabling adaptive super-sampling
+     * If true, the camera will use adaptive super-sampling techniques.
+     */
+    private boolean ASS_FLAG = false;
 
     /**
      * LEVEL is the recursion level for adaptive super-sampling
@@ -178,11 +178,11 @@ public class Camera implements Cloneable {
      * @param i  the row index of the pixel
      * @return a list of rays for the pixel (j, i)
      */
-    public List<Ray> constructRays(int nX, int nY, int j, int i) {
+    public List<Ray> constructRaysAA(int nX, int nY, int j, int i) {
         //list of rays for the pixel (j, i)
         List<Ray> rays = new ArrayList<>();
         Random random = new Random();
-
+        //
         double Ry = height / nY;
         double Rx = width / nX;
         //calculate the new width and height of the mini pixel
@@ -226,7 +226,7 @@ public class Camera implements Cloneable {
      */
     private void castRaysAA(int nX, int nY, int j, int i) {
         //list of rays for the pixel (j, i)
-        List<Ray> rays = constructRays(nX, nY, j, i);
+        List<Ray> rays = constructRaysAA(nX, nY, j, i);
 
         Color color = Color.BLACK;
         for (Ray ray : rays) {
@@ -252,7 +252,8 @@ public class Camera implements Cloneable {
         if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
         if (!isZero(yI)) pIJ = pIJ.add(vUp.scale(yI));
 
-        Color color = adaptiveSuperSampling(pIJ, pixelWidth, pixelHeight, LEVEL); // level is the recursion level for adaptive super-sampling
+        // level is the recursion level for adaptive super-sampling
+        Color color = adaptiveSuperSampling(pIJ, pixelWidth, pixelHeight, LEVEL);
         imageWriter.writePixel(j, i, color);
 
         if (pixelManager != null)
